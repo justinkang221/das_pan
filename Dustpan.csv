@@ -1,0 +1,7 @@
+Name,Purpose,Machining,Assembly
+Pan,To carry and hold passengers from the pickup zone to the drop-off. Designed in a way that passengers can be swept into it like a dust pan.,A piece of sheet-metal to be cut on the waterjet cutter and then bent into shape using hand tools and machines.,Will be attached to the base of the robot by a pan-connector.
+Pan connector,To attach the pan to the base of the robot in a way that the pan always stays as flat and close to the ground as possible.,A rubbery material yet to be determined that is cut into a narrow strip.,Glued to the edges of the pan and base of the robot.
+Pushoff,A strip of material used to push the passengers off the dust pan and into the drop-off zone.,Waterjet cutting/laser cutting,Held to the back of the pan by an elastic band and winched forward by 2 pieces of string around either end.
+Pulleys,"To  pull the pushoff in the correct direction, effectively ejecting passengers from the robot","A premade part, probably mechano",Attached to the pan at its corners.
+Winch,A rod spun by a motor to  pull the pushoff in the correct direction,2 laser cut pieces with a hole in them and a rod cut to size,Fastened to the base of the robot and spun by a motor at the back end.
+Base,The base of the robot where all of the circuitry and components are housed.,"A waterjet cut piece of metal that is bent using hand tools and machines reinforced by several cross-bars along the underside.","A solid base where many different parts are fastened using bolts glue and spot welding."
