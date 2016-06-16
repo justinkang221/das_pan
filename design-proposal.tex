@@ -3,7 +3,7 @@
         Alex Swift-Scott 30070122\\
                 Andrew Dworschak 22620141\\
                 Justin Kang 14819149\\
-                Rahat Dande 123456789\          
+                Rahat Dande 17228140\          
 }
 \date{\today}
 
@@ -14,6 +14,7 @@
 \usepackage[letterpaper, margin=1in]{geometry}
 \usepackage{titling}
 \usepackage{array}
+\usepackage{longtable}
 
 \begin{document}
 \begin{titlingpage}
@@ -31,11 +32,20 @@
 
 
 \section{Preface}
+\par The work for this proposal was divided among our team using an excel spreadsheet. We began by outlining all of the subsections within our report, using the outline provided in lectures during the course, and thinking about all pertinent information to be included. \\ \par
+Once we had a set of defined subsections, as a team, we determined which member would be most knowledgeable about the specific task, and assigned them to the task. \\ \par
+Each member began by creating a set of figures and tables describing the information required in each subsection. We shared these tables and figures with one another, and provided feedback to one another, continually making modifications until all members were satisfied with the result. \\ \par
+Throughout this process, we sought out the help of our mentors and instructors, namely P-PAM, JON “You know nothing” NAKANE, and BERNHARD DAS-PAN. Who guided us in the formatting and the technical writing of this document. \\
 
 \section{Overview of Basic Strategy}
+\par Our motivation is to create the most basic and simple robot.  We feel that a plain and straightforward design is most likely to succeed.
 \subsection{Mechanical Overview}
+\par We found that precision plays a significant role in successful passenger retrieval. We sought out a design that required minimal precision.  After many iterations, we came up with a broom and dust-pan design.  We will use an arm to sweep the passenger off their podium and drag them into our dust-pans.  This does not require the precision of a mechanism like a forklift, since the broom can span a wide range.  This also avoids destroying houses since the bristles of the broom will be elastic and will deform around rigid structures.
 \subsection{Electrical Overview}
+\par We plan on modularizing our electrical circuits such that each circuit that performs an atomic function (ex. H-Bridge, IR detect) is on its own board.  We think that an encapsulated and modularized circuit design will allow us to individually test components.  Such components are also easily replaceable.
 \subsection{Software Overview}
+\par We will store a graph representation of the playing surface in memory for better decision making in navigation.  We will represent each intersection on the surface as a node, and the paths between the intersections as edges.  We will use dynamic weights to decide which path to take.  The weights can describe a) the likelihood of a passenger being in an edge, b) the presence of a passenger at an edge, and c) the path to the drop off area.  We will adjust the weights each time we pick up a passenger so that the weight of the edge from which we picked up the passenger is decreased, and the weights of the edges toward the drop off are increased.  This will make it so that eventually, once we are at capacity, the weights will make it more favourable for the robot to navigate to the drop off area rather than pick up another passenger. \\ \par 
+We believe that storing the surface in memory will allow for smarter decision making and it will reduce our dependency on detecting IR signals to find the drop off area. \\
 
 \section{Chassis}
 \subsection{Components}
@@ -45,12 +55,135 @@
 \subsection{Estimated Final Specifications}
 
 \section{Drive and Actuator System}
+\par There are 8 actuators total in our design: a pair of geared Coleman motors to power the wheels (bidirectional), a pair of geared Coleman motors to move the arms (unidirectional), a pair of un-geared Coleman motors to power the pusher winches (bidirectional) and a pair of servo motors to lock the pushers in place. \\
+\subsection{Drive Mechanism and Transmission}
+\par There are two powered wheels, which are controlled independently to allow for tape following, turning and driving in reverse. In addition, there is an unpowered ball-and-socket roller to provide a third point of contact. To maximize control in tape following, the wheels were placed on the very back end of the chassis. To maximize torque while turning, the wheels were placed with the largest possible distance between them (12’’). The roller was placed at the very front of the robot, along the centerline, to maximize its distance from the driving wheels and improve stability. \\ \par 
+The placement of the wheels, drive motors and transmission is illustrated below: \\
+//TODO: INSERT DIAGRAM + CALULATION \\
+\par Therefore, in order to accelerate the robot at a maximum acceleration of ${0.5 \frac{m}{s^2}}$, the drive motors must exert a torque of \_\_\_. This will consume \_\_\_ W of power. To maintain constant velocity, the motors must exert a torque of \_\_\_. This will consume \_\_\_ W of power. \\
 \subsection{Steering}
-\subsection{Drive Mechanisms}
-\subsection{Transmission}
-\subsection{Actuator Systems}
+\par The robot’s pair arms and passenger-collection pans allows it pickup and drop off passengers to either side without turning away from the tape line in the path’s center. In addition, the robot will be able to drive in reverse, allowing it to enter and exit dead-end streets without needing to turn. Because of this, the robot will never need to turn under any circumstances other than at intersections in the path. \\ \par 
+Therefore, in order to make a turn, the robot must be able to detect an intersection, right itself onto the correct tape line once the turn is complete, and be mechanically capable of turning itself. To detect the intersection, the robot will read the output of branch-detection QRDs placed near the front right and front left corners of the chassis. To right itself, it will rely on the normal tape-following QRDs. \\ \par 
+The turning mechanism is illustrated below: \\
+//TODO: INSERT DIAGRAM + CALCULATIONS \\
+\par Therefore, in order to begin turning and maintain a constant angular speed,  the motors must exert a torque of \_\_\_. This will consume \_\_\_ W of power. \\ \par 
+Considering this and the previous constraints on torque calculated for driving and accelerating, the gear ratio should be approximately \_\_\_. \\
+\subsection{Arm Mechanism}
+\par The left and right sides of the robot both have an identical arm, so that passengers can be retrieved from either direction without changing the yaw of the arm. The arm is jointed and ends in a brush (made of rubber tines or fibres strong enough to push a passenger but flexible enough to give way when brought against a building or curb). The joint of the arm are designed so that, with a single rotation of the large, arm-supporting gears, the brush will trace out a horizontal path (allowing it to “sweep” passengers into the pans). \\ \par 
+\par This mechanism is illustrated below: \\
+//TODO: INSERT DIAGRAM + CALCULATIONS \\
+\par Therefore, in order to move the arm through 1 complete cycle in 5 seconds (unobstructed by objects in path of brush), the motor must exert a maximum torque of \_\_\_.
+\subsection{Pan Mechanism}
+\par The left and right sides of the robot both have identical pans, which consist of a lightweight surface of sheet metal attached to the chassis by a narrow rubber strip. The pan also has a winch-powered pusher and pulley mechanism to expel passengers at the drop-off zone by pushing them out of the pans. In addition, if the pusher strip is held in place by a locking servo, the winches will instead pull the pans up slightly, pulling them off the ground to reduce friction and ensure that passengers don’t fall out during transport. \\ \par 
+This mechanism is illustrated below: (the pans are simple and required few calculation beyond basic size) \\
+//TODO: INSERT DIAGRAM + CALCULATIONS \\
+
+\subsection{Motor Table}
+(All required values are estimated for 1 round of competition) \\ \\
+\hspace*{-5pt}\makebox[\linewidth][c]{
+\begin{tabular}{| p{8em} | p{8em} | p{8em} | p{8em} | m{8em} |}
+\hline
+Motor type & Function & Required voltage & Required power & Required current \\
+\hline
+Geared Barber Coleman motor (FYQF 63310-9) x2
+Drive individual wheel both forward and reverse & ~12V & (supplied by LIPO) & Driving: \newline Accelerating: \newline Turning: \newline Stationary: ~ 0 W\newline \newline Time spent in each state: D:A:T:S = 4:2:3:5, & TODO \\
+\hline
+Geared Barber Coleman motor (FYQF 63310-9)
+x2 & Drive individual arm through its path cycle, forward only & ~12V (supplied by LIPO)
+ & 1 cycle: \newline
+Approx. 20 cycles performed during 1 round & TODO \\
+\hline
+Un-geared Barber Coleman motor (FYQM 63100-51)
+x2 & Turn winch to extend individual pusher (or lift pan, if pusher is locked) & ~12V (supplied by LIPO) & Lower pan:   (approx. 10x / round) \newline Raise pan:    (approx. 10x / round) \newline Expel passengers:  (approx. 4x / round) \newline & TODO \\
+\hline
+TowerPro 9g micro servo (SG90) & Lock pusher in place so that it can’t be extended & ~5V (supplied by TINAH) & Lock/unlock:   (approx. 10x / round) & TODO \\
+\hline
+\end{tabular}
+}
 
 \section{Electrical Design}
+\par TINAH Resource allocation: \\ \\
+\begin{longtable}{| m{7em} | m{3em} | m{25em} |}
+\hline
+Type & Name & Use (Connected to) \\
+\hline
+Analog input & A0 & Front left passenger-locating IR sensor PCB signal \\
+\hline
+Analog input & A1 & Back left passenger locating IR sensor PCB signal \\
+\hline
+Analog input & A2 & Front right passenger locating IR sensor signal \\
+\hline
+Analog input & A3 & Back right passenger locating IR sensor signal \\
+\hline
+Analog input & A4 & Left arm feedback potentiometer signal \\
+\hline
+Analog input & A5 & Right arm feedback potentiometer signal \\
+\hline
+Analog input & A6 & Unassigned (defaults to knob 6) \\
+\hline
+Analog input & A7 & Bumper contact detection PCB signal (if unused, defaults to knob 7) \\
+\hline
+Digital output & 0 & Input of Left arm motor control PCB \\
+\hline
+Digital output & 1 & Input of Right arm motor control PCB \\
+\hline
+Digital output & 2 & Unassigned (defaults to Serial 1 - RX) \\
+\hline
+Digital output & 3 & Unassigned (defaults to Serial 1 - TX) \\
+\hline
+Digital output & 4 & Left front bumper contact switch \\
+\hline
+Digital output & 5 & Right front bumper contact switch \\
+\hline
+Digital output & 6 & Left rear bumper contact switch \\
+\hline
+Digital output & 7 & Right rear bumper contact switch \\
+\hline
+Digital output & 8 & Left arm brush contact switch (possibly redundant) \\
+\hline
+Digital output & 9 & Right arm brush contact switch (possibly redundant) \\
+\hline
+Digital output & 10 & Unassigned \\
+\hline
+Digital output & 11 & Left driving QRD PCB signal \\
+\hline
+Digital output & 12 & Right driving QRD PCB signal \\
+\hline
+Digital output & 13 & Rear rotation QRD PCB signal (possibly redundant) \\
+\hline
+Digital output & 14 & Left branch detection QRD PCB signal \\
+\hline
+Digital output & 15 & Right branch detection QRD PCB signal \\
+\hline
+Motor enable & PWM0 & Unassigned \\
+\hline
+Motor enable & PWM1 & Unassigned \\
+\hline
+Servo output & PWM2 & Unassigned \\
+\hline
+Servo output & PWM3 & Unassigned (also controls buzzer) \\
+\hline
+Motor enable & PWM4 & Unassigned \\
+\hline
+Motor enable & PWM5 & Unassigned \\
+\hline
+Direct motor outputs and indicators & Motor 0 to Motor 3 & Unassigned (Barber Coleman motors used required more voltage than the 9V maximum the TINAH can provide) \\
+\hline
+Motor control output & Motor 0 & Motor DIR, Motor !DIR, and Motor Enable pins to input of Left drive motor H-bridge PCB inputs \\
+\hline
+Motor control output & Motor 1 & Motor DIR, Motor !DIR, and Motor Enable pins to input or Right drive motor H-bridge PCB inputs \\
+\hline
+Motor control output & Motor 2 & Motor DIR, Motor !DIR, and Motor Enable pins to input of Left pan winch control PCB inputs \\
+\hline
+Motor control output & Motor 3 & Motor DIR, Motor !DIR, and Motor Enable pins to input of Right pan winch control PCB inputs \\
+\hline
+Servo motor output & Servo 0 & Signal to left pan locking servo \\
+\hline
+Servo motor output & Servo 1 & Signal to right pan locking servo \\
+\hline
+Servo motor output & Servo 2 & Unassigned \\
+\hline
+\end{longtable}
 \subsection{TINAH I/O Allocation}
 \subsubsection{Motors}
 \subsubsection{Sensors}
@@ -59,7 +192,7 @@
 
 \section{Strategy, Algorithms and Software}
 \subsection{Tape Following and Navigation}
-\subsubsection{Control Loop}
+\subsubsection{Machine State}
 \subsubsection{Graph Based Navigation}
 \subsection{Passenger Detection}
 \subsection{Collision Detection}
@@ -67,8 +200,8 @@
 \section{Risk Assessment and Contingency Planning}
 \subsection{Risk Assessment}
 \subsection{Contingency Planning}
-\hspace*{-8pt}\makebox[\linewidth][c]{
-\begin{tabular}{| m{8em} | m{12em} | m{9em} | m{10em} | m{10em} |}
+\hspace*{-5pt}\makebox[\linewidth][c]{
+\begin{tabular}{| m{8em} | m{8em} | m{8em} | m{8em} | m{8em} |}
 \hline
 Risk Condition & Probability of Occurrence & Impact to Project & Change to Work Plan & Expected Date of Risk Decision \\
 \hline
