@@ -1,8 +1,0 @@
-Name,Purpose,Machining,Assembly
-Supporting Beam,Bear the weight of the arm and anchor it stably to the base,A square beam of material ( or an I-beam) where holes are drilled through.,Will be anchored to the ground using 4 square brackets and hold up the arm using 2 connectors
-Connector,To provide bearings and pivots for each of the arm\OT1\textquoteright s parts,Laser cutting,Attached to the supporting beam by 3 screws
-Big Gears,Gears that control each rod of the arm to achieve the desired motion,"Laser cutting with threaded holes, possibly to have screws held in place by epoxy once the design is finalized.",Screws/bolts will hold the gear in place while allowing it to rotate freely. The screws will not protrude from the outer edge of the gear
-Small Gear,A gear to be driven by the motor that will not exceed its torque and also make sure the system rotates in the desired direction.,"Laser cutting with threaded holes, possibly to have screws held in place by epoxy once the design is finalized.",Screws/bolts will hold the gear in place while allowing it to be driven by a motor.
-Top Rod,A rod used to provide the up and down motion in the sweep as controlled by a big gear,Laser cutting,To be fixed to a pivot joint on the connector and have a screw that is free to slide along the slot in the rod
-Bottom Rod,A rod used to provide the out and in motion in the sweep as controlled by a big gear,Laser cutting,To be fixed to a pivot joint on the lower big gear.
-Sweeper,Both rods will be attached by pivot joints to the sweeper. It will trace out a circular sweeping motion,"Laser cutting broom made from fingers of a rubbery material yet to be determined.",To be attached to the top and bottom rods by a pivot joint.
