@@ -74,10 +74,10 @@ void Drive::straight()
     if (_c == 30) {
         LCD.clear();
         LCD.home();
-        LCD.print("kp: ");
-        LCD.print(_kp);
-        LCD.print("  kd: ");
-        LCD.print(_kd);
+        LCD.print("ol: ");
+        LCD.print(analogRead(_qrd3));
+        LCD.print("  or: ");
+        LCD.print(analogRead(_qrd4));
         LCD.setCursor(0,1);
         LCD.print("l: ");
         LCD.print(_left);
