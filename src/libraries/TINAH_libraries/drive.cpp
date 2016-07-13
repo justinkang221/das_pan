@@ -19,13 +19,15 @@ Drive::Drive(uint8_t m1, uint8_t m2, uint8_t qrd1, uint8_t qrd2, uint8_t qrd3, u
     _qrd3 = qrd3;
     _qrd4 = qrd4;
     
-    _speed = 100;
-    _turnSpeed = 50;
+    _speed = 150;
+    _turnSpeed = 150;
+    _tightness = -35;
     
-    _threshold = 100;
+    _threshold = 40;
+    _intersection = 400;
     
-    _kp = 40;
-    _kd = 70;
+    _kp = 12;
+    _kd = 35;
     
     _p = 0;
     _d = 0;
@@ -71,22 +73,22 @@ void Drive::straight()
     _d = _kd * (_error - _recentError) / (float) (_q + _m);
     _correction = _p + _d;
     
-    if (_c == 30) {
+    /*if (_c > 30) {
         LCD.clear();
         LCD.home();
-        LCD.print("ol: ");
+        LCD.print("L: ");
         LCD.print(analogRead(_qrd3));
-        LCD.print("  or: ");
+        LCD.print(" R: ");
         LCD.print(analogRead(_qrd4));
         LCD.setCursor(0,1);
         LCD.print("l: ");
         LCD.print(_left);
-        LCD.print("  r: ");
+        LCD.print(" r: ");
         LCD.print(_right);
         _c = 0;
     }
     
-    ++_c;
+    ++_c;*/
     ++_m;
     
     motor.speed(_m1, _speed + _correction);
@@ -96,19 +98,26 @@ void Drive::straight()
 
 void Drive::left()
 {
-    while (analogRead(_qrd3) < _threshold) {
-        motor.speed(_m1, -_turnSpeed);
-        motor.speed(_m2, _turnSpeed);
+    motor.speed(_m1, _speed);
+    motor.speed(_m2, _speed);
+    delay(200);
+    motor.speed(_m1, _tightness*_turnSpeed/100);
+    motor.speed(_m2, _turnSpeed);
+    delay(300);
+    while (analogRead(_qrd1) < _intersection) {
     }
 }
 
 void Drive::right()
 {
-    while (analogRead(_qrd4) < _threshold) {
-        motor.speed(_m1, _turnSpeed);
-        motor.speed(_m2, -_turnSpeed);
+    motor.speed(_m1, _speed);
+    motor.speed(_m2, _speed);
+    delay(200);
+    motor.speed(_m1, _turnSpeed);
+    motor.speed(_m2, _tightness*_turnSpeed/100);
+    delay(300);
+    while (analogRead(_qrd2) < _intersection) {
     }
-    
 }
 
 void Drive::reverse()
@@ -137,7 +146,7 @@ void Drive::reverse()
     _d = _kd * (_error - _recentError) / (float) (_q + _m);
     _correction = _p + _d;
     
-    if (_c == 30) {
+    if (_c > 30) {
         LCD.clear();
         LCD.home();
         LCD.print("kp: ");
@@ -162,25 +171,35 @@ void Drive::reverse()
 
 boolean Drive::intersection()
 {
-    return (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold);
+    return (analogRead(_qrd3) > _intersection || analogRead(_qrd4) > _intersection);
+}
+
+void Drive::speed(int16_t speed)
+{
+    _speed = speed;
 }
 
 void Drive::brake()
 {
     motor.stop_all();
+    delay(500);
 }
 
 void Drive::stats()
 {
-    LCD.clear();
-    LCD.home();
-    LCD.print("kp: ");
-    LCD.print(_kp);
-    LCD.print("  kd: ");
-    LCD.print(_kd);
-    LCD.setCursor(0,1);
-    LCD.print("l: ");
-    LCD.print(_left);
-    LCD.print("  r: ");
-    LCD.print(_right);
+    if (_c > 30) {
+        LCD.clear();
+        LCD.home();
+        LCD.print("kp: ");
+        LCD.print(_kp);
+        LCD.print("  kd: ");
+        LCD.print(_kd);
+        LCD.setCursor(0,1);
+        LCD.print("l: ");
+        LCD.print(_left);
+        LCD.print("  r: ");
+        LCD.print(_right);
+        _c = 0;
+    }
+    ++_c;
 }

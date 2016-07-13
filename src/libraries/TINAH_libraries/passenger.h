@@ -13,6 +13,7 @@ public:
     Passenger(uint8_t, uint8_t, uint8_t, uint8_t);
     uint8_t detect(void);
     uint8_t precise(void);
+    void stats(void);
 private:
     uint8_t _leftIR1;
     uint8_t _left;
@@ -26,6 +27,8 @@ private:
     
     uint8_t _threshold;
     uint8_t _precise;
+    
+    uint8_t _c;
 };
 
 #endif

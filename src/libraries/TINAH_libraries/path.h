@@ -6,6 +6,8 @@
 #define path_h
 
 #include <Arduino.h>
+#include <phys253.h>
+#include <LiquidCrystal.h>
 
 class Path
 {
@@ -14,6 +16,7 @@ public:
     void find(void);
     uint8_t turn(void);
     void passengers(uint8_t, uint8_t);
+    void stats(void);
 private:
     uint8_t _intersections[21][4] = {
         { -1, 17, -1, -1}, // 0
@@ -50,7 +53,7 @@ private:
     uint8_t *_regions[7] = {_r0, _r1, _r2, _r3, _r4, _r5, _r6};
     uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
     
-    uint8_t _bias[6] = {30, 30, 25, 30, 30, 15};
+    uint8_t _bias[6] = {30, 30, 0, 30, 30, 50};
     
     uint8_t _lastSearched[6] = {0};
     
@@ -74,6 +77,8 @@ private:
     
     uint8_t _leftPassengers;
     uint8_t _rightPassengers;
+    
+    uint8_t _c;
 };
 
 #endif

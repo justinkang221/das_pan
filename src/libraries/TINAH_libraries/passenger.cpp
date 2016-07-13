@@ -13,8 +13,10 @@ Passenger::Passenger(uint8_t leftIR1, uint8_t leftIR2, uint8_t rightIR1, uint8_t
     _rightIR1 = rightIR1;
     _rightIR2 = rightIR2;
     
-    _threshold = 100;
-    _precise = 300;
+    _threshold = 250;
+    _precise = 500;
+    
+    _c = 0;
 }
 
 uint8_t Passenger::detect(void)
@@ -41,4 +43,21 @@ uint8_t Passenger::precise(void)
         return 2;
     }
     else return 0;
+}
+
+void Passenger::stats(void)
+{
+    if (_c > 30) {
+        LCD.clear();
+        LCD.home();
+        LCD.print(analogRead(_leftIR1));
+        LCD.print("  ");
+        LCD.print(analogRead(_rightIR1));
+        LCD.setCursor(0,1);
+        LCD.print(analogRead(_leftIR2));
+        LCD.print("  ");
+        LCD.print(analogRead(_rightIR2));
+        _c = 0;
+    }
+    ++_c;
 }

@@ -26,6 +26,8 @@ Path::Path(uint8_t startingLeft)
     
     _leftPassengers = 0;
     _rightPassengers = 0;
+    
+    _c = 0;
 }
 
 void Path::find(void)
@@ -107,4 +109,22 @@ void Path::passengers(uint8_t leftPassengers, uint8_t rightPassengers)
 {
     _leftPassengers = leftPassengers;
     _rightPassengers = rightPassengers;
+}
+
+void Path::stats(void)
+{
+    LCD.clear();
+    LCD.home();
+    LCD.print("r: ");
+    LCD.print(_region);
+    LCD.print(" nr: ");
+    LCD.print(_nextReg);
+    LCD.setCursor(0,1);
+    LCD.print("l:");
+    LCD.print(_last);
+    LCD.print(" c:");
+    LCD.print(_current);
+    LCD.print(" n:");
+    LCD.print(_next);
+    Serial.print(_current);
 }
