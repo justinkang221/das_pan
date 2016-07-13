@@ -16,17 +16,20 @@ Arm::Arm(uint8_t motor, uint8_t pot, uint8_t speed)
 
 void Arm::left()
 {
-    RCServo0.write(0);
+    RCServo0.write(1);
+    delay(1000);
 }
 
 void Arm::right()
 {
-    RCServo0.write(180);
+    RCServo0.write(179);
+    delay(1000);
 }
 
 void Arm::center()
 {
     RCServo0.write(90);
+    delay(1000);
 }
 
 void Arm::cycle()

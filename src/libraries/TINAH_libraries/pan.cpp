@@ -6,26 +6,24 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-Pan::Pan()
-{
-}
+Pan::Pan() {}
 
 void Pan::leftUp()
-{
-    RCServo1.write(0);
-}
-
-void Pan::leftDown()
-{
-    RCServo1.write(180);
-}
-
-void Pan::rightUp()
 {
     RCServo2.write(0);
 }
 
-void Pan::rightDown()
+void Pan::leftDown()
 {
     RCServo2.write(180);
+}
+
+void Pan::rightUp()
+{
+    RCServo1.write(0);
+}
+
+void Pan::rightDown()
+{
+    RCServo1.write(180);
 }

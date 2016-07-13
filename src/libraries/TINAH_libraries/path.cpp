@@ -113,7 +113,7 @@ void Path::passengers(uint8_t leftPassengers, uint8_t rightPassengers)
 
 void Path::stats(void)
 {
-    LCD.clear();
+    /*LCD.clear();
     LCD.home();
     LCD.print("r: ");
     LCD.print(_region);
@@ -125,6 +125,6 @@ void Path::stats(void)
     LCD.print(" c:");
     LCD.print(_current);
     LCD.print(" n:");
-    LCD.print(_next);
-    Serial.print(_current);
+    LCD.print(_next);*/
+    Serial.print("at %d, going to %d", _current, _next);
 }
