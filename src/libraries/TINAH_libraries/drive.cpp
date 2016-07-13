@@ -164,8 +164,8 @@ void Drive::reverse()
     ++_c;
     ++_m;
     
-    motor.speed(_m1, -1 * _speed - _correction);
-    motor.speed(_m2, -1 * _speed + _correction);
+    motor.speed(_m2, -1 * (_speed - _correction));
+    motor.speed(_m1, -1 * (_speed + _correction));
     _lastError = _error;
 }
 
