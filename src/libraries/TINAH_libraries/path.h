@@ -15,6 +15,7 @@ public:
     Path(uint8_t);
     void find(void);
     uint8_t turn(void);
+    void update(void);
     void passengers(uint8_t, uint8_t);
     void stats(void);
 private:
@@ -58,10 +59,10 @@ private:
     uint8_t _lastSearched[6] = {0};
     
     uint8_t _current;
-    uint8_t _next;
+    int8_t _next;
     uint8_t _last;
-    uint8_t _region;
-    uint8_t _regIndex;
+    int8_t _region;
+    int8_t _regIndex;
     int8_t _regDirec;
     int8_t _nextReg;
     

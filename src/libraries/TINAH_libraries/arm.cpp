@@ -16,13 +16,13 @@ Arm::Arm(uint8_t motor, uint8_t pot, uint8_t speed)
 
 void Arm::left()
 {
-    RCServo0.write(1);
+    RCServo0.write(179);
     delay(1000);
 }
 
 void Arm::right()
 {
-    RCServo0.write(179);
+    RCServo0.write(1);
     delay(1000);
 }
 
@@ -35,8 +35,9 @@ void Arm::center()
 void Arm::cycle()
 {
     analogWrite(_motor, _speed);
-    while(digitalRead(_pot)==HIGH) { delay(10); }
-    while(digitalRead(_pot)==LOW) { delay(10); }
+    while(digitalRead(_pot)==HIGH);
+    while(digitalRead(_pot)==LOW);
+    delay(200);
     analogWrite(_motor, 0);
 }
 

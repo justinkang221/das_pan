@@ -96,13 +96,15 @@ uint8_t Path::turn(void)
     _jj = 0;
     while (_intersections[_current][_jj] != _last) ++_jj;
     
+    // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
     for (_kk = _jj; (_kk % 4) != _ii; ++_kk);
-    
+    return (_kk - _jj);
+}
+
+void Path::update(void)
+{
     _last = _current;
     _current = _next;
-    
-    // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
-    return (_kk - _jj);
 }
 
 void Path::passengers(uint8_t leftPassengers, uint8_t rightPassengers)
@@ -113,7 +115,7 @@ void Path::passengers(uint8_t leftPassengers, uint8_t rightPassengers)
 
 void Path::stats(void)
 {
-    /*LCD.clear();
+    LCD.clear();
     LCD.home();
     LCD.print("r: ");
     LCD.print(_region);
@@ -125,6 +127,16 @@ void Path::stats(void)
     LCD.print(" c:");
     LCD.print(_current);
     LCD.print(" n:");
-    LCD.print(_next);*/
-    Serial.print("at %d, going to %d", _current, _next);
+    LCD.print(_next);
+    /*Serial.print("\nregion: ");
+    Serial.print(_region);
+    Serial.print("\nlast: ");
+    Serial.print(_last);
+    Serial.print("\ncurrent: ");
+    Serial.print(_current);
+    Serial.print("\n\nnext region: ");
+    Serial.print(_nextReg);
+    Serial.print("\nnext: ");
+    Serial.print(_next);
+    Serial.print("\n\n\n");*/
 }

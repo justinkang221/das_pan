@@ -13,14 +13,15 @@ Pan pan;
 Arm arm(37, 0, 135);
 // Tape (left motor, right motor, inner left qrd, inner right qrd, outer left qrd, outer right qrd)
 Drive drive(2, 1, 1, 2, 0, 3);
-// Path path(0);
+// Path (starting left - T or F);
+Path path(1);
 // Passenger (general left IR, precise left IR, general right IR, precise right IR)
-Passenger passenger(1, 3, 0 , 2);
+Passenger passenger(5, 7, 4 , 6);
 
 void setup() {
-  #include <phys253setup.txt>
+#include <phys253setup.txt>
   Serial.begin(9600);
-
+  path.find();
   arm.center();
   // pan.leftUp();
   pan.rightUp();
@@ -28,12 +29,13 @@ void setup() {
 
 uint8_t next;
 uint8_t turn;
-boolean findPath = true;
-boolean forward = true;
+boolean findPath = false;
 uint16_t c = 1000;
+boolean veryFirst = true;
 
-void loop() {
+/*void loop() {
   drive.straight();
+  passenger.stats();
 
   if (passenger.precise() == 2) {
     drive.brake();
@@ -43,72 +45,49 @@ void loop() {
     arm.cycle();
     arm.center();
     pan.rightUp();
-    }
-}
+  }
+}*/
 
-/*void loop() {
+void loop() {
   drive.straight();
-
-  if (drive.intersection() && c > 1000) {
-    //drive.brake();
-    drive.left();
-    c = 0;
-    }
-
+  
   ++c;
-  while ( stopbutton() ) {
+  /*while ( stopbutton() ) {
     drive.setPD(map(knob(6), 0, 1023, 0, 100), map(knob(7), 0, 1023, 0, 100));
     drive.stats();
-  }
+    }
 
-  while ( startbutton() ) {
+    while ( startbutton() ) {
     passenger.stats();
-    }
+    }*/
 
-  if (passenger.detect() == 1) {
-    drive.speed(50);
-    while (passenger.precise() != 1) {
-      while (passenger.precise() != 1) {
-        if (forward) drive.straight();
-        else drive.reverse();
-      }
-      drive.brake();
-      forward = !forward;
-    }
-
+  /*if (passenger.detect() == 1) {
+    drive.brake();
+    
     pan.leftDown();
     arm.left();
     arm.cycle();
     arm.center();
     pan.leftUp();
 
-    forward = true;
     drive.straight();
-    }
-    else if (passenger.detect() == 2) {
-      drive.speed(50);
-      while (passenger.precise() != 2) {
-      while (passenger.precise() != 2) {
-        if (forward) drive.straight();
-        else drive.reverse();
-      }
-      drive.brake();
-      forward = !forward;
-    }
+  }*/
+  /*if (passenger.detect() == 2) {
+    drive.brake();
 
     pan.rightDown();
     arm.right();
     arm.cycle();
     arm.center();
     pan.rightUp();
-
-    forward = true;
+    
     drive.straight();
-    }
+  }*/
 
-  if (drive.intersection() && c > 1000) {
+  if ((drive.intersection() && c > 1000) || veryFirst) {
+    veryFirst = false;
     drive.brake();
-    while( !startbutton() );
+    while ( !startbutton() );
     findPath = true;
     turn = path.turn();
     switch (turn) {
@@ -121,6 +100,8 @@ void loop() {
       case 3: drive.right();
         break;
     }
+    path.stats();
+    path.update();
     drive.straight();
     c = 0;
   }
@@ -131,5 +112,5 @@ void loop() {
     path.stats();
   }
   drive.straight();
-}*/
+}
 

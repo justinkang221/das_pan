@@ -10,20 +10,20 @@ Pan::Pan() {}
 
 void Pan::leftUp()
 {
-    RCServo2.write(0);
+    RCServo2.write(170);
 }
 
 void Pan::leftDown()
 {
-    RCServo2.write(180);
+    RCServo2.write(30);
 }
 
 void Pan::rightUp()
 {
-    RCServo1.write(0);
+    RCServo1.write(170);
 }
 
 void Pan::rightDown()
 {
-    RCServo1.write(180);
+    RCServo1.write(30);
 }
