@@ -6,19 +6,51 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Servo  KEYWORD1
+Servo  		KEYWORD1
+Pan		KEYWORD1
+Arm		KEYWORD1
+Drive		KEYWORD1
+Path		KEYWORD1
+Passenger	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-attach KEYWORD2
-detach KEYWORD2
-write KEYWORD2
-read KEYWORD2
-attached KEYWORD2
+attach 		KEYWORD2
+detach 		KEYWORD2
+write 		KEYWORD2
+read 		KEYWORD2
+attached 	KEYWORD2
 setMinimumPulse KEYWORD2
 setMaximumPulse KEYWORD2
-refresh KEYWORD2
+refresh		KEYWORD2
+
+stopbutton	KEYWORD2
+startbutton	KEYWORD2
+stats		KEYWORD2
+setPD		KEYWORD2
+leftPick	KEYWORD2
+left		KEYWORD2
+center		KEYWORD2
+right		KEYWORD2
+cycle		KEYWORD2
+
+leftUp		KEYWORD2
+leftPick	KEYWORD2
+rightUp		KEYWORD2
+rightPick	KEYWORD2
+rightDrop	KEYWORD2
+leftDrop	KEYWORD2
+
+straight	KEYWORD2
+reverse		KEYWORD2
+brake		KEYWORD2
+intersection	KEYWORD2
+prepareDrop	KEYWORD2
+
+turn		KEYWORD2
+update		KEYWORD2
+nearDrop	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

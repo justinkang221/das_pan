@@ -28,7 +28,7 @@ void setup() {
 }
 
 uint8_t next;
-uint8_t turn;
+uint8_t t;
 boolean findPath = false;
 boolean veryFirst = true;
 
@@ -75,8 +75,8 @@ void loop() {
     while ( !startbutton() );
     
     findPath = true;
-    turn = path.turn();
-    switch (turn) {
+    t = path.turn();
+    switch (t) {
       case 0: drive.reverse();
         break;
       case 1: drive.left();
