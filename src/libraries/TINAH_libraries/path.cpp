@@ -86,6 +86,11 @@ void Path::find(void)
     ++_distance;
 }
 
+boolean Path::nearDrop(void)
+{
+    return (_region == 5 && ( (_regIndex == 0 && _regDirec == 1) || (_regIndex == 2 && _regDirec == -1)));
+}
+
 uint8_t Path::turn(void)
 {
     // find index of destination node

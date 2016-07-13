@@ -10,9 +10,11 @@ class Pan
 public:
     Pan();
     void leftUp();
-    void leftDown();
-    void rightUp();
-    void rightDown();
+    void leftPick(void);
+    void leftDrop(void);
+    void rightUp(void);
+    void rightPick(void);
+    void rightDrop(void);
 };
 
 #endif

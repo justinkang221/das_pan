@@ -169,9 +169,15 @@ void Drive::reverse()
     _lastError = _error;
 }
 
+void Drive::prepareDrop(void)
+{
+    _hack = 200;
+}
+
 boolean Drive::intersection()
 {
-    return (analogRead(_qrd3) > _intersection || analogRead(_qrd4) > _intersection);
+    if (_hack) --_hack;
+    return (analogRead(_qrd3) > _intersection || analogRead(_qrd4) > _intersection || _hack == 1);
 }
 
 void Drive::speed(int16_t speed)

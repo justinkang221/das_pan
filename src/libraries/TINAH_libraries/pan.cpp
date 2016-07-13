@@ -8,22 +8,32 @@
 
 Pan::Pan() {}
 
-void Pan::leftUp()
+void Pan::leftUp(void)
 {
     RCServo2.write(170);
 }
 
-void Pan::leftDown()
+void Pan::leftPick(void)
 {
     RCServo2.write(30);
 }
 
-void Pan::rightUp()
+void Pan::leftDrop(void)
+{
+    RCServo2.write(0);
+}
+
+void Pan::rightUp(void)
 {
     RCServo1.write(170);
 }
 
-void Pan::rightDown()
+void Pan::rightPick(void)
 {
     RCServo1.write(30);
+}
+
+void Pan::rightDrop(void)
+{
+    RCServo1.write(0);
 }

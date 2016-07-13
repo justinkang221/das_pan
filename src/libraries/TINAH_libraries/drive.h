@@ -13,12 +13,15 @@ class Drive
 public:
     Drive(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
     void setPD(uint8_t, uint8_t);
-    void straight();
-    void left();
-    void right();
-    void reverse();
-    void brake();
-    boolean intersection();
+    
+    void straight(void);
+    void left(void);
+    void right(void);
+    void reverse(void);
+    void brake(void);
+    
+    boolean intersection(void);
+    void prepareDrop(void);
     void speed(int16_t);
     
     void stats();
@@ -54,6 +57,8 @@ private:
     uint8_t _c;
     uint8_t _q;
     uint8_t _m;
+    
+    uint16_t _hack;
 };
 
 #endif

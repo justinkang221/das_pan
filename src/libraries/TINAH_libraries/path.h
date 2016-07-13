@@ -16,6 +16,7 @@ public:
     void find(void);
     uint8_t turn(void);
     void update(void);
+    boolean nearDrop(void);
     void passengers(uint8_t, uint8_t);
     void stats(void);
 private:
