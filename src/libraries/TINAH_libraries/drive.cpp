@@ -9,7 +9,7 @@
 #include <LiquidCrystal.h>
 #include <Arduino.h>
 
-Drive::Drive(uint8_t m1, uint8_t m2, uint8_t qrd1, uint8_t qrd2, uint8_t qrd3, uint8_t qrd4)
+Drive::Drive(uint8_t m1, uint8_t m2, uint8_t qrd1, uint8_t qrd2, uint8_t qrd3, uint8_t qrd4, uint8_t qrd5, uint8_t qrd6)
 {
     _m1 = m1;
     _m2 = m2;
@@ -18,9 +18,11 @@ Drive::Drive(uint8_t m1, uint8_t m2, uint8_t qrd1, uint8_t qrd2, uint8_t qrd3, u
     _qrd2 = qrd2;
     _qrd3 = qrd3;
     _qrd4 = qrd4;
+    _qrd5 = qrd5;
+    _qrd6 = qrd6;
     
     _speed = 150;
-    _turnSpeed = 150;
+    _turnSpeed = 100;
     _tightness = -35;
     
     _threshold = 40;
@@ -40,6 +42,8 @@ Drive::Drive(uint8_t m1, uint8_t m2, uint8_t qrd1, uint8_t qrd2, uint8_t qrd3, u
     _c = 0;
     _q = 0;
     _m = 0;
+    
+    _hack = 0;
 }
 
 void Drive::setPD(uint8_t kp, uint8_t kd)
@@ -123,8 +127,8 @@ void Drive::right()
 void Drive::reverse()
 {
     // TODO: test if it works
-    _left = analogRead(_qrd1);
-    _right = analogRead(_qrd2);
+    _left = analogRead(_qrd5);
+    _right = analogRead(_qrd6);
     
     if (_left > _threshold) {
         if (_right > _threshold) _error = 0;
@@ -149,10 +153,8 @@ void Drive::reverse()
     if (_c > 30) {
         LCD.clear();
         LCD.home();
-        LCD.print("kp: ");
-        LCD.print(_kp);
-        LCD.print("  kd: ");
-        LCD.print(_kd);
+        LCD.print(-1 * (_speed + _correction));
+        LCD.print(-1 * (_speed - _correction));
         LCD.setCursor(0,1);
         LCD.print("l: ");
         LCD.print(_left);
@@ -164,18 +166,43 @@ void Drive::reverse()
     ++_c;
     ++_m;
     
-    motor.speed(_m2, -1 * (_speed - _correction));
-    motor.speed(_m1, -1 * (_speed + _correction));
+    motor.speed(_m2, -1 * (_speed + _correction));
+    motor.speed(_m1, -1 * (_speed - _correction));
     _lastError = _error;
+}
+
+void Drive::uturn(void)
+{
+    motor.speed(_m1, -200);
+    motor.speed(_m2, -50);
+    delay(1200);
+    motor.speed(_m1, 0);
+    motor.speed(_m2, 200);
+    while (analogRead(_qrd1) < _intersection) {
+    }
 }
 
 void Drive::prepareDrop(void)
 {
-    _hack = 200;
+    _hack = 300000 / _speed;
+}
+
+void Drive::prepareEndpoint(void)
+{
+    _hack = 200000 / _speed;
 }
 
 boolean Drive::intersection()
 {
+    /*if (_c > 30) {
+        LCD.clear();
+        LCD.home();
+        LCD.print("hack:");
+        LCD.print(_hack);
+        _c = 0;
+    }
+    ++_c;*/
+    
     if (_hack) --_hack;
     return (analogRead(_qrd3) > _intersection || analogRead(_qrd4) > _intersection || _hack == 1);
 }

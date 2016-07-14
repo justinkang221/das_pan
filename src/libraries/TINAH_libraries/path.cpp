@@ -7,6 +7,10 @@
 
 Path::Path(uint8_t startingLeft)
 {
+    _regIndex = 2;
+    _regDirec = 1;
+    _nextReg = -1;
+    
     if (startingLeft) {
         _current = 0;
         _next = 17;
@@ -19,10 +23,6 @@ Path::Path(uint8_t startingLeft)
         _last = 4;
         _region = 4;
     }
-    
-    _regIndex = 2;
-    _regDirec = -1;
-    _nextReg = -1;
     
     _leftPassengers = 0;
     _rightPassengers = 0;
@@ -88,7 +88,12 @@ void Path::find(void)
 
 boolean Path::nearDrop(void)
 {
-    return (_region == 5 && ( (_regIndex == 0 && _regDirec == 1) || (_regIndex == 2 && _regDirec == -1)));
+    return (_next == 18);
+}
+
+boolean Path::nearEndpoint(void)
+{
+    return (_next == 0 || _next == 1 || _next == 2 || _next==3 || _next == 4);
 }
 
 uint8_t Path::turn(void)
@@ -100,6 +105,13 @@ uint8_t Path::turn(void)
     // find index of last node
     _jj = 0;
     while (_intersections[_current][_jj] != _last) ++_jj;
+    
+    // check if special turning case: 4,5 == 180 at nodes 4,0
+    /*switch (_current) {
+        case 4:
+        case 0: return 4;
+        case 7: return (_regDirec == 1 ? 3 : 1);
+    }*/
     
     // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
     for (_kk = _jj; (_kk % 4) != _ii; ++_kk);
@@ -122,9 +134,9 @@ void Path::stats(void)
 {
     LCD.clear();
     LCD.home();
-    LCD.print("r: ");
+    LCD.print("r:");
     LCD.print(_region);
-    LCD.print(" nr: ");
+    LCD.print(" nr:");
     LCD.print(_nextReg);
     LCD.setCursor(0,1);
     LCD.print("l:");
@@ -133,7 +145,7 @@ void Path::stats(void)
     LCD.print(_current);
     LCD.print(" n:");
     LCD.print(_next);
-    /*Serial.print("\nregion: ");
+    Serial.print("\nregion: ");
     Serial.print(_region);
     Serial.print("\nlast: ");
     Serial.print(_last);
@@ -143,5 +155,5 @@ void Path::stats(void)
     Serial.print(_nextReg);
     Serial.print("\nnext: ");
     Serial.print(_next);
-    Serial.print("\n\n\n");*/
+    Serial.print("\n\n\n");
 }

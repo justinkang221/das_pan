@@ -17,6 +17,7 @@ public:
     uint8_t turn(void);
     void update(void);
     boolean nearDrop(void);
+    boolean nearEndpoint(void);
     void passengers(uint8_t, uint8_t);
     void stats(void);
 private:
@@ -27,9 +28,9 @@ private:
         { -1, 8, -1, -1}, // 3
         { -1, 19, -1, -1}, // 4
         {6, -1, -1, -1}, // 5
-        { -1, 11, 5, 1}, // 6
+        { 5, 11, -1, 1}, // 6
         {13, -1, 12, 2}, // 7
-        {9, 14, -1, 3}, // 8
+        {-1, 14, 9, 3}, // 8
         { -1, -1, 8, -1}, // 9
         {18, -1, 16, 11}, // 10
         {12, 10, 17, 6}, // 11
@@ -55,7 +56,7 @@ private:
     uint8_t *_regions[7] = {_r0, _r1, _r2, _r3, _r4, _r5, _r6};
     uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
     
-    uint8_t _bias[6] = {30, 30, 0, 30, 30, 50};
+    uint8_t _bias[6] = {30, 30, 25, 30, 30, 30};
     
     uint8_t _lastSearched[6] = {0};
     

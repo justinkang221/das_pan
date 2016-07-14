@@ -11,8 +11,8 @@
 Pan pan;
 // Arm(motor pin, pot pin, cycle speed), uses RCServo0
 Arm arm(37, 0, 135);
-// Tape (left motor, right motor, inner left qrd, inner right qrd, outer left qrd, outer right qrd)
-Drive drive(2, 1, 1, 2, 0, 3);
+// Tape (left motor, right motor, inner left qrd, inner right qrd, outer left qrd, outer right qrd, reverse left qrd, reverse right qrd)
+Drive drive(2, 1, 1, 2, 0, 3, 5, 7);
 // Path (starting left - T or F)
 Path path(0);
 // Passenger (general left IR, precise left IR, general right IR, precise right IR)
@@ -32,6 +32,10 @@ uint8_t t;
 boolean findPath = false;
 boolean veryFirst = true;
 
+/*void loop() {
+  drive.reverse();
+  }*/
+
 void loop() {
   drive.straight();
   while ( stopbutton() ) {
@@ -39,41 +43,40 @@ void loop() {
     drive.stats();
   }
 
-/*
-  if (passenger.detect() == 1) {
+  /*if (passenger.detect() == 1) {
     drive.brake();
 
     pan.leftPick();
-    
+
     arm.left();
     arm.cycle();
     arm.center();
-    
+
     pan.leftUp();
 
     drive.straight();
-  }
-  else if (passenger.detect() == 2) {
+    }
+    else if (passenger.detect() == 2) {
     drive.brake();
 
     pan.rightPick();
-    
+
     arm.right();
     arm.cycle();
     arm.center();
-    
+
     pan.rightUp();
 
     drive.straight();
-  }
-*/
+    }*/
+
 
   if (drive.intersection() || veryFirst) {
     veryFirst = false;
-    
+
     drive.brake();
     while ( !startbutton() );
-    
+
     findPath = true;
     t = path.turn();
     switch (t) {
@@ -85,12 +88,14 @@ void loop() {
         break;
       case 3: drive.right();
         break;
+      case 4: drive.uturn();
+        break;
     }
     path.stats();
     path.update();
-    
     if (path.nearDrop()) drive.prepareDrop();
-    
+    if (path.nearEndpoint()) drive.prepareEndpoint();
+
     drive.straight();
   }
   else if (findPath) {
@@ -98,7 +103,7 @@ void loop() {
     findPath = false;
     path.stats();
   }
-  
+
   drive.straight();
 }
 

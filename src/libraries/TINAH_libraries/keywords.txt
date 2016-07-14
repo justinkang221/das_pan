@@ -45,6 +45,7 @@ leftDrop	KEYWORD2
 straight	KEYWORD2
 reverse		KEYWORD2
 brake		KEYWORD2
+uturn		KEYWORD2
 intersection	KEYWORD2
 prepareDrop	KEYWORD2
 

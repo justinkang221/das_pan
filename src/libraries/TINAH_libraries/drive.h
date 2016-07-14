@@ -11,7 +11,7 @@
 class Drive
 {
 public:
-    Drive(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
+    Drive(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
     void setPD(uint8_t, uint8_t);
     
     void straight(void);
@@ -19,9 +19,11 @@ public:
     void right(void);
     void reverse(void);
     void brake(void);
+    void uturn(void);
     
     boolean intersection(void);
     void prepareDrop(void);
+    void prepareEndpoint(void);
     void speed(int16_t);
     
     void stats();
@@ -37,6 +39,8 @@ private:
     uint8_t _qrd2;
     uint8_t _qrd3;
     uint8_t _qrd4;
+    uint8_t _qrd5;
+    uint8_t _qrd6;
     
     uint8_t _kp;
     uint8_t _kd;
