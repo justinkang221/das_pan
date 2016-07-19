@@ -9,24 +9,22 @@
 #include <LiquidCrystal.h>
 #include <Arduino.h>
 
-Drive::Drive(uint8_t m1, uint8_t m2, uint8_t qrd1, uint8_t qrd2, uint8_t qrd3, uint8_t qrd4, uint8_t qrd5, uint8_t qrd6)
+#define _m1 (2)
+#define _m2 (1)
+
+#define _qrd1 (0)
+#define _qrd2 (1)
+#define _qrd3 (3)
+#define _qrd4 (2)
+#define _qrd5 (4)
+#define _qrd6 (5)
+
+#define _turnSpeed (100)
+#define _tightness (-55)
+
+Drive::Drive()
 {
-    _m1 = m1;
-    _m2 = m2;
-    
-    _qrd1 = qrd1;
-    _qrd2 = qrd2;
-    _qrd3 = qrd3;
-    _qrd4 = qrd4;
-    _qrd5 = qrd5;
-    _qrd6 = qrd6;
-    
     _speed = 150;
-    _turnSpeed = 100;
-    _tightness = -35;
-    
-    _threshold = 40;
-    _intersection = 400;
     
     _kp = 12;
     _kd = 35;
@@ -54,15 +52,15 @@ void Drive::setPD(uint8_t kp, uint8_t kd)
 
 void Drive::straight()
 {
-    _left = analogRead(_qrd1);
-    _right = analogRead(_qrd2);
+    _left = digitalRead(_qrd1);
+    _right = digitalRead(_qrd2);
     
-    if (_left > _threshold) {
-        if (_right > _threshold) _error = 0;
+    if (_left) {
+        if (_right) _error = 0;
         else _error = -1;
     }
     else {
-        if (_right > _threshold) _error = 1;
+        if (_right) _error = 1;
         else if (_lastError > 0) _error = 5;
         else _error = -5;
     }
@@ -74,16 +72,16 @@ void Drive::straight()
     }
     
     _p = _kp * _error;
-    _d = _kd * (_error - _recentError) / (float) (_q + _m);
+    _d = _kd * (_error - _recentError) / (_q + _m);
     _correction = _p + _d;
     
-    /*if (_c > 30) {
+    if (_c > 30) {
         LCD.clear();
         LCD.home();
         LCD.print("L: ");
-        LCD.print(analogRead(_qrd3));
+        LCD.print(digitalRead(_qrd3));
         LCD.print(" R: ");
-        LCD.print(analogRead(_qrd4));
+        LCD.print(digitalRead(_qrd4));
         LCD.setCursor(0,1);
         LCD.print("l: ");
         LCD.print(_left);
@@ -92,11 +90,11 @@ void Drive::straight()
         _c = 0;
     }
     
-    ++_c;*/
+    ++_c;
     ++_m;
     
     motor.speed(_m1, _speed + _correction);
-    motor.speed(_m2, _speed - _correction);
+    motor.speed(_m2, _speed - _correction + 10);
     _lastError = _error;
 }
 
@@ -104,38 +102,36 @@ void Drive::left()
 {
     motor.speed(_m1, _speed);
     motor.speed(_m2, _speed);
-    delay(200);
+    delay(100);
     motor.speed(_m1, _tightness*_turnSpeed/100);
     motor.speed(_m2, _turnSpeed);
     delay(300);
-    while (analogRead(_qrd1) < _intersection) {
-    }
+    while (digitalRead(_qrd1));
 }
 
 void Drive::right()
 {
     motor.speed(_m1, _speed);
     motor.speed(_m2, _speed);
-    delay(200);
+    delay(100);
     motor.speed(_m1, _turnSpeed);
     motor.speed(_m2, _tightness*_turnSpeed/100);
     delay(300);
-    while (analogRead(_qrd2) < _intersection) {
-    }
+    while (digitalRead(_qrd2));
 }
 
 void Drive::reverse()
 {
     // TODO: test if it works
-    _left = analogRead(_qrd5);
-    _right = analogRead(_qrd6);
+    _left = digitalRead(_qrd5);
+    _right = digitalRead(_qrd6);
     
-    if (_left > _threshold) {
-        if (_right > _threshold) _error = 0;
+    if (_left) {
+        if (_right) _error = 0;
         else _error = -1;
     }
     else {
-        if (_right > _threshold) _error = 1;
+        if (_right) _error = 1;
         else if (_lastError > 0) _error = 5;
         else _error = -5;
     }
@@ -147,7 +143,7 @@ void Drive::reverse()
     }
     
     _p = _kp * _error;
-    _d = _kd * (_error - _recentError) / (float) (_q + _m);
+    _d = _kd * (_error - _recentError) / (_q + _m);
     _correction = _p + _d;
     
     if (_c > 30) {
@@ -178,7 +174,7 @@ void Drive::uturn(void)
     delay(1200);
     motor.speed(_m1, 0);
     motor.speed(_m2, 200);
-    while (analogRead(_qrd1) < _intersection) {
+    while (digitalRead(_qrd1)) {
     }
 }
 
@@ -204,7 +200,7 @@ boolean Drive::intersection()
     ++_c;*/
     
     if (_hack) --_hack;
-    return (analogRead(_qrd3) > _intersection || analogRead(_qrd4) > _intersection || _hack == 1);
+    return ((digitalRead(_qrd3) && digitalRead(_qrd3)) || (digitalRead(_qrd4) && digitalRead(_qrd4)) || _hack == 1);
 }
 
 void Drive::speed(int16_t speed)
@@ -215,23 +211,17 @@ void Drive::speed(int16_t speed)
 void Drive::brake()
 {
     motor.stop_all();
-    delay(500);
+    //delay(500);
 }
 
 void Drive::stats()
 {
     if (_c > 30) {
-        LCD.clear();
-        LCD.home();
+        LCD.setCursor(0,1);
         LCD.print("kp: ");
         LCD.print(_kp);
         LCD.print("  kd: ");
         LCD.print(_kd);
-        LCD.setCursor(0,1);
-        LCD.print("l: ");
-        LCD.print(_left);
-        LCD.print("  r: ");
-        LCD.print(_right);
         _c = 0;
     }
     ++_c;

@@ -7,41 +7,41 @@
 #include <path.h>
 #include <passenger.h>
 
-// Pan, RCServo2 --> left, RCServo1 --> right
 Pan pan;
-// Arm(motor pin, pot pin, cycle speed), uses RCServo0
-Arm arm(37, 0, 135);
-// Tape (left motor, right motor, inner left qrd, inner right qrd, outer left qrd, outer right qrd, reverse left qrd, reverse right qrd)
-Drive drive(2, 1, 1, 2, 0, 3, 5, 7);
-// Path (starting left - T or F)
-Path path(0);
-// Passenger (general left IR, precise left IR, general right IR, precise right IR)
-Passenger passenger(5, 7, 4 , 6);
+Arm arm;
+Drive drive;
+Path path;
+Passenger passenger;
 
 void setup() {
 #include <phys253setup.txt>
   Serial.begin(9600);
+
   path.find();
+
   arm.center();
-  // pan.leftUp();
+  pan.leftUp();
   pan.rightUp();
+
+  //path.startingRight();
 }
 
 uint8_t next;
 uint8_t t;
 boolean findPath = false;
-boolean veryFirst = true;
 
-/*void loop() {
-  drive.reverse();
-  }*/
+void looop() {
+  drive.left();
 
-void loop() {
-  drive.straight();
   while ( stopbutton() ) {
+    drive.brake();
     drive.setPD(map(knob(6), 0, 1023, 0, 100), map(knob(7), 0, 1023, 0, 100));
     drive.stats();
   }
+}
+
+void loop() {
+  drive.straight();
 
   /*if (passenger.detect() == 1) {
     drive.brake();
@@ -71,9 +71,7 @@ void loop() {
     }*/
 
 
-  if (drive.intersection() || veryFirst) {
-    veryFirst = false;
-
+  if (drive.intersection()) {
     drive.brake();
     while ( !startbutton() );
 
@@ -91,8 +89,9 @@ void loop() {
       case 4: drive.uturn();
         break;
     }
-    path.stats();
+
     path.update();
+
     if (path.nearDrop()) drive.prepareDrop();
     if (path.nearEndpoint()) drive.prepareEndpoint();
 
@@ -101,9 +100,9 @@ void loop() {
   else if (findPath) {
     path.find();
     findPath = false;
-    path.stats();
   }
 
+  path.stats();
   drive.straight();
 }
 

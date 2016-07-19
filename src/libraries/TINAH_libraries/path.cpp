@@ -5,29 +5,64 @@
 #include <path.h>
 #include <Arduino.h>
 
-Path::Path(uint8_t startingLeft)
+static const uint8_t _intersections[21][4] = {
+    { -1, 17, -1, -1}, // 0
+    { -1, 6, -1, -1}, // 1
+    { -1, 7, -1, -1}, // 2
+    { -1, 8, -1, -1}, // 3
+    { -1, 19, -1, -1}, // 4
+    {6, -1, -1, -1}, // 5
+    { 5, 11, -1, 1}, // 6
+    {13, -1, 12, 2}, // 7
+    {-1, 14, 9, 3}, // 8
+    { -1, -1, 8, -1}, // 9
+    {18, -1, 16, 11}, // 10
+    {12, 10, 17, 6}, // 11
+    { -1, 13, 11, 7}, // 12
+    {14, 12, -1, 7}, // 13
+    {19, 15, 13, 8}, // 14
+    { 20, -1, 18, 14}, // 15
+    {10, -1, -1, 17}, // 16
+    {11, 16, -1, 0}, // 17
+    {15, -1, 10, -1}, // 18
+    {-1, 20, 14, 4}, // 19
+    { -1, -1, 15, 19} // 20
+};
+
+static const uint8_t _r0[6] = {11, 17, 0, 17, 16, 10};
+static const uint8_t _r1[7] = {11, 6, 1, 6, 5, 6, 11};
+static const uint8_t _r2[5] = {12, 7, 2, 7, 13};
+static const uint8_t _r3[7] = {14, 8, 3, 8, 9, 8, 14};
+static const uint8_t _r4[6] = {14, 19, 4, 19, 20, 15};
+static const uint8_t _r5[3] = {10, 18, 15};
+static const uint8_t _r6[6] = {10, 11, 12, 13, 14, 15};
+
+static const uint8_t *_regions[7] = {_r0, _r1, _r2, _r3, _r4, _r5, _r6};
+static const uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
+
+Path::Path()
 {
-    _regIndex = 2;
+    _regIndex = 3;
     _regDirec = 1;
     _nextReg = -1;
     
-    if (startingLeft) {
-        _current = 0;
-        _next = 17;
-        _last = 0;
-        _region = 0;
-    }
-    else {
-        _current = 4;
-        _next = 19;
-        _last = 4;
-        _region = 4;
-    }
+    _current = 17;
+    _next = 16;
+    _last = 0;
+    _region = 0;
     
     _leftPassengers = 0;
     _rightPassengers = 0;
     
     _c = 0;
+}
+
+void Path::startingRight()
+{
+    _current = 19;
+    _next = 20;
+    _last = 4;
+    _region = 4;
 }
 
 void Path::find(void)
@@ -107,11 +142,11 @@ uint8_t Path::turn(void)
     while (_intersections[_current][_jj] != _last) ++_jj;
     
     // check if special turning case: 4,5 == 180 at nodes 4,0
-    /*switch (_current) {
+    switch (_current) {
         case 4:
         case 0: return 4;
         case 7: return (_regDirec == 1 ? 3 : 1);
-    }*/
+    }
     
     // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
     for (_kk = _jj; (_kk % 4) != _ii; ++_kk);

@@ -7,12 +7,11 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-Arm::Arm(uint8_t motor, uint8_t pot, uint8_t speed)
-{
-    _motor = motor;
-    _pot = pot;
-    _speed = speed;
-}
+#define _motor (37)
+#define _pot (0)
+#define _speed (135)
+
+Arm::Arm(){}
 
 void Arm::left()
 {

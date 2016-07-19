@@ -1,6 +1,6 @@
 #include <path.h>
 
-Path path(0);
+Path path;
 void setup() {
   Serial.begin(9600);
   path.find();
@@ -18,6 +18,8 @@ void loop() {
     case 2: Serial.print("straight\n");
     break;
     case 3: Serial.print("right\n");
+    break;
+    case 4: Serial.print("uturn\n");
   }
   path.stats();
   path.update();

@@ -11,7 +11,7 @@
 class Drive
 {
 public:
-    Drive(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
+    Drive(void);
     void setPD(uint8_t, uint8_t);
     
     void straight(void);
@@ -29,18 +29,6 @@ public:
     void stats();
 private:
     int16_t _speed;
-    int16_t _turnSpeed;
-    int8_t _tightness;
-    
-    uint8_t _m1;
-    uint8_t _m2;
-    
-    uint8_t _qrd1;
-    uint8_t _qrd2;
-    uint8_t _qrd3;
-    uint8_t _qrd4;
-    uint8_t _qrd5;
-    uint8_t _qrd6;
     
     uint8_t _kp;
     uint8_t _kd;
@@ -49,10 +37,8 @@ private:
     int16_t _d;
     int16_t _correction;
     
-    uint16_t _left;
-    uint16_t _right;
-    uint16_t _threshold;
-    uint16_t _intersection;
+    boolean _left;
+    boolean _right;
     
     int8_t _error;
     int8_t _lastError;

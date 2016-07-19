@@ -6,16 +6,16 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-Passenger::Passenger(uint8_t leftIR1, uint8_t leftIR2, uint8_t rightIR1, uint8_t rightIR2)
+#define _leftIR1 (1)
+#define _leftIR2 (3)
+#define _rightIR1 (0)
+#define _rightIR2 (2)
+
+#define _threshold (250)
+#define _precise (500)
+
+Passenger::Passenger()
 {
-    _leftIR1 = leftIR1;
-    _leftIR2 = leftIR2;
-    _rightIR1 = rightIR1;
-    _rightIR2 = rightIR2;
-    
-    _threshold = 250;
-    _precise = 500;
-    
     _c = 0;
 }
 

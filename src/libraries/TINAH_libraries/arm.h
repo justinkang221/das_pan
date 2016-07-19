@@ -10,15 +10,11 @@
 class Arm
 {
 public:
-    Arm(uint8_t, uint8_t, uint8_t);
+    Arm(void);
     void left();
     void center();
     void right();
     void cycle();
-private:
-    uint8_t _motor;
-    uint8_t _pot;
-    uint8_t _speed;
 };
 
 #endif
