@@ -1,9 +1,12 @@
 /*
- * Path.h - Library for finding an optimal path for the robot.
+ * Path.h - Library for finding path.
  */
 
 #include <path.h>
+#include <phys253.h>
 #include <Arduino.h>
+
+#define _startingRight (1)
 
 static const uint8_t _intersections[21][4] = {
     { -1, 17, -1, -1}, // 0
@@ -12,9 +15,9 @@ static const uint8_t _intersections[21][4] = {
     { -1, 8, -1, -1}, // 3
     { -1, 19, -1, -1}, // 4
     {6, -1, -1, -1}, // 5
-    { 5, 11, -1, 1}, // 6
+    { -1, 11, 5, 1}, // 6
     {13, -1, 12, 2}, // 7
-    {-1, 14, 9, 3}, // 8
+    {9, 14, -1, 3}, // 8
     { -1, -1, 8, -1}, // 9
     {18, -1, 16, 11}, // 10
     {12, 10, 17, 6}, // 11
@@ -40,16 +43,26 @@ static const uint8_t _r6[6] = {10, 11, 12, 13, 14, 15};
 static const uint8_t *_regions[7] = {_r0, _r1, _r2, _r3, _r4, _r5, _r6};
 static const uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
 
-Path::Path()
+Path::Path(void)
 {
+    // TODO: set initial condition based on switch check
+    //if (digitalRead(_startingRight)) {
+    if (_startingRight) {
+        _current = 19;
+        _next = 20;
+        _last = 4;
+        _region = 4;
+    }
+    else {
+        _current = 17;
+        _next = 16;
+        _last = 0;
+        _region = 0;
+    }
+    
     _regIndex = 3;
     _regDirec = 1;
     _nextReg = -1;
-    
-    _current = 17;
-    _next = 16;
-    _last = 0;
-    _region = 0;
     
     _leftPassengers = 0;
     _rightPassengers = 0;
@@ -57,15 +70,7 @@ Path::Path()
     _c = 0;
 }
 
-void Path::startingRight()
-{
-    _current = 19;
-    _next = 20;
-    _last = 4;
-    _region = 4;
-}
-
-void Path::find(void)
+uint8_t Path::find(void)
 {
     _next = -1;
     do {
@@ -119,6 +124,7 @@ void Path::find(void)
     } while (_next == -1);
     
     ++_distance;
+    return (_current == 18) ? ((_regDirec == 1) ? -1 : -2 ) : _current;
 }
 
 boolean Path::nearDrop(void)
@@ -128,7 +134,7 @@ boolean Path::nearDrop(void)
 
 boolean Path::nearEndpoint(void)
 {
-    return (_next == 0 || _next == 1 || _next == 2 || _next==3 || _next == 4);
+    return (_next == 0 || _next == 1 || _next == 2 || _next==3 || _next == 4 || _next == 5 || _next == 9);
 }
 
 uint8_t Path::turn(void)
@@ -150,6 +156,7 @@ uint8_t Path::turn(void)
     
     // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
     for (_kk = _jj; (_kk % 4) != _ii; ++_kk);
+    
     return (_kk - _jj);
 }
 
@@ -169,24 +176,29 @@ void Path::stats(void)
 {
     LCD.clear();
     LCD.home();
+    
     LCD.print("r:");
     LCD.print(_region);
     LCD.print(" nr:");
     LCD.print(_nextReg);
+    
     LCD.setCursor(0,1);
+    
     LCD.print("l:");
     LCD.print(_last);
     LCD.print(" c:");
     LCD.print(_current);
     LCD.print(" n:");
     LCD.print(_next);
+    LCD.print("   ");
+    
     Serial.print("\nregion: ");
     Serial.print(_region);
     Serial.print("\nlast: ");
     Serial.print(_last);
     Serial.print("\ncurrent: ");
     Serial.print(_current);
-    Serial.print("\n\nnext region: ");
+    Serial.print("\nnext region: ");
     Serial.print(_nextReg);
     Serial.print("\nnext: ");
     Serial.print(_next);

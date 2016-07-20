@@ -18,6 +18,9 @@ private:
     uint8_t _left;
     uint8_t _right;
     
+    uint8_t _l;
+    uint8_t _r;
+    
     uint8_t _c;
 };
 

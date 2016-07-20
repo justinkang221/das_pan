@@ -1,10 +1,9 @@
 /*
- * Tape.h - Library for tape-following
- * Created by Rahat Dhande, July 10, 2016.
+ * Drive.h - Library for driving robot.
  */
 
-#ifndef tape_h
-#define tape_h
+#ifndef drive_h
+#define drive_h
 
 #include <Arduino.h>
 
@@ -14,19 +13,23 @@ public:
     Drive(void);
     void setPD(uint8_t, uint8_t);
     
-    void straight(void);
+    void go(void);
+    void brake(void);
+    
     void left(void);
+    void forward(void);
     void right(void);
     void reverse(void);
-    void brake(void);
     void uturn(void);
     
     boolean intersection(void);
+    uint8_t collision(void);
+    
     void prepareDrop(void);
     void prepareEndpoint(void);
     void speed(int16_t);
     
-    void stats();
+    void stats(void);
 private:
     int16_t _speed;
     
@@ -47,8 +50,12 @@ private:
     uint8_t _c;
     uint8_t _q;
     uint8_t _m;
+    uint8_t _i;
     
     uint16_t _hack;
+    uint16_t _sack;
+    boolean _backing;
+    boolean _inter;
 };
 
 #endif

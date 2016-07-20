@@ -1,39 +1,39 @@
 /*
  * Pan.cpp - library for actuating pans.
- * Created by Rahat Dhande, July 8, 2016.
  */
+
 #include <pan.h>
 #include <phys253.h>
 #include <Arduino.h>
 
-Pan::Pan() {}
+Pan::Pan(void) {}
 
 void Pan::leftUp(void)
 {
-    RCServo2.write(170);
+    RCServo1.write(1);
 }
 
 void Pan::leftPick(void)
 {
-    RCServo2.write(30);
+    RCServo1.write(80);
 }
 
 void Pan::leftDrop(void)
 {
-    RCServo2.write(0);
+    RCServo1.write(130);
 }
 
 void Pan::rightUp(void)
 {
-    RCServo1.write(170);
+    RCServo2.write(130);
 }
 
 void Pan::rightPick(void)
 {
-    RCServo1.write(30);
+    RCServo2.write(25);
 }
 
 void Pan::rightDrop(void)
 {
-    RCServo1.write(0);
+    RCServo2.write(1);
 }

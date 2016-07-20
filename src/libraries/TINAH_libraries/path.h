@@ -1,5 +1,5 @@
 /*
- * Path.h - Library for finding an optimal path for the robot.
+ * Path.h - Library for finding path.
  */
 
 #ifndef path_h
@@ -13,17 +13,19 @@ class Path
 {
 public:
     Path(void);
-    void startingRight(void);
     
-    void find(void);
+    uint8_t find(void);
     uint8_t turn(void);
     void update(void);
+    
     boolean nearDrop(void);
     boolean nearEndpoint(void);
+    
     void passengers(uint8_t, uint8_t);
+    
     void stats(void);
 private:
-    uint8_t _bias[6] = {30, 30, 25, 30, 30, 30};
+    uint8_t _bias[6] = {30, 30, 25, 100, 30, 30};
     uint8_t _lastSearched[6] = {0};
     
     uint8_t _current;

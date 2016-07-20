@@ -7,13 +7,14 @@
 #include <path.h>
 #include <passenger.h>
 
-Pan pan;
 Arm arm;
 Drive drive;
-Path path;
+Pan pan;
 Passenger passenger;
+Path path;
 
-void setup() {
+void setup()
+{
 #include <phys253setup.txt>
   Serial.begin(9600);
 
@@ -22,67 +23,101 @@ void setup() {
   arm.center();
   pan.leftUp();
   pan.rightUp();
-
-  //path.startingRight();
 }
 
-uint8_t next;
-uint8_t t;
+uint8_t t, n;
 boolean findPath = false;
 
-void looop() {
-  drive.left();
+uint8_t leftPassengers = 0, rightPassengers = 0;
 
-  while ( stopbutton() ) {
-    drive.brake();
-    drive.setPD(map(knob(6), 0, 1023, 0, 100), map(knob(7), 0, 1023, 0, 100));
-    drive.stats();
-  }
+boolean r = true; // get rid of this
+
+void loopy()
+{
+  if (r) arm.right();
+  else arm.left();
+  arm.cycle();
+  delay(1000);
+  r = !r;
 }
 
-void loop() {
-  drive.straight();
+void loop()
+{
+  drive.go();
 
-  /*if (passenger.detect() == 1) {
+  /*if ( passenger.detect() == 1 && leftPassenger <= 2 )
+  {
+    while ( passenger.precise() != 1 ) drive.go();
+
     drive.brake();
 
     pan.leftPick();
 
     arm.left();
     arm.cycle();
+
+    path.passengers(++leftPassenger, rightPassenger);
+
     arm.center();
 
     pan.leftUp();
+    //drive.go();
+  }
 
-    drive.straight();
-    }
-    else if (passenger.detect() == 2) {
+  if ( passenger.detect() == 2 && rightPassenger <= 2 )
+  {
+    while ( passenger.precise() != 2 ) drive.go();
+
     drive.brake();
 
     pan.rightPick();
 
     arm.right();
     arm.cycle();
+    path.passengers(leftPassenger, ++rightPassenger);
     arm.center();
 
     pan.rightUp();
+    //drive.go();
+  }*/
 
-    drive.straight();
-    }*/
+  if ( drive.intersection() )
+  {
+    drive.brake(); // get rid of this
+    while ( !startbutton() ); // get rid of this
 
+    // TODO: test drop off
+    if (n == -1 && leftPassengers)
+    {
+      drive.brake();
+      pan.leftDrop();
 
-  if (drive.intersection()) {
-    drive.brake();
-    while ( !startbutton() );
+      leftPassengers = 0;
+      path.passengers(leftPassengers, rightPassengers);
+
+      pan.leftUp();
+    }
+    else if (n == -2 && rightPassengers)
+    {
+      drive.brake();
+      pan.rightDrop();
+
+      rightPassengers = 0;
+      path.passengers(leftPassengers, rightPassengers);
+
+      pan.rightUp();
+    }
 
     findPath = true;
     t = path.turn();
-    switch (t) {
+
+    switch (t)
+    {
       case 0: drive.reverse();
         break;
       case 1: drive.left();
         break;
-      case 2: drive.straight();
+      case 2: drive.forward();
         break;
       case 3: drive.right();
         break;
@@ -92,17 +127,18 @@ void loop() {
 
     path.update();
 
-    if (path.nearDrop()) drive.prepareDrop();
-    if (path.nearEndpoint()) drive.prepareEndpoint();
+    if ( path.nearDrop() ) drive.prepareDrop();
+    if ( path.nearEndpoint() ) drive.prepareEndpoint();
 
-    drive.straight();
+    //drive.go();
   }
-  else if (findPath) {
-    path.find();
+  else if ( findPath )
+  {
+    n = path.find();
     findPath = false;
   }
 
   path.stats();
-  drive.straight();
+  //drive.go();
 }
 
