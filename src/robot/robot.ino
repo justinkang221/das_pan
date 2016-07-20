@@ -26,11 +26,21 @@ void setup()
 }
 
 uint8_t t, n;
-boolean findPath = false;
+uint8_t findPath = 0;
 
 uint8_t leftPassengers = 0, rightPassengers = 0;
 
 boolean r = true; // get rid of this
+
+void looop() {
+  drive.go();
+  drive.stats();
+  if ( drive.intersection() /* || drive.collision() */ )
+  {
+    drive.brake();
+    while ( !startbutton() );
+  }
+}
 
 void loopy()
 {
@@ -41,12 +51,13 @@ void loopy()
   r = !r;
 }
 
-void loop()
+void loopier()
 {
   drive.go();
 
+  /* TODO: handle IR detection around corners and stuff*/
   /*if ( passenger.detect() == 1 && leftPassenger <= 2 )
-  {
+    {
     while ( passenger.precise() != 1 ) drive.go();
 
     drive.brake();
@@ -62,10 +73,10 @@ void loop()
 
     pan.leftUp();
     //drive.go();
-  }
+    }
 
-  if ( passenger.detect() == 2 && rightPassenger <= 2 )
-  {
+    if ( passenger.detect() == 2 && rightPassenger <= 2 )
+    {
     while ( passenger.precise() != 2 ) drive.go();
 
     drive.brake();
@@ -79,16 +90,24 @@ void loop()
 
     pan.rightUp();
     //drive.go();
-  }*/
+    }*/
 
-  if ( drive.intersection() )
+  if ( drive.intersection() /* || drive.collision() */ )
   {
     drive.brake(); // get rid of this
     while ( !startbutton() ); // get rid of this
 
+    // TODO: write path.weights()
+    /*if ( drive.collision() )
+      {
+      path.update(); // pretend you've hit the intersection you were going towards
+      path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
+      path.find(); // find the path that leads you away from collision
+      }*/
+
     // TODO: test drop off
-    if (n == -1 && leftPassengers)
-    {
+    /*if (n == -1 && leftPassengers)
+      {
       drive.brake();
       pan.leftDrop();
 
@@ -96,9 +115,9 @@ void loop()
       path.passengers(leftPassengers, rightPassengers);
 
       pan.leftUp();
-    }
-    else if (n == -2 && rightPassengers)
-    {
+      }
+      else if (n == -2 && rightPassengers)
+      {
       drive.brake();
       pan.rightDrop();
 
@@ -106,9 +125,9 @@ void loop()
       path.passengers(leftPassengers, rightPassengers);
 
       pan.rightUp();
-    }
+      }*/
 
-    findPath = true;
+    findPath = 30;
     t = path.turn();
 
     switch (t)
@@ -117,7 +136,7 @@ void loop()
         break;
       case 1: drive.left();
         break;
-      case 2: drive.forward();
+      case 2: drive.straight();
         break;
       case 3: drive.right();
         break;
@@ -130,15 +149,119 @@ void loop()
     if ( path.nearDrop() ) drive.prepareDrop();
     if ( path.nearEndpoint() ) drive.prepareEndpoint();
 
-    //drive.go();
+    drive.go();
   }
-  else if ( findPath )
+  else if ( findPath == 1 )
   {
     n = path.find();
-    findPath = false;
+    findPath = 0;
   }
 
+  findPath && --findPath;
+
   path.stats();
-  //drive.go();
+  drive.go();
+}
+
+void loop()
+{
+  drive.go();
+
+  // TODO: handle IR detection around corners and stuff
+  /*if ( passenger.detect() == 1 && leftPassenger <= 2 )
+    {
+    while ( passenger.precise() != 1 ) drive.go();
+
+    drive.brake();
+
+    pan.leftPick();
+
+    arm.left();
+    arm.cycle();
+
+    path.passengers(++leftPassenger, rightPassenger);
+
+    arm.center();
+
+    pan.leftUp();
+    //drive.go();
+    }
+
+    if ( passenger.detect() == 2 && rightPassenger <= 2 )
+    {
+    while ( passenger.precise() != 2 ) drive.go();
+
+    drive.brake();
+
+    pan.rightPick();
+
+    arm.right();
+    arm.cycle();
+    path.passengers(leftPassenger, ++rightPassenger);
+    arm.center();
+
+    pan.rightUp();
+    //drive.go();
+    }*/
+
+  if ( drive.intersection() /* || drive.collision() */ ) {
+    /*drive.brake(); // get rid of this
+    while ( !startbutton() ); // get rid of this*/
+
+    // TODO: write path.weights()
+    /*if ( drive.collision() )
+      {
+      path.update(); // pretend you've hit the intersection you were going towards
+      path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
+      path.find(); // find the path that leads you away from collision
+      }*/
+
+    // TODO: test drop off
+    /*if (n == -1 && leftPassengers)
+      {
+      drive.brake();
+      pan.leftDrop();
+
+      leftPassengers = 0;
+      path.passengers(leftPassengers, rightPassengers);
+
+      pan.leftUp();
+      }
+      else if (n == -2 && rightPassengers)
+      {
+      drive.brake();
+      pan.rightDrop();
+
+      rightPassengers = 0;
+      path.passengers(leftPassengers, rightPassengers);
+
+      pan.rightUp();
+      }*/
+
+    t = path.turn();
+    if ( t == 2 )
+    {
+      drive.straight();
+    }
+    path.update();
+
+    if ( path.nearDrop() ) drive.prepareDrop();
+    if ( path.nearEndpoint() ) drive.prepareEndpoint();
+
+    n = path.find();
+    //path.stats();
+    switch (t)
+    {
+      case 0: drive.reverse();
+        break;
+      case 1: drive.left();
+        break;
+      case 3: drive.right();
+        break;
+      case 4: drive.uturn();
+        break;
+    }
+  }
+
 }
 

@@ -22,6 +22,7 @@ public:
     boolean nearEndpoint(void);
     
     void passengers(uint8_t, uint8_t);
+    void avoid(void);
     
     void stats(void);
 private:

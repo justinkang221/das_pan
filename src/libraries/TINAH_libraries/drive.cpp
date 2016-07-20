@@ -12,13 +12,13 @@
 
 #define _qrd1 (0)
 #define _qrd2 (1)
-#define _qrd3 (4)
-#define _qrd4 (5)
+#define _qrd3 (2)
+#define _qrd4 (3)
 #define _qrd5 (4)
 #define _qrd6 (5)
 
 #define _turnSpeed (150)
-#define _tightness (-70)
+#define _tightness (-35)
 
 #define _threshold (500)
 
@@ -29,7 +29,7 @@
 
 Drive::Drive(void)
 {
-    _speed = 100;
+    _speed = 150;
     
     _kp = 12;
     _kd = 35;
@@ -61,35 +61,64 @@ void Drive::setPD(uint8_t kp, uint8_t kd)
 
 void Drive::go(void)
 {
-    _left = digitalRead(_qrd1);
-    _right = digitalRead(_qrd2);
-    
-    if (_left) {
-        if (_right) _error = 0;
-        else _error = -1;
+    // TODO: test this
+    if (_backing) {
+        _left = analogRead(_qrd5);
+        _right = analogRead(_qrd6);
+        
+        if (_left) {
+            if (_right) _error = 0;
+            else _error = -1;
+        }
+        else {
+            if (_right) _error = 1;
+            else if (_lastError > 0) _error = 5;
+            else _error = -5;
+        }
+        
+        if (_error != _lastError) {
+            _recentError = _lastError;
+            _q = _m;
+            _m = 1;
+        }
+        
+        _p = _kp * _error;
+        _d = _kd * (_error - _recentError) / (_q + _m);
+        _correction = _p + _d;
+        
+        motor.speed(_m2, -1 * (_speed + _correction));
+        motor.speed(_m1, -1 * (_speed - _correction));
+        _lastError = _error;
     }
     else {
-        if (_right) _error = 1;
-        else if (_lastError > 0) _error = 5;
-        else _error = -5;
+        _left = digitalRead(_qrd1);
+        _right = digitalRead(_qrd2);
+        
+        if (_left) {
+            if (_right) _error = 0;
+            else _error = -1;
+        }
+        else {
+            if (_right) _error = 1;
+            else if (_lastError > 0) _error = 5;
+            else _error = -5;
+        }
+        
+        if (_error != _lastError) {
+            _recentError = _lastError;
+            _q = _m;
+            _m = 1;
+        }
+        
+        _p = _kp * _error;
+        _d = _kd * (_error - _recentError) / (_q + _m);
+        _correction = _p + _d;
+        ++_m;
+        
+        motor.speed(_m1, _speed + _correction);
+        motor.speed(_m2, _speed - _correction + 10);
+        _lastError = _error;
     }
-    
-    if (_error != _lastError) {
-        _recentError = _lastError;
-        _q = _m;
-        _m = 1;
-    }
-    
-    _p = _kp * _error;
-    _d = _kd * (_error - _recentError) / (_q + _m);
-    _correction = _p + _d;
-    ++_m;
-    
-    motor.speed(_m1, _speed + _correction);
-    motor.speed(_m2, _speed - _correction + 10);
-    _lastError = _error;
-    
-    _sack && --_sack;
 }
 
 void Drive::left(void)
@@ -101,21 +130,25 @@ void Drive::left(void)
     if (_backing) {
         motor.speed(_m2, _tightness*_turnSpeed/100);
         motor.speed(_m1, _turnSpeed);
-        
+        delay(400);
+        _lastError = -5;
     }
     else {
         motor.speed(_m1, _tightness*_turnSpeed/100);
         motor.speed(_m2, _turnSpeed);
         delay(400);
+        _lastError = 5;
     }
+    _error = 0;
+    _recentError = 0;
     
-    while (!(digitalRead(_qrd1) && !digitalRead(_qrd2)));
+    while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
     _backing = false;
 }
 
-void Drive::forward(void)
+void Drive::straight(void)
 {
-    _sack = 20;
+    _sack = 400;
 }
 
 void Drive::right(void)
@@ -128,47 +161,28 @@ void Drive::right(void)
         motor.speed(_m2, _turnSpeed);
         motor.speed(_m1, _tightness*_turnSpeed/100);
         delay(400);
+        _lastError = 5;
 
     }
     else {
         motor.speed(_m1, _turnSpeed);
         motor.speed(_m2, _tightness*_turnSpeed/100);
         delay(400);
+        _lastError = -5;
     }
+    _error = 0;
+    _recentError = 0;
     
-    while (!(digitalRead(_qrd1) && !digitalRead(_qrd2)));
+    while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
     _backing = false;
+    
+    /*motor.stop_all();
+    while(!startbutton());*/
 }
 
 void Drive::reverse(void)
 {
-    _backing = true;
-    _left = digitalRead(_qrd5);
-    _right = digitalRead(_qrd6);
-    
-    if (_left) {
-        if (_right) _error = 0;
-        else _error = -1;
-    }
-    else {
-        if (_right) _error = 1;
-        else if (_lastError > 0) _error = 5;
-        else _error = -5;
-    }
-    
-    if (_error != _lastError) {
-        _recentError = _lastError;
-        _q = _m;
-        _m = 1;
-    }
-    
-    _p = _kp * _error;
-    _d = _kd * (_error - _recentError) / (_q + _m);
-    _correction = _p + _d;
-    
-    motor.speed(_m2, -1 * (_speed + _correction));
-    motor.speed(_m1, -1 * (_speed - _correction));
-    _lastError = _error;
+    _backing = !_backing;
 }
 
 void Drive::uturn(void)
@@ -179,7 +193,7 @@ void Drive::uturn(void)
     
     motor.speed(_m1, 0);
     motor.speed(_m2, 200);
-    while (digitalRead(_qrd1));
+    while (!digitalRead(_qrd1));
 }
 
 void Drive::prepareDrop(void)
@@ -195,25 +209,22 @@ void Drive::prepareEndpoint(void)
 boolean Drive::intersection()
 {
     // TODO: get rid of _inter
-    /*if (_hack) --_hack;
+    if (_hack) --_hack;
     if(_hack == 1){
         return true;
     }
-    else if (_sack == 0 && (digitalRead(_qrd3) || digitalRead(_qrd4)) ) {
-        if (_inter) {
-            _inter = false;
-            return true;
-        }
-        else {
-            _inter = true;
-            return false;
-        }
+    else if (!_sack && (digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3)) || (digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) ) ) {
+        return true;
     }
-    _inter = false;
-    return false;*/
+    
+    if (_sack) --_sack;
+    LCD.home();
+    LCD.print(_sack);
+    
+    return false;
     
     // TODO: see if we need _sack
-    return (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1));
+    //return (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1));
     //return ( (!_sack) && (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1)) );
 }
 
@@ -240,23 +251,23 @@ void Drive::stats(void)
         LCD.home();
         
         LCD.print("L: ");
-        LCD.print(analogRead(_qrd3));
+        LCD.print(digitalRead(_qrd3));
         LCD.print(" R: ");
-        LCD.print(analogRead(_qrd4));
+        LCD.print(digitalRead(_qrd4));
         
         LCD.setCursor(0,1);
         
         if (_backing) {
             LCD.print("l: ");
-            LCD.print(digitalRead(_qrd1));
+            LCD.print(analogRead(_qrd5));
             LCD.print(" r: ");
-            LCD.print(digitalRead(_qrd2));
+            LCD.print(analogRead(_qrd6));
         }
         else {
             LCD.print("l: ");
-            LCD.print(digitalRead(_qrd5));
+            LCD.print(digitalRead(_qrd1));
             LCD.print(" r: ");
-            LCD.print(digitalRead(_qrd6));
+            LCD.print(digitalRead(_qrd2));
         }
         
         _c = 0;
@@ -264,3 +275,5 @@ void Drive::stats(void)
     
     ++_c;
 }
+
+

@@ -17,7 +17,7 @@ public:
     void brake(void);
     
     void left(void);
-    void forward(void);
+    void straight(void);
     void right(void);
     void reverse(void);
     void uturn(void);

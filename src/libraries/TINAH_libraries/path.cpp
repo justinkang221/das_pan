@@ -124,17 +124,8 @@ uint8_t Path::find(void)
     } while (_next == -1);
     
     ++_distance;
-    return (_current == 18) ? ((_regDirec == 1) ? -1 : -2 ) : _current;
-}
-
-boolean Path::nearDrop(void)
-{
-    return (_next == 18);
-}
-
-boolean Path::nearEndpoint(void)
-{
-    return (_next == 0 || _next == 1 || _next == 2 || _next==3 || _next == 4 || _next == 5 || _next == 9);
+    return _current;
+    //return (_current == 18) ? ((_regDirec == 1) ? -1 : -2 ) : _current;
 }
 
 uint8_t Path::turn(void)
@@ -166,10 +157,26 @@ void Path::update(void)
     _current = _next;
 }
 
+boolean Path::nearDrop(void)
+{
+    return (_next == 18);
+}
+
+boolean Path::nearEndpoint(void)
+{
+    return (_next == 0 || _next == 1 || _next == 2 || _next==3 || _next == 4 || _next == 5 || _next == 9);
+}
+
 void Path::passengers(uint8_t leftPassengers, uint8_t rightPassengers)
 {
     _leftPassengers = leftPassengers;
     _rightPassengers = rightPassengers;
+    // TODO: adjust weights in favour of drop zone
+}
+
+void Path::avoid(void)
+{
+    // TODO: adjust weights in favour of the last node
 }
 
 void Path::stats(void)
