@@ -21,7 +21,7 @@ public:
     boolean nearDrop(void);
     boolean nearEndpoint(void);
     
-    void passengers(uint8_t, uint8_t);
+    void passengers(uint8_t);
     void avoid(void);
     
     void stats(void);
@@ -47,8 +47,7 @@ private:
     uint8_t _jj;
     uint8_t _kk;
     
-    uint8_t _leftPassengers;
-    uint8_t _rightPassengers;
+    uint8_t _passengers;
     
     uint8_t _c;
 };

@@ -56,7 +56,7 @@ void loop()
     arm.left();
     arm.cycle();
 
-    path.passengers(++leftPassengers, rightPassengers);
+    path.passengers(++leftPassengers + rightPassengers);
 
     arm.center();
 
@@ -80,7 +80,7 @@ void loop()
     arm.right();
     arm.cycle();
 
-    path.passengers(leftPassengers, ++rightPassengers);
+    path.passengers(leftPassengers + ++rightPassengers);
 
     arm.center();
 
@@ -90,7 +90,7 @@ void loop()
   }
 
   if ( drive.intersection() || collision ) {
-    
+
 
     // TODO: write path.weights()
     if ( collision )
@@ -114,8 +114,8 @@ void loop()
     }
 
     // TODO: test drop off
-    /*if (n == -1)
-      {
+    if (n == -1)
+    {
       if (leftPassengers) {
         drive.brake();
         pan.leftDrop();
@@ -135,10 +135,10 @@ void loop()
         drive.uturn();
       }
 
-      path.passengers(leftPassengers, rightPassengers);
-      }
-      else if (n == -2)
-      {
+      path.passengers(leftPassengers + rightPassengers);
+    }
+    else if (n == -2)
+    {
       if (rightPassengers) {
         drive.brake();
         pan.rightDrop();
@@ -158,8 +158,8 @@ void loop()
         drive.uturn();
       }
 
-      path.passengers(leftPassengers, rightPassengers);
-      }*/
+      path.passengers(leftPassengers + rightPassengers);
+    }
 
     t = path.turn();
 

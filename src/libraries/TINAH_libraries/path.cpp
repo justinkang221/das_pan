@@ -64,8 +64,7 @@ Path::Path(void)
     _regDirec = 1;
     _nextReg = -1;
     
-    _leftPassengers = 0;
-    _rightPassengers = 0;
+    _passengers = 0;
     
     _c = 0;
 }
@@ -180,10 +179,9 @@ boolean Path::nearEndpoint(void)
     return (_next == 0 || _next == 1 || _next == 2 || _next==3 || _next == 4 || _next == 5 || _next == 9);
 }
 
-void Path::passengers(uint8_t leftPassengers, uint8_t rightPassengers)
+void Path::passengers(uint8_t passengers)
 {
-    _leftPassengers = leftPassengers;
-    _rightPassengers = rightPassengers;
+    _passengers = passengers;
     // TODO: adjust weights in favour of drop zone
 }
 
