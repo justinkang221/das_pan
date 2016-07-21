@@ -25,7 +25,8 @@ void setup()
   pan.rightUp();
 }
 
-uint8_t t, n;
+uint8_t t;
+int8_t n;
 uint8_t findPath = 0;
 
 uint8_t leftPassengers = 0, rightPassengers = 0;
@@ -38,7 +39,7 @@ void loop()
 {
   drive.go();
 
-  //collision = drive.collision();
+  collision = drive.collision();
   // TODO: handle IR detection around corners and stuff
   if ( passenger.precise() == 1 && leftPassengers <= 2 )
   {
@@ -89,12 +90,19 @@ void loop()
   }
 
   if ( drive.intersection() || collision ) {
-    /*drive.brake(); // get rid of this
-      while ( !startbutton() ); // get rid of this*/
+    
 
     // TODO: write path.weights()
     if ( collision )
     {
+      drive.brake(); // get rid of this
+      LCD.clear();
+      LCD.home();
+      LCD.print("n: ");
+      LCD.print(n);
+      LCD.print(" c: ");
+      LCD.print(collision);
+      while ( !startbutton() ); // get rid of this*/
       if ( n == -3 && collision < 4 );
       else if ( n == 1 && collision > 5 );
       /*else
