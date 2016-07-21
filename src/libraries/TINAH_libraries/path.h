@@ -14,7 +14,7 @@ class Path
 public:
     Path(void);
     
-    uint8_t find(void);
+    int8_t find(void);
     uint8_t turn(void);
     void update(void);
     

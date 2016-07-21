@@ -22,10 +22,10 @@
 
 #define _threshold (500)
 
-#define _col1 (0)
-#define _col2 (1)
-#define _col3 (2)
-#define _col4 (3)
+#define _col1 (15)
+#define _col2 (14)
+#define _col3 (12)
+#define _col4 (13)
 
 Drive::Drive(void)
 {
@@ -50,7 +50,6 @@ Drive::Drive(void)
     _sack = 0;
     
     _backing = false;
-    _inter = false;
 }
 
 void Drive::setPD(uint8_t kp, uint8_t kd)
@@ -63,8 +62,8 @@ void Drive::go(void)
 {
     // TODO: test this
     if (_backing) {
-        _left = analogRead(_qrd5);
-        _right = analogRead(_qrd6);
+        _left = digitalRead(_qrd5);
+        _right = digitalRead(_qrd6);
         
         if (_left) {
             if (_right) _error = 0;
@@ -86,8 +85,8 @@ void Drive::go(void)
         _d = _kd * (_error - _recentError) / (_q + _m);
         _correction = _p + _d;
         
-        motor.speed(_m2, -1 * (_speed + _correction));
-        motor.speed(_m1, -1 * (_speed - _correction));
+        motor.speed(_m2, -1 * (100 + _correction));
+        motor.speed(_m1, -1 * (100 - _correction));
         _lastError = _error;
     }
     else {
@@ -148,7 +147,7 @@ void Drive::left(void)
 
 void Drive::straight(void)
 {
-    _sack = 400;
+    _sack = 500;
 }
 
 void Drive::right(void)
@@ -175,9 +174,6 @@ void Drive::right(void)
     
     while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
     _backing = false;
-    
-    /*motor.stop_all();
-    while(!startbutton());*/
 }
 
 void Drive::reverse(void)
@@ -213,24 +209,21 @@ boolean Drive::intersection()
     if(_hack == 1){
         return true;
     }
-    else if (!_sack && (digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3)) || (digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) ) ) {
+    else if ( !_sack && ( (digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3)) || (digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4)) ) ) {
         return true;
     }
     
     if (_sack) --_sack;
-    LCD.home();
-    LCD.print(_sack);
     
     return false;
     
-    // TODO: see if we need _sack
     //return (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1));
     //return ( (!_sack) && (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1)) );
 }
 
 uint8_t Drive::collision(void)
 {
-    return ( (digitalRead(_col1)) + 2 * (digitalRead(_col2)) + 3 * (digitalRead(_col3)) + 4 * (digitalRead(_col4)) );
+    return ( !(digitalRead(_col1)) + 2 * !(digitalRead(_col2)) + 4 * !(digitalRead(_col3)) + 8 * !(digitalRead(_col4)) );
 }
 
 void Drive::speed(int16_t speed)

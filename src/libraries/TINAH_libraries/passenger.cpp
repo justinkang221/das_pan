@@ -6,18 +6,18 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _leftIR1 (1)
-#define _leftIR2 (3)
-#define _rightIR1 (0)
-#define _rightIR2 (2)
+#define _leftIR1 (3)
+#define _leftIR2 (1)
+#define _rightIR1 (2)
+#define _rightIR2 (0)
 
 #define _l1 (0)
 #define _l2 (1)
 #define _r1 (2)
 #define _r2 (3)
 
-#define _threshold (250)
-#define _precise (500)
+#define _threshold (300)
+#define _precise (300)
 
 Passenger::Passenger(void)
 {
@@ -29,18 +29,16 @@ Passenger::Passenger(void)
 
 uint8_t Passenger::detect(void)
 {
-    _left = analogRead(_leftIR1);
-    _right = analogRead(_rightIR1);
-    
-    return (_left > _threshold) ? 1 : ((_right > _threshold) ? 2 : 0);
+    if (analogRead(_leftIR1) > _threshold && analogRead(_leftIR1) > _threshold && analogRead(_leftIR1) > _threshold && analogRead(_leftIR1) > _threshold && analogRead(_leftIR1) > _threshold) return 1;
+    else if(analogRead(_rightIR1) > _threshold && analogRead(_rightIR1) > _threshold && analogRead(_rightIR1) > _threshold && analogRead(_rightIR1) > _threshold && analogRead(_rightIR1) > _threshold) return 2;
+    return 0;
 }
 
 uint8_t Passenger::precise(void)
 {
-    _left = analogRead(_leftIR2);
-    _right = analogRead(_rightIR2);
-    
-    return (_left > _precise) ? 1 : ((_right > _precise) ? 2 : 0);
+    if (analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise) return 1;
+    else if(analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise) return 2;
+    return 0;
 }
 
 void Passenger::stats(void)

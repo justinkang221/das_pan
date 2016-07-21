@@ -54,8 +54,9 @@ private:
     
     uint16_t _hack;
     uint16_t _sack;
+    byte _cack;
+    
     boolean _backing;
-    boolean _inter;
 };
 
 #endif

@@ -20,14 +20,13 @@ void Arm::left(void)
 
 void Arm::right(void)
 {
-    RCServo0.write(1);
+    RCServo0.write(10);
     delay(1000);
 }
 
 void Arm::center(void)
 {
     RCServo0.write(76);
-    delay(1000);
 }
 
 void Arm::cycle(void)

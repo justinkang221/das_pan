@@ -70,7 +70,7 @@ Path::Path(void)
     _c = 0;
 }
 
-uint8_t Path::find(void)
+int8_t Path::find(void)
 {
     _next = -1;
     do {
@@ -124,8 +124,21 @@ uint8_t Path::find(void)
     } while (_next == -1);
     
     ++_distance;
-    return _current;
-    //return (_current == 18) ? ((_regDirec == 1) ? -1 : -2 ) : _current;
+    if (_current == 18) {
+        if (_regDirec == 1) {
+            return -1;
+        }
+        else {
+            return -2;
+        }
+    }
+    else if (_current < 5 || _current == 9 || _current == 5) {
+        return -3;
+    }
+    else if (_current == 8 || _current == 6 ) {
+        return 1;
+    }
+    else return 0;
 }
 
 uint8_t Path::turn(void)
