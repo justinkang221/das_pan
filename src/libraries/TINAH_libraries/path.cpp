@@ -64,8 +64,6 @@ Path::Path(void)
     _regDirec = 1;
     _nextReg = -1;
     
-    _passengers = 0;
-    
     _c = 0;
 }
 
@@ -181,8 +179,7 @@ boolean Path::nearEndpoint(void)
 
 void Path::passengers(uint8_t passengers)
 {
-    _passengers = passengers;
-    // TODO: adjust weights in favour of drop zone
+    //_bias[4] = 100 * passengers;
 }
 
 void Path::avoid(void)

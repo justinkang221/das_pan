@@ -48,6 +48,7 @@ Drive::Drive(void)
     
     _hack = 0;
     _sack = 0;
+    _cack = 0;
     
     _backing = false;
 }
@@ -181,15 +182,35 @@ void Drive::reverse(void)
     _backing = !_backing;
 }
 
-void Drive::uturn(void)
+void Drive::uturn(boolean ccw)
 {
-    motor.speed(_m1, -200);
-    motor.speed(_m2, -50);
-    delay(1200);
+    if (ccw) {
+        motor.speed(_m1, -200);
+        motor.speed(_m2, -50);
+        
+        while (!(this->collision() & B1100));
+        
+        motor.speed(_m1, 0);
+        motor.speed(_m2, 200);
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1)));
+        
+        _lastError = 5;
+    }
+    else {
+        motor.speed(_m1, -50);
+        motor.speed(_m2, -200);
+        
+        while (!(this->collision() & B1100));
+        
+        motor.speed(_m1, 200);
+        motor.speed(_m2, 0);
+        while (!(digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2)));
+        
+        _lastError = -5;
+    }
     
-    motor.speed(_m1, 0);
-    motor.speed(_m2, 200);
-    while (!digitalRead(_qrd1));
+    _error = 0;
+    _recentError = 0;
 }
 
 void Drive::prepareDrop(void)

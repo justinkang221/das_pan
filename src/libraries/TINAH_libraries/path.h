@@ -26,7 +26,7 @@ public:
     
     void stats(void);
 private:
-    uint8_t _bias[6] = {30, 30, 25, 100, 30, 30};
+    uint8_t _bias[6] = {30, 30, 25, 30, 100, 30};
     uint8_t _lastSearched[6] = {0};
     
     uint8_t _current;
@@ -46,8 +46,6 @@ private:
     uint8_t _ii;
     uint8_t _jj;
     uint8_t _kk;
-    
-    uint8_t _passengers;
     
     uint8_t _c;
 };

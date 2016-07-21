@@ -20,7 +20,7 @@ public:
     void straight(void);
     void right(void);
     void reverse(void);
-    void uturn(void);
+    void uturn(boolean);
     
     boolean intersection(void);
     uint8_t collision(void);
@@ -54,7 +54,7 @@ private:
     
     uint16_t _hack;
     uint16_t _sack;
-    byte _cack;
+    uint8_t _cack;
     
     boolean _backing;
 };
