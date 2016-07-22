@@ -30,6 +30,7 @@ int8_t n;
 
 uint8_t leftPassengers = 0, rightPassengers = 0;
 
+boolean corner = false;
 boolean crash = false;
 boolean ccw = false;
 boolean tight = false;
@@ -38,6 +39,7 @@ void loop()
 {
   drive.go();
 
+  corner = drive.intersection();
   crash = drive.collision() && ( n != 0 ); // TODO: implement collisions with other robots and get rid of n != 0
   // TODO: handle IR detection around corners and stuff
   if ( passenger.precise() == 1 && leftPassengers < 2 )
@@ -90,16 +92,10 @@ void loop()
     //drive.go();
   }
 
-  if ( drive.intersection() || crash )
+  if ( corner || crash )
   {
     /*drive.brake();
-    LCD.clear();
-    LCD.home();
-    LCD.print("n: ");
-    LCD.print(n);
-    LCD.setCursor(0, 1);
-    LCD.print("crash: ");
-    LCD.print(crash);
+    path.stats();
     while( !startbutton() );*/
     // TODO: write path.avoid()
     /*if ( crash )
@@ -122,7 +118,6 @@ void loop()
       }
       }*/
 
-    // TODO: test drop off
     if (n == -1)
     {
       if (leftPassengers) {

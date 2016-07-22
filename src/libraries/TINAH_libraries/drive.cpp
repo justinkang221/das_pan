@@ -357,32 +357,42 @@ void Drive::brake(void)
     motor.stop_all();
 }
 
-void Drive::stats(void)
+void Drive::stats(boolean collision)
 {
     if (_c > 30) {
         LCD.clear();
         LCD.home();
         
-        LCD.print("L: ");
-        LCD.print(digitalRead(_qrd3));
-        LCD.print(" R: ");
-        LCD.print(digitalRead(_qrd4));
-        
-        LCD.setCursor(0,1);
-        
-        if (_backing) {
-            LCD.print("l: ");
-            LCD.print(analogRead(_qrd5));
-            LCD.print(" r: ");
-            LCD.print(analogRead(_qrd6));
+        if (collision) {
+            LCD.print("fl: ");
+            LCD.print(digitalRead(_qrd1));
+            LCD.print(" bl: ");
+            LCD.print(digitalRead(_qrd5));
+            LCD.print(" il: ");
+            LCD.print(digitalRead(_qrd3));
+            
+            LCD.setCursor(0,1);
+            
+            LCD.print("fr: ");
+            LCD.print(digitalRead(_qrd2));
+            LCD.print(" br: ");
+            LCD.print(digitalRead(_qrd6));
+            LCD.print(" ir: ");
+            LCD.print(digitalRead(_qrd4));
         }
         else {
-            LCD.print("l: ");
-            LCD.print(digitalRead(_qrd1));
-            LCD.print(" r: ");
-            LCD.print(digitalRead(_qrd2));
+            LCD.print("fl: ");
+            LCD.print(digitalRead(_col1));
+            LCD.print(" bl: ");
+            LCD.print(digitalRead(_col2));
+            
+            LCD.setCursor(0, 1);
+            
+            LCD.print("fr: ");
+            LCD.print(digitalRead(_col3));
+            LCD.print(" br: ");
+            LCD.print(digitalRead(_col4));
         }
-        
         _c = 0;
     }
     

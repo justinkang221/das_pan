@@ -29,7 +29,7 @@ public:
     void prepareEndpoint(void);
     void speed(int16_t);
     
-    void stats(void);
+    void stats(boolean collision);
 private:
     int16_t _speed;
     
