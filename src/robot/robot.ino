@@ -7,6 +7,8 @@
 #include <path.h>
 #include <passenger.h>
 
+#define CCW (2)
+
 Arm arm;
 Drive drive;
 Pan pan;
@@ -33,7 +35,18 @@ uint8_t leftPassengers = 0, rightPassengers = 0;
 
 int c = 0;
 uint8_t collision = 0;
-boolean r = true; // get rid of this
+boolean ccw = true;
+
+void lop()
+{
+  drive.go();
+  if (drive.intersection()) {
+    drive.brake();
+    while ( !startbutton() );
+    drive.uturn(ccw);
+    ccw = !ccw;
+  }
+}
 
 void loop()
 {
@@ -90,10 +103,11 @@ void loop()
   }
 
   if ( drive.intersection() || collision ) {
-
-
+    /*drive.brake();
+    path.stats();
+    while ( !startbutton() );*/
     // TODO: write path.weights()
-    if ( collision )
+    /*if ( collision )
     {
       drive.brake(); // get rid of this
       LCD.clear();
@@ -102,16 +116,16 @@ void loop()
       LCD.print(n);
       LCD.print(" c: ");
       LCD.print(collision);
-      while ( !startbutton() ); // get rid of this*/
+      while ( !startbutton() ); // get rid of this
       if ( n == -3 && collision < 4 );
       else if ( n == 1 && collision > 5 );
-      /*else
-        {
+      else
+      {
         path.update(); // pretend you've hit the intersection you were going towards
         path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
         path.find(); // find the path that leads you away from collision
-        }*/
-    }
+      }
+    }*/
 
     // TODO: test drop off
     if (n == -1)
@@ -119,6 +133,7 @@ void loop()
       if (leftPassengers) {
         drive.brake();
         pan.leftDrop();
+        delay(1000);
 
         leftPassengers = 0;
 
@@ -126,13 +141,14 @@ void loop()
       }
 
       if (rightPassengers) {
-        drive.uturn();
+        drive.uturn(true);
         pan.rightDrop();
+        delay(1000);
 
         rightPassengers = 0;
 
         pan.rightUp();
-        drive.uturn();
+        drive.uturn(false);
       }
 
       path.passengers(leftPassengers + rightPassengers);
@@ -142,6 +158,7 @@ void loop()
       if (rightPassengers) {
         drive.brake();
         pan.rightDrop();
+        delay(1000);
 
         rightPassengers = 0;
 
@@ -149,13 +166,14 @@ void loop()
       }
 
       if (leftPassengers) {
-        drive.uturn();
+        drive.uturn(false);
         pan.leftDrop();
+        delay(1000);
 
         leftPassengers = 0;
 
         pan.leftUp();
-        drive.uturn();
+        drive.uturn(true);
       }
 
       path.passengers(leftPassengers + rightPassengers);
@@ -171,7 +189,7 @@ void loop()
     n = path.find();
     switch (t)
     {
-      case 0: drive.reverse();
+      case 0: drive.uturn( n == CCW ? true : false );
         break;
       case 1: drive.left();
         break;
@@ -179,11 +197,11 @@ void loop()
         break;
       case 3: drive.right();
         break;
-      case 4: drive.uturn();
+      case 4: drive.uturn(true);
         break;
     }
   }
 
-  passenger.stats();
+  //path.stats();
 }
 

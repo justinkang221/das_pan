@@ -61,7 +61,6 @@ void Drive::setPD(uint8_t kp, uint8_t kd)
 
 void Drive::go(void)
 {
-    // TODO: test this
     if (_backing) {
         _left = digitalRead(_qrd5);
         _right = digitalRead(_qrd6);
@@ -185,11 +184,13 @@ void Drive::reverse(void)
 void Drive::uturn(boolean ccw)
 {
     if (ccw) {
+        _backing = true;
         motor.speed(_m1, -200);
         motor.speed(_m2, -50);
         
-        while (!(this->collision() & B1100));
+        while ( !this->collision() );
         
+        _backing = false;
         motor.speed(_m1, 0);
         motor.speed(_m2, 200);
         while (!(digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1)));
@@ -197,11 +198,13 @@ void Drive::uturn(boolean ccw)
         _lastError = 5;
     }
     else {
+        _backing = true;
         motor.speed(_m1, -50);
         motor.speed(_m2, -200);
         
-        while (!(this->collision() & B1100));
+        while ( !this->collision() );
         
+        _backing = false;
         motor.speed(_m1, 200);
         motor.speed(_m2, 0);
         while (!(digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2)));
@@ -215,7 +218,7 @@ void Drive::uturn(boolean ccw)
 
 void Drive::prepareDrop(void)
 {
-    _hack = 70000 / _speed;
+    _hack = 6000;
 }
 
 void Drive::prepareEndpoint(void)
@@ -225,26 +228,63 @@ void Drive::prepareEndpoint(void)
 
 boolean Drive::intersection()
 {
-    // TODO: get rid of _inter
-    if (_hack) --_hack;
-    if(_hack == 1){
+    _hack && --_hack;
+    if(_hack == 1)
+    {
         return true;
     }
-    else if ( !_sack && ( (digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3)) || (digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4)) ) ) {
+    else if (
+             !_sack
+             
+             &&
+             
+             (
+              ( digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) )
+              
+              ||
+              
+              ( digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) )
+              )
+             )
+    {
         return true;
     }
     
-    if (_sack) --_sack;
+    _sack && --_sack;
     
     return false;
-    
-    //return (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1));
-    //return ( (!_sack) && (analogRead(_qrd3) > _threshold || analogRead(_qrd4) > _threshold || (_hack && _hack-- == 1)) );
 }
 
-uint8_t Drive::collision(void)
+boolean Drive::collision(void)
 {
-    return ( !((digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1))) + 2 * !(digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) + 4 * !(digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3)) + 8 * !(digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4)));
+    return
+    (
+     ( _backing )
+     
+     &&
+     
+     (
+      !( digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) )
+      
+      ||
+      
+      !( digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) )
+      )
+     
+     ||
+     
+     (
+      !( (digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1)) )
+      
+      ||
+      
+      !( (digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) )
+      )
+     );
+    
+    // TODO: get rid of this monstrosity
+    
+    /*return ( !((digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1))) + 2 * !(digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) + 4 * !(digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3)) + 8 * !(digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4)));*/
 }
 
 void Drive::speed(int16_t speed)
@@ -255,7 +295,6 @@ void Drive::speed(int16_t speed)
 void Drive::brake(void)
 {
     motor.stop_all();
-    //delay(500);
 }
 
 void Drive::stats(void)
@@ -289,5 +328,3 @@ void Drive::stats(void)
     
     ++_c;
 }
-
-

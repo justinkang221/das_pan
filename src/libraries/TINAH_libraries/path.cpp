@@ -122,19 +122,21 @@ int8_t Path::find(void)
     
     ++_distance;
     if (_current == 18) {
-        if (_regDirec == 1) {
+        if (_regDirec == -1) {
             return -1;
         }
         else {
             return -2;
         }
     }
-    else if (_current < 5 || _current == 9 || _current == 5) {
+    /*else if (_current < 5 || _current == 9 || _current == 5) {
         return -3;
     }
     else if (_current == 8 || _current == 6 ) {
         return 1;
-    }
+    }*/
+    else if (_current == 0 || _current == 3 || _current == 5) return 2;
+    else if (_current == 4 || _current == 1 || _current == 9) return 1;
     else return 0;
 }
 
@@ -179,7 +181,7 @@ boolean Path::nearEndpoint(void)
 
 void Path::passengers(uint8_t passengers)
 {
-    //_bias[4] = 100 * passengers;
+    _bias[5] = 100 * passengers;
 }
 
 void Path::avoid(void)

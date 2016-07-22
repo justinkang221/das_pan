@@ -44,4 +44,3 @@ void Arm::cycle(void)
     delay(200);
     analogWrite(_motor, 0);
 }
-

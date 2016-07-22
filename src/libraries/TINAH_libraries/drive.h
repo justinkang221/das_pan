@@ -23,7 +23,7 @@ public:
     void uturn(boolean);
     
     boolean intersection(void);
-    uint8_t collision(void);
+    boolean collision(void);
     
     void prepareDrop(void);
     void prepareEndpoint(void);
