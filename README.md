@@ -3,4 +3,13 @@
 
 ![Ripped Andre](img/andre-arnold.png)
 
-This is the official ENPH253 GitHub Repo for Group 7. It will include designs, code, and documentation for our robot.
+
+Engineering Physics Summer 2016 - Team 7
+
+
+## das_pan
+> Upload `robot.ino` to the TINAH.
+
+If you clone this repo and wish to compile using `arduino`, you’ll need to change the `sketchbook location` to the path on your local machine.
+
+![Sketchbook Location](img/sketchbook_location.png)
