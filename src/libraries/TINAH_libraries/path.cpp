@@ -142,13 +142,17 @@ int8_t Path::find(void)
     else if (_current == 8 || _current == 6 ) {
         return 1;
     }*/
+    //else if (_current == 7) return 4;
     else if (_current == 0 || _current == 1 || _current == 5) return 2;
     else if (_current == 4 || _current == 3 || _current == 9) return 1;
+    else if ( (_next == 13 && _last == 8) || (_next == 8 && _last == 13) || (_next == 17 && _last == 6) || (_next == 6 && _last == 17) ) return 3;
     else return 0;
 }
 
 uint8_t Path::turn(void)
 {
+    //if (_current == 2) return 4;
+    
     // find index of destination node
     _ii = 0;
     while (_intersections[_current][_ii] != _next) ++_ii;

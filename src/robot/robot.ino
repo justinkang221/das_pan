@@ -32,6 +32,7 @@ uint8_t leftPassengers = 0, rightPassengers = 0;
 
 boolean crash = false;
 boolean ccw = false;
+boolean tight = false;
 
 void loop()
 {
@@ -183,20 +184,21 @@ void loop()
     //if ( path.nearEndpoint() ) drive.prepareEndpoint();
     
     ccw = ( n == 2 );
+    tight = ( n == 3 );
     
     n = path.find();
     switch (t)
     {
       case 0: drive.uturn(ccw);
         break;
-      case 1: drive.left();
+      case 1: drive.left(tight);
         break;
       case 2: drive.straight();
         break;
-      case 3: drive.right();
+      case 3: drive.right(tight);
         break;
-        /*case 4: drive.uturn(true);
-          break;*/
+      case 4: drive.reverse();
+          break;
     }
   }
 }

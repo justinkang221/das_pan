@@ -120,29 +120,54 @@ void Drive::go(void)
     }
 }
 
-void Drive::left(void)
+void Drive::left(boolean tight)
 {
-    motor.speed(_m1, _speed);
-    motor.speed(_m2, _speed);
-    delay(150);
-    
-    if (_backing) {
-        motor.speed(_m2, _tightness*_turnSpeed/100);
-        motor.speed(_m1, _turnSpeed);
+    if (tight) {
+        motor.speed(_m1, _speed);
+        motor.speed(_m2, _speed);
         delay(150);
-        _lastError = -5;
+        
+        if (_backing) {
+            motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
+            motor.speed(_m1, _turnSpeed);
+            delay(150);
+            _lastError = -5;
+        }
+        else {
+            motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
+            motor.speed(_m2, _turnSpeed);
+            delay(150);
+            _lastError = 5;
+        }
+        _error = 0;
+        _recentError = 0;
+        
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        _backing = false;
     }
     else {
-        motor.speed(_m1, _tightness*_turnSpeed/100);
-        motor.speed(_m2, _turnSpeed);
+        motor.speed(_m1, _speed);
+        motor.speed(_m2, _speed);
         delay(150);
-        _lastError = 5;
+        
+        if (_backing) {
+            motor.speed(_m2, _tightness*_turnSpeed/100);
+            motor.speed(_m1, _turnSpeed);
+            delay(150);
+            _lastError = -5;
+        }
+        else {
+            motor.speed(_m1, _tightness*_turnSpeed/100);
+            motor.speed(_m2, _turnSpeed);
+            delay(150);
+            _lastError = 5;
+        }
+        _error = 0;
+        _recentError = 0;
+        
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        _backing = false;
     }
-    _error = 0;
-    _recentError = 0;
-    
-    while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
-    _backing = false;
 }
 
 void Drive::straight(void)
@@ -150,30 +175,56 @@ void Drive::straight(void)
     _sack = 500;
 }
 
-void Drive::right(void)
+void Drive::right(boolean tight)
 {
-    motor.speed(_m1, _speed);
-    motor.speed(_m2, _speed);
-    delay(150);
-    
-    if (_backing) {
-        motor.speed(_m2, _turnSpeed);
-        motor.speed(_m1, _tightness*_turnSpeed/100);
+    if (tight) {
+        motor.speed(_m1, _speed);
+        motor.speed(_m2, _speed);
         delay(150);
-        _lastError = 5;
-
+        
+        if (_backing) {
+            motor.speed(_m2, _turnSpeed);
+            motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
+            delay(150);
+            _lastError = 5;
+            
+        }
+        else {
+            motor.speed(_m1, _turnSpeed);
+            motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
+            delay(150);
+            _lastError = -5;
+        }
+        _error = 0;
+        _recentError = 0;
+        
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        _backing = false;
     }
     else {
-        motor.speed(_m1, _turnSpeed);
-        motor.speed(_m2, _tightness*_turnSpeed/100);
+        motor.speed(_m1, _speed);
+        motor.speed(_m2, _speed);
         delay(150);
-        _lastError = -5;
+        
+        if (_backing) {
+            motor.speed(_m2, _turnSpeed);
+            motor.speed(_m1, _tightness*_turnSpeed/100);
+            delay(150);
+            _lastError = 5;
+            
+        }
+        else {
+            motor.speed(_m1, _turnSpeed);
+            motor.speed(_m2, _tightness*_turnSpeed/100);
+            delay(150);
+            _lastError = -5;
+        }
+        _error = 0;
+        _recentError = 0;
+        
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        _backing = false;
     }
-    _error = 0;
-    _recentError = 0;
-    
-    while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
-    _backing = false;
 }
 
 void Drive::reverse(void)
