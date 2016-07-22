@@ -129,13 +129,13 @@ void Drive::left(void)
     if (_backing) {
         motor.speed(_m2, _tightness*_turnSpeed/100);
         motor.speed(_m1, _turnSpeed);
-        delay(400);
+        delay(150);
         _lastError = -5;
     }
     else {
         motor.speed(_m1, _tightness*_turnSpeed/100);
         motor.speed(_m2, _turnSpeed);
-        delay(400);
+        delay(150);
         _lastError = 5;
     }
     _error = 0;
@@ -159,14 +159,14 @@ void Drive::right(void)
     if (_backing) {
         motor.speed(_m2, _turnSpeed);
         motor.speed(_m1, _tightness*_turnSpeed/100);
-        delay(400);
+        delay(150);
         _lastError = 5;
 
     }
     else {
         motor.speed(_m1, _turnSpeed);
         motor.speed(_m2, _tightness*_turnSpeed/100);
-        delay(400);
+        delay(150);
         _lastError = -5;
     }
     _error = 0;
@@ -185,28 +185,31 @@ void Drive::uturn(boolean ccw)
 {
     if (ccw) {
         _backing = true;
+        
         motor.speed(_m1, -200);
-        motor.speed(_m2, -50);
+        motor.speed(_m2, 50);
         
         while ( !this->collision() );
         
         _backing = false;
-        motor.speed(_m1, 0);
+        motor.speed(_m1, -50);
         motor.speed(_m2, 200);
         while (!(digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1)));
         
         _lastError = 5;
+        
     }
     else {
         _backing = true;
-        motor.speed(_m1, -50);
+        
+        motor.speed(_m1, 50);
         motor.speed(_m2, -200);
         
         while ( !this->collision() );
         
         _backing = false;
         motor.speed(_m1, 200);
-        motor.speed(_m2, 0);
+        motor.speed(_m2, -50);
         while (!(digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2)));
         
         _lastError = -5;
@@ -270,17 +273,23 @@ boolean Drive::collision(void)
       
       !( digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) )
       )
+     )
      
      ||
      
      (
-      !( (digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1)) )
+      !( _backing )
       
-      ||
+      &&
       
-      !( (digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) )
-      )
-     );
+      (
+       !( (digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1)) )
+       
+       ||
+       
+       !( (digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) )
+       )
+      );
     
     // TODO: get rid of this monstrosity
     

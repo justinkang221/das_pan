@@ -34,20 +34,25 @@ stats			KEYWORD2
 
 # arm
 leftPick		KEYWORD2
-left			KEYWORD2
+leftFront		KEYWORD2
+leftBack		KEYWORD2
 center			KEYWORD2
-right			KEYWORD2
+rightFront		KEYWORD2
+rightBack		KEYWORD2
 cycle			KEYWORD2
 
 # drive
 setPD			KEYWORD2
 go			KEYWORD2
 brake			KEYWORD2
+left			KEYWORD2
+right			KEYWORD2
 forward			KEYWORD2
 straight		KEYWORD2
 reverse			KEYWORD2
 uturn			KEYWORD2
 intersection		KEYWORD2
+collision		KEYWORD2
 prepareDrop		KEYWORD2
 prepareEndpoint		KEYWORD2
 
@@ -68,6 +73,7 @@ turn			KEYWORD2
 update			KEYWORD2
 nearDrop		KEYWORD2
 nearEndpoint		KEYWORD2
+passengers		KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

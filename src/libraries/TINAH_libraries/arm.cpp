@@ -12,21 +12,33 @@
 
 Arm::Arm(void) {}
 
-void Arm::left(void)
+void Arm::leftFront(void)
 {
     RCServo0.write(176);
     delay(1000);
 }
 
-void Arm::right(void)
+void Arm::leftBack(void)
 {
-    RCServo0.write(10);
+    RCServo0.write(155);
     delay(1000);
 }
 
 void Arm::center(void)
 {
-    RCServo0.write(76);
+    RCServo0.write(70);
+}
+
+void Arm::rightFront(void)
+{
+    RCServo0.write(1);
+    delay(1000);
+}
+
+void Arm::rightBack(void)
+{
+    RCServo0.write(10);
+    delay(1000);
 }
 
 void Arm::cycle(void)

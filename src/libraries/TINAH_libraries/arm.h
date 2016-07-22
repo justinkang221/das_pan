@@ -11,9 +11,11 @@ class Arm
 {
 public:
     Arm(void);
-    void left(void);
+    void leftFront(void);
+    void leftBack(void);
     void center(void);
-    void right(void);
+    void rightFront(void);
+    void rightBack(void);
     void cycle(void);
 };
 

@@ -6,7 +6,7 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _startingRight (1)
+#define _startingRight (9)
 
 static const uint8_t _intersections[21][4] = {
     { -1, 17, -1, -1}, // 0
@@ -46,18 +46,25 @@ static const uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
 Path::Path(void)
 {
     // TODO: set initial condition based on switch check
-    //if (digitalRead(_startingRight)) {
-    if (_startingRight) {
-        _current = 19;
-        _next = 20;
-        _last = 4;
-        _region = 4;
-    }
-    else {
+    if (digitalRead(_startingRight)) {
         _current = 17;
         _next = 16;
         _last = 0;
         _region = 0;
+        
+        _bias[0] = _bias[0] + _bias[4];
+        _bias[4] = _bias[0] - _bias[4];
+        _bias[0] = _bias[0] - _bias[4];
+        
+        _bias[1] = _bias[1] + _bias[3];
+        _bias[3] = _bias[1] - _bias[3];
+        _bias[1] = _bias[1] - _bias[3];
+    }
+    else {
+        _current = 19;
+        _next = 20;
+        _last = 4;
+        _region = 4;
     }
     
     _regIndex = 3;
@@ -135,8 +142,8 @@ int8_t Path::find(void)
     else if (_current == 8 || _current == 6 ) {
         return 1;
     }*/
-    else if (_current == 0 || _current == 3 || _current == 5) return 2;
-    else if (_current == 4 || _current == 1 || _current == 9) return 1;
+    else if (_current == 0 || _current == 1 || _current == 5) return 2;
+    else if (_current == 4 || _current == 3 || _current == 9) return 1;
     else return 0;
 }
 
@@ -151,11 +158,11 @@ uint8_t Path::turn(void)
     while (_intersections[_current][_jj] != _last) ++_jj;
     
     // check if special turning case: 4,5 == 180 at nodes 4,0
-    switch (_current) {
+    /*switch (_current) {
         case 4:
         case 0: return 4;
         case 7: return (_regDirec == 1 ? 3 : 1);
-    }
+    }*/
     
     // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
     for (_kk = _jj; (_kk % 4) != _ii; ++_kk);

@@ -16,8 +16,8 @@
 #define _r1 (2)
 #define _r2 (3)
 
-#define _threshold (300)
-#define _precise (300)
+#define _threshold (200)
+#define _precise (200)
 
 Passenger::Passenger(void)
 {
