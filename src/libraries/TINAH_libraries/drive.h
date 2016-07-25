@@ -29,6 +29,7 @@ public:
     void prepareEndpoint(void);
     void speed(int16_t);
     
+    boolean wheel(uint8_t);
     void stats(boolean collision);
 private:
     int16_t _speed;
@@ -57,6 +58,8 @@ private:
     uint8_t _cack;
     
     boolean _backing;
+    boolean _black;
+    boolean _brack;
 };
 
 #endif

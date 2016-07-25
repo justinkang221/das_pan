@@ -11,18 +11,17 @@ Arm arm;
 Drive drive;
 Pan pan;
 Passenger passenger;
-Path path;
 
 uint8_t theta = 0;
 uint8_t phi = 0;
 uint8_t c = 0;
+boolean stop = false;
+boolean left, right;
 
 void setup()
 {
 #include <phys253setup.txt>
   Serial.begin(9600);
-
-  path.find();
 
   arm.center();
   pan.leftUp();
@@ -57,8 +56,13 @@ void loop()
     {
       LCD.clear();
       LCD.home();
+      
       LCD.print("arm position: ");
+      
+      LCD.setCursor(0, 1);
+      
       LCD.print(theta);
+      
       c = 0;
     }
 
@@ -79,12 +83,12 @@ void loop()
     {
       LCD.clear();
       LCD.home();
-      
+
       LCD.print("left pan: ");
       LCD.print(theta);
-      
+
       LCD.setCursor(0, 1);
-      
+
       LCD.print("right pan: ");
       LCD.print(phi);
 
@@ -103,10 +107,22 @@ void loop()
 
   menu("path");
   while ( !startbutton() );
+  Path path;
+  path.find();
+  delay(500);
   while ( !stopbutton() )
   {
     path.stats();
-    while( !startbutton() );
+    while ( !startbutton() ) {
+      if ( stopbutton() ) {
+        stop = true;
+        break;
+      }
+    }
+    if (stop) {
+      stop = false;
+      break;
+    }
     path.update();
     path.find();
   }
@@ -116,7 +132,7 @@ void menu(String name)
 {
   LCD.clear();
   LCD.home();
-  LCD.print("testing " + name);
+  LCD.print("test " + name);
   LCD.setCursor(0, 1);
   LCD.print("press <start>");
 }

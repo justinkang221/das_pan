@@ -27,6 +27,9 @@
 #define _col3 (12)
 #define _col4 (13)
 
+#define _wheelL (0) // TODO: change this
+#define _wheelR (1)
+
 Drive::Drive(void)
 {
     _speed = 150;
@@ -51,6 +54,9 @@ Drive::Drive(void)
     _cack = 0;
     
     _backing = false;
+    
+    _black = digitalRead(_wheelL);
+    _brack = digitalRead(_wheelR);
 }
 
 void Drive::setPD(uint8_t kp, uint8_t kd)
@@ -122,21 +128,27 @@ void Drive::go(void)
 
 void Drive::left(boolean tight)
 {
+    // update encoder
+    this->wheel(_wheelR);
+    
     if (tight) {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        delay(150);
+        while( !this->wheel(_wheelR) );
+        // delay(150);
         
         if (_backing) {
             motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
-            delay(150);
+            while( !this->wheel(_wheelR) );
+            //delay(150);
             _lastError = -5;
         }
         else {
             motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
             motor.speed(_m2, _turnSpeed);
-            delay(150);
+            while( !this->wheel(_wheelR) );
+            // delay(150);
             _lastError = 5;
         }
         _error = 0;
@@ -148,18 +160,21 @@ void Drive::left(boolean tight)
     else {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        delay(150);
+        while( !this->wheel(1) );
+        // delay(150);
         
         if (_backing) {
             motor.speed(_m2, _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
-            delay(150);
+            while( !this->wheel(1) );
+            // delay(150);
             _lastError = -5;
         }
         else {
             motor.speed(_m1, _tightness*_turnSpeed/100);
             motor.speed(_m2, _turnSpeed);
-            delay(150);
+            while( !this->wheel(1) );
+            // delay(150);
             _lastError = 5;
         }
         _error = 0;
@@ -172,27 +187,36 @@ void Drive::left(boolean tight)
 
 void Drive::straight(void)
 {
+    // update encoder
+    this->wheel(_wheelL);
+    
     _sack = 500;
 }
 
 void Drive::right(boolean tight)
 {
+    // update encoder
+    this->wheel(_wheelL);
+    
     if (tight) {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        delay(150);
+        while( !this->wheel(_wheelL) );
+        // delay(150);
         
         if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
-            delay(150);
+            while( !this->wheel(_wheelL) );
+            // delay(150);
             _lastError = 5;
             
         }
         else {
             motor.speed(_m1, _turnSpeed);
             motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
-            delay(150);
+            while( !this->wheel(_wheelL) );
+            // delay(150);
             _lastError = -5;
         }
         _error = 0;
@@ -204,19 +228,22 @@ void Drive::right(boolean tight)
     else {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        delay(150);
+        while( !this->wheel(0) );
+        // delay(150);
         
         if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, _tightness*_turnSpeed/100);
-            delay(150);
+            while( !this->wheel(0) );
+            // delay(150);
             _lastError = 5;
             
         }
         else {
             motor.speed(_m1, _turnSpeed);
             motor.speed(_m2, _tightness*_turnSpeed/100);
-            delay(150);
+            while( !this->wheel(0) );
+            // delay(150);
             _lastError = -5;
         }
         _error = 0;
@@ -272,7 +299,10 @@ void Drive::uturn(boolean ccw)
 
 void Drive::prepareDrop(void)
 {
-    _hack = 6000;
+    // update encoder
+    this->wheel(_wheelL);
+    
+    _hack = 44;
 }
 
 void Drive::prepareEndpoint(void)
@@ -282,7 +312,7 @@ void Drive::prepareEndpoint(void)
 
 boolean Drive::intersection()
 {
-    _hack && --_hack;
+    _hack && this->wheel(_wheelL) && --_hack;
     if(_hack == 1)
     {
         return true;
@@ -304,9 +334,33 @@ boolean Drive::intersection()
         return true;
     }
     
-    _sack && --_sack;
+    _sack && this->wheel(_wheelL) && --_sack;
     
     return false;
+}
+
+boolean Drive::wheel(uint8_t _wheel)
+{
+    if ( _wheel == _wheelL ) {
+        if (
+            digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black
+            )
+        {
+            _black = !_black;
+            return true;
+        }
+        else return false;
+    }
+    else {
+        if (
+            digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack
+            )
+        {
+            _brack = !_brack;
+            return true;
+        }
+        else return false;
+    }
 }
 
 boolean Drive::collision(void)
@@ -341,10 +395,6 @@ boolean Drive::collision(void)
        !( (digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) )
        )
       );
-    
-    // TODO: get rid of this monstrosity
-    
-    /*return ( !((digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1) || digitalRead(_col1))) + 2 * !(digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2) || digitalRead(_col2)) + 4 * !(digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3) || digitalRead(_col3)) + 8 * !(digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4) || digitalRead(_col4)));*/
 }
 
 void Drive::speed(int16_t speed)
@@ -364,34 +414,34 @@ void Drive::stats(boolean collision)
         LCD.home();
         
         if (collision) {
-            LCD.print("fl: ");
-            LCD.print(digitalRead(_qrd1));
-            LCD.print(" bl: ");
-            LCD.print(digitalRead(_qrd5));
-            LCD.print(" il: ");
-            LCD.print(digitalRead(_qrd3));
-            
-            LCD.setCursor(0,1);
-            
-            LCD.print("fr: ");
-            LCD.print(digitalRead(_qrd2));
-            LCD.print(" br: ");
-            LCD.print(digitalRead(_qrd6));
-            LCD.print(" ir: ");
-            LCD.print(digitalRead(_qrd4));
-        }
-        else {
-            LCD.print("fl: ");
+            LCD.print("fl:");
             LCD.print(digitalRead(_col1));
-            LCD.print(" bl: ");
+            LCD.print(" bl:");
             LCD.print(digitalRead(_col2));
             
             LCD.setCursor(0, 1);
             
-            LCD.print("fr: ");
+            LCD.print("fr:");
             LCD.print(digitalRead(_col3));
-            LCD.print(" br: ");
+            LCD.print(" br:");
             LCD.print(digitalRead(_col4));
+        }
+        else {
+            LCD.print("fl:");
+            LCD.print(digitalRead(_qrd1));
+            LCD.print(" bl:");
+            LCD.print(digitalRead(_qrd5));
+            LCD.print(" il:");
+            LCD.print(digitalRead(_qrd3));
+            
+            LCD.setCursor(0,1);
+            
+            LCD.print("fr:");
+            LCD.print(digitalRead(_qrd2));
+            LCD.print(" br:");
+            LCD.print(digitalRead(_qrd6));
+            LCD.print(" ir:");
+            LCD.print(digitalRead(_qrd4));
         }
         _c = 0;
     }
