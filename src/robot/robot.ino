@@ -25,6 +25,8 @@ void setup()
 
 uint8_t t;
 int8_t n;
+int8_t thing;
+
 
 uint8_t leftPassengers = 0, rightPassengers = 0;
 
@@ -37,168 +39,184 @@ void loop()
 {
   drive.go();
 
-  corner = drive.intersection();
-  crash = drive.collision() && ( n != 0 ); // TODO: implement collisions with other robots and get rid of n != 0
-  // TODO: handle IR detection around corners and stuff
-  if ( passenger.precise() == 1 && leftPassengers < 2 )
-  {
-    drive.speed(50);
-    /*while ( passenger.precise() != 1 ) {
-      drive.go();
-      passenger.stats();
-      }*/
-
-    drive.brake();
-
-    pan.leftPick();
-
-    if (leftPassengers) arm.leftBack();
-    else arm.leftFront();
-    arm.cycle();
-
-    path.passengers(++leftPassengers + rightPassengers);
-
-    arm.center();
-
-    pan.leftUp();
-    drive.speed(150);
-    //drive.go();
-  }
-
-  if ( passenger.precise() == 2 && rightPassengers < 2 )
-  {
-    drive.speed(50);
-    /*while ( passenger.precise() != 2 ) {
-      drive.go();
-      passenger.stats();
-      }*/
-
-    drive.brake();
-
-    pan.rightPick();
-
-    if (rightPassengers) arm.rightBack();
-    else arm.rightFront();
-    arm.cycle();
-
-    path.passengers(leftPassengers + ++rightPassengers);
-
-    arm.center();
-
-    pan.rightUp();
-    drive.speed(150);
-    //drive.go();
-  }
-
-  if ( corner || crash )
-  {
-    // TODO: write path.avoid()
-    /*if ( crash )
-      {
-      drive.brake(); // get rid of this
-      LCD.clear();
-      LCD.home();
-      LCD.print("n: ");
-      LCD.print(n);
-      LCD.print(" c: ");
-      LCD.print(collision);
-      while ( !startbutton() ); // get rid of this
-      if ( n == -3 && collision < 4 );
-      else if ( n == 1 && collision > 5 );
-      else
-      {
-        path.update(); // pretend you've hit the intersection you were going towards
-        path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
-        path.find(); // find the path that leads you away from collision
-      }
-      }*/
-
-    if (n == -1)
-    {
-      if (leftPassengers) {
+  if (drive.isSacked()) {
+    thing = drive.describeIntersection();
+    if (drive.isSacked() == 0) {
+      if (thing != path.getDirections()) {
+        LCD.print("We're Fudged!");
+        LCD.print(thing);
+        LCD.print(path.getDirections());
         drive.brake();
-        pan.leftDrop();
-        delay(500);
-
-        leftPassengers = 0;
-
-        pan.leftUp();
+        while(!startbutton());
       }
-
-      if (rightPassengers) {
-        drive.uturn(true);
-        pan.rightDrop();
-        delay(500);
-
-        rightPassengers = 0;
-
-        pan.rightUp();
-        drive.uturn(false);
+      else {
+        path.update();
+        switch (t)
+        {
+          case 0: drive.reverse();
+            break;
+          case 1: drive.left(tight);
+            break;
+          case 2: drive.straight();
+            break;
+          case 3: drive.right(tight);
+            break;
+          case 4: drive.uturn(ccw);
+            break;
+        }
       }
-
-      path.passengers(leftPassengers + rightPassengers);
     }
-    else if (n == -2)
+  }
+  else {
+    corner = drive.intersection();
+    crash = drive.collision() && ( n != 0 ); // TODO: implement collisions with other robots and get rid of n != 0
+    // TODO: handle IR detection around corners and stuff
+    if ( passenger.precise() == 1 && leftPassengers < 2 )
     {
-      if (rightPassengers)
-      {
-        drive.brake();
-        pan.rightDrop();
-        delay(500);
+      drive.speed(50);
+      /*while ( passenger.precise() != 1 ) {
+        drive.go();
+        passenger.stats();
+        }*/
 
-        rightPassengers = 0;
+      drive.brake();
 
-        pan.rightUp();
-      }
+      pan.leftPick();
 
-      if (leftPassengers)
-      {
-        drive.uturn(false);
-        pan.leftDrop();
-        delay(500);
+      if (leftPassengers) arm.leftBack();
+      else arm.leftFront();
+      arm.cycle();
 
-        leftPassengers = 0;
+      path.passengers(++leftPassengers + rightPassengers);
 
-        pan.leftUp();
-        drive.uturn(true);
-      }
+      arm.center();
 
-      path.passengers(leftPassengers + rightPassengers);
+      pan.leftUp();
+      drive.speed(150);
+      //drive.go();
     }
 
-    if ( path.nearDrop() ) drive.prepareDrop();
-    //if ( path.nearEndpoint() ) drive.prepareEndpoint();
-    
-    ccw = ( n == 2 );
-    tight = ( n == 3 );
-
-    drive.go();
-    
-    n = path.find();
-
-    drive.brake();
-    drive.stats(false);
-    while( !startbutton() );
-    
-    drive.go();
-    
-    t = path.turn();
-
-    path.update();
-    
-    
-    switch (t)
+    if ( passenger.precise() == 2 && rightPassengers < 2 )
     {
-      case 0: drive.reverse();
-        break;
-      case 1: drive.left(tight);
-        break;
-      case 2: drive.straight();
-        break;
-      case 3: drive.right(tight);
-        break;
-      case 4: drive.uturn(ccw);
-          break;
+      drive.speed(50);
+      /*while ( passenger.precise() != 2 ) {
+        drive.go();
+        passenger.stats();
+        }*/
+
+      drive.brake();
+
+      pan.rightPick();
+
+      if (rightPassengers) arm.rightBack();
+      else arm.rightFront();
+      arm.cycle();
+
+      path.passengers(leftPassengers + ++rightPassengers);
+
+      arm.center();
+
+      pan.rightUp();
+      drive.speed(150);
+      //drive.go();
+    }
+
+    if ( corner || crash )
+    {
+      // TODO: write path.avoid()
+      /*if ( crash )
+        {
+        drive.brake(); // get rid of this
+        LCD.clear();
+        LCD.home();
+        LCD.print("n: ");
+        LCD.print(n);
+        LCD.print(" c: ");
+        LCD.print(collision);
+        while ( !startbutton() ); // get rid of this
+        if ( n == -3 && collision < 4 );
+        else if ( n == 1 && collision > 5 );
+        else
+        {
+          path.update(); // pretend you've hit the intersection you were going towards
+          path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
+          path.find(); // find the path that leads you away from collision
+        }
+        }*/
+
+      if (n == -1)
+      {
+        if (leftPassengers) {
+          drive.brake();
+          pan.leftDrop();
+          delay(500);
+
+          leftPassengers = 0;
+
+          pan.leftUp();
+        }
+
+        if (rightPassengers) {
+          drive.uturn(true);
+          pan.rightDrop();
+          delay(500);
+
+          rightPassengers = 0;
+
+          pan.rightUp();
+          drive.uturn(false);
+        }
+
+        path.passengers(leftPassengers + rightPassengers);
+      }
+      else if (n == -2)
+      {
+        if (rightPassengers)
+        {
+          drive.brake();
+          pan.rightDrop();
+          delay(500);
+
+          rightPassengers = 0;
+
+          pan.rightUp();
+        }
+
+        if (leftPassengers)
+        {
+          drive.uturn(false);
+          pan.leftDrop();
+          delay(500);
+
+          leftPassengers = 0;
+
+          pan.leftUp();
+          drive.uturn(true);
+        }
+
+        path.passengers(leftPassengers + rightPassengers);
+      }
+
+      if ( path.nearDrop() ) drive.prepareDrop();
+      //if ( path.nearEndpoint() ) drive.prepareEndpoint();
+
+      ccw = ( n == 2 );
+      tight = ( n == 3 );
+
+      drive.go();
+
+      n = path.find();
+
+      /*drive.brake();
+      drive.stats(false);
+      while ( !startbutton() );*/
+
+      drive.go();
+
+      t = path.turn();
+
+      /*drive.brake();
+      while(!startbutton());*/
     }
   }
 }

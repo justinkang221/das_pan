@@ -34,6 +34,9 @@ public:
     void addDistance(void);
     void removeDistance(void);
     uint16_t getDistance(void);
+	
+	uint8_t isSacked(void);
+	int8_t describeIntersection(void);
     
     boolean wheel(uint8_t);
     void stats(boolean collision);
@@ -66,6 +69,13 @@ private:
     uint16_t _hack;
     uint16_t _sack;
     uint8_t _cack;
+	
+	boolean _interL;
+	boolean _interR;
+	boolean _interS;
+	boolean _interSPast;
+	boolean _lost;
+	int8_t _store;
     
     boolean _backing;
     boolean _black;

@@ -60,6 +60,13 @@ Drive::Drive(void)
     
     _distanceR = 0;
     _distanceL = 0;
+	
+	_interL = false;
+	_interR = false;
+	_interS = true;
+	_interSPast = false;
+	_lost = false;
+	_store = 0;
     
     _i = 0;
 }
@@ -161,13 +168,13 @@ void Drive::left(boolean tight)
     this->wheel(_wheelR);
     
     if (tight) {
-        motor.speed(_m1, _speed);
+        /*motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
         for (_i = 0; _i<6; _i++){
         	while( !this->wheel(_wheelR) );
         	}
         // delay(150);
-        
+        */
         if (_backing) {
             motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
@@ -193,13 +200,13 @@ void Drive::left(boolean tight)
         _backing = false;
     }
     else {
-        motor.speed(_m1, _speed);
+        /*motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
         for (_i = 0; _i<6; _i++){
         	while( !this->wheel(_wheelR) );
         	}
         // delay(150);
-        
+        */
         if (_backing) {
             motor.speed(_m2, _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
@@ -229,9 +236,6 @@ void Drive::left(boolean tight)
 void Drive::straight(void)
 {
     // update encoder
-    this->wheel(_wheelL);
-    
-    _sack = 4;
 }
 
 void Drive::right(boolean tight)
@@ -240,13 +244,13 @@ void Drive::right(boolean tight)
     this->wheel(_wheelL);
     
     if (tight) {
-        motor.speed(_m1, _speed);
+        /*motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
         for (_i = 0; _i<6; _i++){
         	while( !this->wheel(_wheelL) );
         	}
         // delay(150);
-        
+        */
         if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
@@ -273,13 +277,14 @@ void Drive::right(boolean tight)
         _backing = false;
     }
     else {
+		/*
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
         for (_i = 0; _i<6; _i++){
         	while( !this->wheel(_wheelL) );
         	}
         // delay(150);
-        
+        */
         if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, _tightness*_turnSpeed/100);
@@ -393,42 +398,108 @@ void Drive::prepareEndpoint(void)
     _hack = 20;
 }
 
-boolean Drive::intersection()
+uint8_t Drive::isSacked(void){
+	if (_sack == 0){
+		return 0;
+	}
+	else if(_sack > 1){
+		return 2;
+	}
+	else{
+		return 1;
+	}
+}
+
+int8_t Drive::describeIntersection(void){
+	if(_sack){
+		if(this->wheel(_wheelL)){
+		--_sack;
+		}
+		if(!_interL && ( digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3))) 
+		{
+			_interL=true;
+		}
+		if(!_interR && ( digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) )){
+			_interR=true;
+		}
+		if(_interS && !_interSPast &&
+		( !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1) && !digitalRead(_qrd1)) &&
+		( !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2) && !digitalRead(_qrd2)) 
+		){
+			_interS = false;
+			_interSPast= true;
+		}
+		if(!_interS && _interSPast &&
+		(( digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1)) ||
+		( digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2))) 
+		){
+			_interS = true;
+		}
+	if(_sack == 0){
+		_store = _interL + 2*_interS + 4*_interR;
+		_interR = false;
+		_interL = false;
+		_interS = true;
+		_interSPast = false;
+		return _store;
+	}
+	}
+	else return -1;
+}
+
+/*
+boolean Drive::intersection(boolean right){
+	if(right){
+		if (( digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3)) 
+		{
+		   return true;
+	    }
+	    else return false; 
+	}
+	else {
+		if( digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) ){
+			return true;
+		}
+		else return false;
+	}
+}
+*/
+
+boolean Drive::intersection(void)
 {
     _hack && this->wheel(_wheelL) && --_hack;
     if(_hack == 1)
     {
         _distanceL=0;
         _distanceR=0;
+		_sack = 4;
+		this->wheel(_wheelL);
         return true;
     }
     else if (_backing){
         if(this->getDistance() == 0){
             _distanceL=0;
             _distanceR=0;
+			_sack = 4;
+			this->wheel(_wheelL);
             return true;
         }
     }
-    else if (
-             !_sack
-             
-             &&
-             
-             (
-              ( digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) )
-              
-              ||
-              
-              ( digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) )
-              )
-             )
-    {
-        _distanceL=0;
-        _distanceR=0;
-        return true;
-    }
-    
-    _sack && this->wheel(_wheelL) && --_sack;
+    else if (!_sack){
+		if(( digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) )){
+			_interL = true;
+		}
+		if(( digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) && digitalRead(_qrd4) )){
+			_interR = true;
+		}
+		if(_interR || _interL){
+			_distanceL=0;
+			_distanceR=0;
+			_sack = 4;
+			this->wheel(_wheelL);
+			return true;
+		}
+	}
     
     return false;
 }
@@ -533,7 +604,7 @@ void Drive::stats(boolean collision)
             LCD.print(" bl:");
             LCD.print(digitalRead(_qrd5));
             LCD.print(" il:");
-            LCD.print(digitalRead(_qrd3));
+            LCD.print(digitalRead(_qrd4));
             
             LCD.setCursor(0,1);
             

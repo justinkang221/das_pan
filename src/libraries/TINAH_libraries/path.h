@@ -24,6 +24,8 @@ public:
     
     void passengers(uint8_t);
     void avoid(void);
+	
+	int8_t getDirections(void);
     
     void stats(void);
 private:

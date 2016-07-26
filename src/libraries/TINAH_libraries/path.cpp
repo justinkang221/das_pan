@@ -8,7 +8,7 @@
 
 #define _startingRight (8)
 
-static const uint8_t _intersections[21][4] = {
+static const int8_t _intersections[21][4] = {
     { -1, 17, -1, -1}, // 0
     { -1, 6, -1, -1}, // 1
     { -1, 7, -1, -1}, // 2
@@ -72,6 +72,20 @@ Path::Path(void)
     _nextReg = -1;
     
     _c = 0;
+}
+
+int8_t Path::getDirections(void){
+	_ii = 0;
+	_jj = 0;
+	
+    while (_intersections[_current][_jj] != _last) ++_jj;
+	_jj = (_jj +1) % 4;
+	_ii += (_intersections[_current][_jj] != -1);
+	_jj = (_jj +1) % 4;
+	_ii += 2*(_intersections[_current][_jj] != -1);
+	_jj = (_jj +1) % 4;
+	_ii += 4*(_intersections[_current][_jj] != -1);
+	return _ii;
 }
 
 void Path::weights(uint8_t r0, uint8_t r1, uint8_t r2, uint8_t r3, uint8_t r4, uint8_t r5)
