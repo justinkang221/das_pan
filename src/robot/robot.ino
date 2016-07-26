@@ -35,11 +35,6 @@ boolean tight = false;
 
 void loop()
 {
-  drive.uturn(1);
-}
-
-void fuck()
-{
   drive.go();
 
   corner = drive.intersection();
