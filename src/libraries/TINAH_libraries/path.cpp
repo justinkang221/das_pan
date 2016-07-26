@@ -46,7 +46,7 @@ static const uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
 Path::Path(void)
 {
     // TODO: set initial condition based on switch check
-    if (!digitalRead(_startingRight)) {
+    if (digitalRead(_startingRight)) {
         _current = 17;
         _next = 16;
         _last = 0;
@@ -72,6 +72,16 @@ Path::Path(void)
     _nextReg = -1;
     
     _c = 0;
+}
+
+void Path::weights(uint8_t r0, uint8_t r1, uint8_t r2, uint8_t r3, uint8_t r4, uint8_t r5)
+{
+    _bias[0] = r0;
+    _bias[1] = r1;
+    _bias[2] = r2;
+    _bias[3] = r3;
+    _bias[4] = r4;
+    _bias[5] = r5;
 }
 
 int8_t Path::find(void)
@@ -162,11 +172,11 @@ uint8_t Path::turn(void)
     while (_intersections[_current][_jj] != _last) ++_jj;
     
     // check if special turning case: 4,5 == 180 at nodes 4,0
-    /*switch (_current) {
+    switch (_current) {
         case 4:
         case 0: return 4;
         case 7: return (_regDirec == 1 ? 3 : 1);
-    }*/
+    }
     
     // return direction 0 == backwards, 1 == left, 2 == straight, 3 == right
     for (_kk = _jj; (_kk % 4) != _ii; ++_kk);

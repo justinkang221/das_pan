@@ -13,6 +13,7 @@ class Path
 {
 public:
     Path(void);
+    void weights(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
     
     int8_t find(void);
     uint8_t turn(void);

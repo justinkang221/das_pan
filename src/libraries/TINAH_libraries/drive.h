@@ -25,15 +25,24 @@ public:
     boolean intersection(void);
     boolean collision(void);
 	boolean collisionSpecific(uint8_t);
+    boolean isBacking(void);
     
     void prepareDrop(void);
     void prepareEndpoint(void);
     void speed(int16_t);
     
+    void addDistance(void);
+    void removeDistance(void);
+    uint16_t getDistance(void);
+    
     boolean wheel(uint8_t);
     void stats(boolean collision);
 private:
     int16_t _speed;
+    
+    uint16_t _distanceR;
+    uint16_t _distanceL;
+    
     
     uint8_t _kp;
     uint8_t _kd;

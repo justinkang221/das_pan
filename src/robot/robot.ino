@@ -92,9 +92,6 @@ void loop()
 
   if ( corner || crash )
   {
-    drive.brake();
-    path.stats();
-    while( !startbutton() );
     // TODO: write path.avoid()
     /*if ( crash )
       {
@@ -179,6 +176,10 @@ void loop()
     
     n = path.find();
 
+    drive.brake();
+    drive.stats(false);
+    while( !startbutton() );
+    
     drive.go();
     
     t = path.turn();
@@ -188,7 +189,7 @@ void loop()
     
     switch (t)
     {
-      case 0: drive.uturn(ccw);
+      case 0: drive.reverse();
         break;
       case 1: drive.left(tight);
         break;
@@ -196,7 +197,7 @@ void loop()
         break;
       case 3: drive.right(tight);
         break;
-      case 4: drive.reverse();
+      case 4: drive.uturn(ccw);
           break;
     }
   }

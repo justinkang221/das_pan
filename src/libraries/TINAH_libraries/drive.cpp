@@ -58,6 +58,9 @@ Drive::Drive(void)
     _black = digitalRead(_wheelL);
     _brack = digitalRead(_wheelR);
     
+    _distanceR = 0;
+    _distanceL = 0;
+    
     _i = 0;
 }
 
@@ -67,9 +70,32 @@ void Drive::setPD(uint8_t kp, uint8_t kd)
     _kd = kd;
 }
 
+void Drive::addDistance(void){
+    if(this->wheel(_wheelR)){
+        _distanceR++;
+    }
+    if(this->wheel(_wheelL)){
+        _distanceL++;
+    }
+}
+
+void Drive::removeDistance(void){
+    if(this->wheel(_wheelR)){
+        _distanceR--;
+    }
+    if(this->wheel(_wheelL)){
+        _distanceL--;
+    }
+}
+
+uint16_t Drive::getDistance(void){
+    return min(_distanceR,_distanceL);
+}
+
 void Drive::go(void)
 {
     if (_backing) {
+        this->removeDistance();
         _left = digitalRead(_qrd5);
         _right = digitalRead(_qrd6);
         
@@ -98,6 +124,7 @@ void Drive::go(void)
         _lastError = _error;
     }
     else {
+        this->addDistance();
         _left = digitalRead(_qrd1);
         _right = digitalRead(_qrd2);
         
@@ -285,6 +312,11 @@ void Drive::reverse(void)
     _backing = !_backing;
 }
 
+boolean Drive::isBacking(void)
+{
+    return _backing;
+}
+
 void Drive::uturn(boolean ccw)
 {
     if (ccw) {
@@ -366,7 +398,16 @@ boolean Drive::intersection()
     _hack && this->wheel(_wheelL) && --_hack;
     if(_hack == 1)
     {
+        _distanceL=0;
+        _distanceR=0;
         return true;
+    }
+    else if (_backing){
+        if(this->getDistance() == 0){
+            _distanceL=0;
+            _distanceR=0;
+            return true;
+        }
     }
     else if (
              !_sack
@@ -382,6 +423,8 @@ boolean Drive::intersection()
               )
              )
     {
+        _distanceL=0;
+        _distanceR=0;
         return true;
     }
     
@@ -467,7 +510,7 @@ void Drive::brake(void)
 
 void Drive::stats(boolean collision)
 {
-    if (_c > 30) {
+    if (_c > 0) {
         LCD.clear();
         LCD.home();
         
