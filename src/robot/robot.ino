@@ -18,8 +18,6 @@ void setup()
 #include <phys253setup.txt>
   Serial.begin(9600);
 
-  path.find();
-
   arm.center();
   pan.leftUp();
   pan.rightUp();
@@ -36,6 +34,11 @@ boolean ccw = false;
 boolean tight = false;
 
 void loop()
+{
+  drive.uturn(1);
+}
+
+void fuck()
 {
   drive.go();
 
@@ -94,9 +97,9 @@ void loop()
 
   if ( corner || crash )
   {
-    /*drive.brake();
+    drive.brake();
     path.stats();
-    while( !startbutton() );*/
+    while( !startbutton() );
     // TODO: write path.avoid()
     /*if ( crash )
       {
@@ -171,17 +174,23 @@ void loop()
       path.passengers(leftPassengers + rightPassengers);
     }
 
-    t = path.turn();
-
-    path.update();
-
     if ( path.nearDrop() ) drive.prepareDrop();
     //if ( path.nearEndpoint() ) drive.prepareEndpoint();
     
     ccw = ( n == 2 );
     tight = ( n == 3 );
+
+    drive.go();
     
     n = path.find();
+
+    drive.go();
+    
+    t = path.turn();
+
+    path.update();
+    
+    
     switch (t)
     {
       case 0: drive.uturn(ccw);

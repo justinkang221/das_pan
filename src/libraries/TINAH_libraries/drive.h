@@ -24,6 +24,7 @@ public:
     
     boolean intersection(void);
     boolean collision(void);
+	boolean collisionSpecific(uint8_t);
     
     void prepareDrop(void);
     void prepareEndpoint(void);

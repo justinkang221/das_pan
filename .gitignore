@@ -106,3 +106,7 @@ octave-workspace
 *.mtc1
 *.out
 *.synctex.gz
+
+.classpath
+.project
+bin

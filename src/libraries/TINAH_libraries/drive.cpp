@@ -18,7 +18,7 @@
 #define _qrd6 (5)
 
 #define _turnSpeed (150)
-#define _tightness (-35)
+#define _tightness (-55)
 
 #define _threshold (500)
 
@@ -27,8 +27,8 @@
 #define _col3 (12)
 #define _col4 (13)
 
-#define _wheelL (0) // TODO: change this
-#define _wheelR (1)
+#define _wheelL (9)
+#define _wheelR (10)
 
 Drive::Drive(void)
 {
@@ -57,6 +57,8 @@ Drive::Drive(void)
     
     _black = digitalRead(_wheelL);
     _brack = digitalRead(_wheelR);
+    
+    _i = 0;
 }
 
 void Drive::setPD(uint8_t kp, uint8_t kd)
@@ -134,20 +136,26 @@ void Drive::left(boolean tight)
     if (tight) {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        while( !this->wheel(_wheelR) );
+        for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelR) );
+        	}
         // delay(150);
         
         if (_backing) {
             motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
-            while( !this->wheel(_wheelR) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelR) );
+        	}
             //delay(150);
             _lastError = -5;
         }
         else {
             motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
             motor.speed(_m2, _turnSpeed);
-            while( !this->wheel(_wheelR) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelR) );
+        	}
             // delay(150);
             _lastError = 5;
         }
@@ -160,20 +168,26 @@ void Drive::left(boolean tight)
     else {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        while( !this->wheel(1) );
+        for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelR) );
+        	}
         // delay(150);
         
         if (_backing) {
             motor.speed(_m2, _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
-            while( !this->wheel(1) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelR) );
+        	}
             // delay(150);
             _lastError = -5;
         }
         else {
             motor.speed(_m1, _tightness*_turnSpeed/100);
             motor.speed(_m2, _turnSpeed);
-            while( !this->wheel(1) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelR) );
+        	}
             // delay(150);
             _lastError = 5;
         }
@@ -190,7 +204,7 @@ void Drive::straight(void)
     // update encoder
     this->wheel(_wheelL);
     
-    _sack = 500;
+    _sack = 4;
 }
 
 void Drive::right(boolean tight)
@@ -201,13 +215,17 @@ void Drive::right(boolean tight)
     if (tight) {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        while( !this->wheel(_wheelL) );
+        for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelL) );
+        	}
         // delay(150);
         
         if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
-            while( !this->wheel(_wheelL) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelL) );
+        	}
             // delay(150);
             _lastError = 5;
             
@@ -215,7 +233,9 @@ void Drive::right(boolean tight)
         else {
             motor.speed(_m1, _turnSpeed);
             motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
-            while( !this->wheel(_wheelL) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelL) );
+        	}
             // delay(150);
             _lastError = -5;
         }
@@ -228,13 +248,17 @@ void Drive::right(boolean tight)
     else {
         motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
-        while( !this->wheel(0) );
+        for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelL) );
+        	}
         // delay(150);
         
         if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, _tightness*_turnSpeed/100);
-            while( !this->wheel(0) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelL) );
+        	}
             // delay(150);
             _lastError = 5;
             
@@ -242,7 +266,9 @@ void Drive::right(boolean tight)
         else {
             motor.speed(_m1, _turnSpeed);
             motor.speed(_m2, _tightness*_turnSpeed/100);
-            while( !this->wheel(0) );
+            for (_i = 0; _i<6; _i++){
+        	while( !this->wheel(_wheelL) );
+        	}
             // delay(150);
             _lastError = -5;
         }
@@ -263,16 +289,41 @@ void Drive::uturn(boolean ccw)
 {
     if (ccw) {
         _backing = true;
-        
-        motor.speed(_m1, -200);
-        motor.speed(_m2, 50);
-        
-        while ( !this->collision() );
-        
+		
+        this->wheel(_wheelL);
+		while(true){
+		motor.speed(_m1, -150);
+        motor.speed(_m2, 0);
+        for (_i = 0; _i<4; _i++){
+        	while( !this->wheel(_wheelL) );
+			if(this->collisionSpecific(_col3)){
+				break;
+			}
+        }
+		if(this->collisionSpecific(_col3)){
+				break;
+			}
+		motor.speed(_m1, -150);
+        motor.speed(_m2, -150);
+        this->wheel(_wheelL);
+        for (_i = 0; _i<4; _i++){
+        	while( !this->wheel(_wheelL) );
+			if(this->collisionSpecific(_col3)){
+				break;
+			}
+        }
+		if(this->collisionSpecific(_col3)){
+				break;
+		}
+		}
         _backing = false;
-        motor.speed(_m1, -50);
-        motor.speed(_m2, 200);
-        while (!(digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1)));
+        motor.speed(_m1, 0);
+        motor.speed(_m2, 150);
+		while (!(digitalRead(_qrd2) && digitalRead(_qrd2) && digitalRead(_qrd2)));
+		motor.speed(_m1, 0);
+		motor.speed(_m2, 0);
+		while( !startbutton() )
+        //while (!(digitalRead(_qrd1) && digitalRead(_qrd1) && digitalRead(_qrd1)));
         
         _lastError = 5;
         
@@ -302,12 +353,12 @@ void Drive::prepareDrop(void)
     // update encoder
     this->wheel(_wheelL);
     
-    _hack = 44;
+    _hack = 88;
 }
 
 void Drive::prepareEndpoint(void)
 {
-    _hack = 15000 / _speed;
+    _hack = 20;
 }
 
 boolean Drive::intersection()
@@ -341,31 +392,38 @@ boolean Drive::intersection()
 
 boolean Drive::wheel(uint8_t _wheel)
 {
-    if ( _wheel == _wheelL ) {
-        if (
-            digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black
-            )
-        {
-            _black = !_black;
-            return true;
-        }
-        else return false;
-    }
-    else {
+    if ( _wheel == _wheelR ) {
         if (
             digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack
+            && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack && digitalRead(_wheel) != _brack
             )
         {
             _brack = !_brack;
             return true;
         }
         else return false;
+            
     }
+    else {
+		if(
+		digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black
+        && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black && digitalRead(_wheel) != _black
+        )
+        {
+            _black = !_black;
+            return true;
+        }
+        else return false;
+    }
+}
+
+boolean Drive::collisionSpecific(uint8_t _colNum){
+	return !( digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) || digitalRead(_colNum) );
 }
 
 boolean Drive::collision(void)
 {
-    return
+    return 
     (
      ( _backing )
      
