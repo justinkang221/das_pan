@@ -48,7 +48,7 @@ Path::Path(void)
     // TODO: set initial condition based on switch check
     if (digitalRead(_startingRight)) {
         _current = 17;
-        _next = 16;
+        _next = 11;
         _last = 0;
         _region = 0;
         
@@ -62,13 +62,13 @@ Path::Path(void)
     }
     else {
         _current = 19;
-        _next = 20;
+        _next = 14;
         _last = 4;
         _region = 4;
     }
     
-    _regIndex = 3;
-    _regDirec = 1;
+    _regIndex = 1;
+    _regDirec = -1;
     _nextReg = -1;
     
     _c = 0;
@@ -152,7 +152,7 @@ int8_t Path::find(void)
     } while (_next == -1);
     
     ++_distance;
-    if (_current == 18) {
+    if (_next == 18) {
         if (_regDirec == -1) {
             return -1;
         }
@@ -167,8 +167,8 @@ int8_t Path::find(void)
         return 1;
     }*/
     //else if (_current == 7) return 4;
-    else if (_current == 0 || _current == 1 || _current == 5) return 2;
-    else if (_current == 4 || _current == 3 || _current == 9) return 1;
+    else if (_next == 0 || _next == 1 || _next == 5) return 2;
+    else if (_next == 4 || _next == 3 || _next == 9) return 1;
     else if ( (_next == 13 && _last == 8) || (_next == 8 && _last == 13) || (_next == 17 && _last == 6) || (_next == 6 && _last == 17) ) return 3;
     else return 0;
 }

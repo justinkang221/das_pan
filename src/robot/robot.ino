@@ -43,11 +43,11 @@ void loop()
     thing = drive.describeIntersection();
     if (drive.isSacked() == 0) {
       if (thing != path.getDirections()) {
-        LCD.print("We're Fudged!");
+        LCD.print("We're Fucked!");
         LCD.print(thing);
         LCD.print(path.getDirections());
         drive.brake();
-        while(!startbutton());
+        while (!startbutton());
       }
       else {
         path.update();
@@ -67,9 +67,10 @@ void loop()
       }
     }
   }
-  else {
+  else
+  {
     corner = drive.intersection();
-    crash = drive.collision() && ( n != 0 ); // TODO: implement collisions with other robots and get rid of n != 0
+    crash = drive.collision();// && ( n != 0 ); // TODO: implement collisions with other robots and get rid of n != 0
     // TODO: handle IR detection around corners and stuff
     if ( passenger.precise() == 1 && leftPassengers < 2 )
     {
@@ -132,16 +133,16 @@ void loop()
         LCD.print("n: ");
         LCD.print(n);
         LCD.print(" c: ");
-        LCD.print(collision);
+        LCD.print(crash);
         while ( !startbutton() ); // get rid of this
-        if ( n == -3 && collision < 4 );
-        else if ( n == 1 && collision > 5 );
+        if ( n == -3 && crash < 4 );
+        else if ( n == 1 && crash > 5 );
         else
-        {
+          {
           path.update(); // pretend you've hit the intersection you were going towards
           path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
           path.find(); // find the path that leads you away from collision
-        }
+          }
         }*/
 
       if (n == -1)
@@ -208,15 +209,32 @@ void loop()
       n = path.find();
 
       /*drive.brake();
-      drive.stats(false);
-      while ( !startbutton() );*/
+        drive.stats(false);
+        while ( !startbutton() );*/
 
       drive.go();
 
       t = path.turn();
 
+      if (crash)
+      {
+        path.update();
+        switch (t)
+        {
+          case 0: drive.reverse();
+            break;
+          case 1: drive.left(tight);
+            break;
+          case 2: drive.straight();
+            break;
+          case 3: drive.right(tight);
+            break;
+          case 4: drive.uturn(ccw);
+            break;
+        }
+      }
       /*drive.brake();
-      while(!startbutton());*/
+        while(!startbutton());*/
     }
   }
 }

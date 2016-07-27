@@ -34,6 +34,8 @@ public:
     void addDistance(void);
     void removeDistance(void);
     uint16_t getDistance(void);
+    
+    void record(boolean);
 	
 	uint8_t isSacked(void);
 	int8_t describeIntersection(void);
@@ -60,6 +62,10 @@ private:
     int8_t _error;
     int8_t _lastError;
     int8_t _recentError;
+    
+    int8_t _backerror;
+    int8_t _backlastError;
+    int8_t _backrecentError;
     
     uint8_t _c;
     uint8_t _q;
