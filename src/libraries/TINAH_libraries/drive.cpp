@@ -128,7 +128,7 @@ void Drive::record(boolean front){
         
         if (_left) {
             if (_right) _backerror = 0;
-            else _error = -1;
+            else _backerror = -1;
         }
         else {
             if (_right) _backerror = 1;
@@ -153,7 +153,7 @@ void Drive::record(boolean front){
         
         if (_left) {
             if (_right) _backerror = 0;
-            else _error = -1;
+            else _backerror = -1;
         }
         else {
             if (_right) _backerror = 1;

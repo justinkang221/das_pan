@@ -49,7 +49,8 @@ void loop()
         drive.brake();
         while (!startbutton());
       }
-      else {
+      else
+      {
         path.update();
         switch (t)
         {
