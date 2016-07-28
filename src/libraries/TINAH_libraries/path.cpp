@@ -206,14 +206,12 @@ void Path::update(void)
 
 void Path::avoid(void)
 {
-    // if we are in a region
+    // if we are in a region and we haven't entered it direcly from another region
     if (_nextReg == -1 && !(_current >= 10 && _current <= 15 && (_last < 10 || _last > 15))) {
-        //Serial.print("region\n");
         _regDirec = -1 * _regDirec;
         _regIndex += _regDirec;
         // if we just entered a region
         if (_current >= 10 && _current <= 15) {
-            //Serial.print("(just entered)\n");
             _regDirec = (_last > _current) ? 1 : -1;
             _regIndex = _last - (10 + _regDirec);
             _next = _last;
@@ -226,13 +224,11 @@ void Path::avoid(void)
     }
     // if we are on the bridge
     else {
-        //Serial.print("bridge\n");
         _regDirec = -1 * _regDirec;
         _regIndex += _regDirec;
         _nextReg = 5;
         // if we just left a region
         if (_last > 15 || _last < 10) {
-            //Serial.print("(just left)\n");
             if (_last <= 8) {
                 _region = _last - 5;
                 if (_region == 2) {
