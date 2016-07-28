@@ -5,6 +5,8 @@
 #ifndef Pan_h
 #define Pan_h
 
+#include <Arduino.h>
+
 class Pan
 {
 public:
@@ -15,6 +17,8 @@ public:
     void rightUp(void);
     void rightPick(void);
     void rightDrop(void);
+	boolean leftFull(boolean);
+	boolean rightFull(boolean);
 };
 
 #endif

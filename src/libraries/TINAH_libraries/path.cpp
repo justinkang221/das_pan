@@ -216,7 +216,7 @@ boolean Path::nearEndpoint(void)
 
 void Path::passengers(uint8_t passengers)
 {
-    _bias[5] = 100 * passengers;
+    _bias[5] += 5 * passengers;
 }
 
 void Path::avoid(void)

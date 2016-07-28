@@ -3,8 +3,8 @@
 Path path;
 void setup() {
   Serial.begin(9600);
-  path.startingRight();
   path.find();
+  Serial.println("Initialized");
 }
 
 int turn;
@@ -12,7 +12,7 @@ int turn;
 boolean findPath = false;
 uint8_t t, n;
 
-void looop() {
+void loop() {
   turn = path.turn();
   switch (turn) {
     case 0: Serial.print("backwards\n");
@@ -31,7 +31,7 @@ void looop() {
   delay(1000);
 }
 
-void loop()
+void looop()
 {
   while (!startbutton());
   if (!findPath) {

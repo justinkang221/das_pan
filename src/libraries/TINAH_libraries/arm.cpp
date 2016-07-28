@@ -7,7 +7,7 @@
 #include <Arduino.h>
 
 #define _motor (37)
-#define _pot (8)
+#define _pot (11)
 #define _speed (135)
 
 Arm::Arm(void) {}

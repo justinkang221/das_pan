@@ -26,7 +26,7 @@ void setup()
 uint8_t t;
 int8_t n;
 int8_t thing;
-
+uint16_t currDistance;
 
 uint8_t leftPassengers = 0, rightPassengers = 0;
 
@@ -55,6 +55,19 @@ void hileHitler()
       }
       else
       {
+        drive.brake();
+        path.stats();
+        while ( !startbutton() );
+
+        if ( path.nearDrop() ) {
+          drive.brake();
+          LCD.home();
+          LCD.clear();
+          LCD.print("near drop");
+          while( !startbutton() );
+          drive.prepareDrop();
+        }
+        
         path.update();
         switch (t)
         {
@@ -84,19 +97,33 @@ void hileHitler()
         drive.go();
         passenger.stats();
         }*/
-
       drive.brake();
 
-      pan.leftPick();
-
-      if (leftPassengers) arm.leftBack();
+      if (leftPassengers) {
+        currDistance = drive.getDistance();
+        drive.speed(50);
+        while(drive.getDistance() < currDistance + 3) drive.go();
+        drive.brake();
+        arm.leftBack();
+      }
       else arm.leftFront();
+      
+      pan.leftPick();
+      
       arm.cycle();
-
-      path.passengers(++leftPassengers + rightPassengers);
 
       arm.center();
 
+      if (pan.leftFull(leftPassengers)) ++leftPassengers;
+      path.passengers(leftPassengers + rightPassengers);
+      LCD.home();
+      LCD.clear();
+      LCD.print("l: ");
+      LCD.print(leftPassengers);
+      LCD.print(" r: ");
+      LCD.print(rightPassengers);
+      while( !startbutton() );
+      
       pan.leftUp();
       drive.speed(150);
       //drive.go();
@@ -202,8 +229,7 @@ void hileHitler()
 
         path.passengers(leftPassengers + rightPassengers);
       }
-
-      if ( path.nearDrop() ) drive.prepareDrop();
+      
       //if ( path.nearEndpoint() ) drive.prepareEndpoint();
 
       ccw = ( n == 2 );
@@ -212,10 +238,6 @@ void hileHitler()
       drive.go();
 
       n = path.find();
-
-      /*drive.brake();
-        drive.stats(false);
-        while ( !startbutton() );*/
 
       drive.go();
 
