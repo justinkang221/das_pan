@@ -234,7 +234,7 @@ void Path::passengers(uint8_t passengers)
 
 void Path::stats(void)
 {
-    LCD.clear();
+    /*LCD.clear();
     LCD.home();
     
     LCD.print("r:");
@@ -242,7 +242,7 @@ void Path::stats(void)
     LCD.print(" nr:");
     LCD.print(_nextReg);
     
-    LCD.setCursor(0,1);
+    LCD.setCursor(0,1);*/
     
     LCD.print("l:");
     LCD.print(_last);
