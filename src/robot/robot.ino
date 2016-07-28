@@ -35,7 +35,11 @@ boolean crash = false;
 boolean ccw = false;
 boolean tight = false;
 
-void loop()
+void loop(){
+  drive.uturn(true);
+}
+
+void hileHitler()
 {
   drive.go();
 

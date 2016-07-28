@@ -70,7 +70,9 @@ private:
     uint8_t _c;
     uint8_t _q;
     uint8_t _m;
+    
     uint8_t _i;
+    uint8_t _j;
     
     uint16_t _hack;
     uint16_t _sack;
@@ -83,7 +85,7 @@ private:
 	boolean _lost;
 	int8_t _store;
     
-    boolean _backing;
+    uint8_t _backing;
     boolean _black;
     boolean _brack;
 };
