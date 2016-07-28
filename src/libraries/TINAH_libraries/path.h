@@ -18,18 +18,18 @@ public:
     int8_t find(void);
     uint8_t turn(void);
     void update(void);
+    void avoid(void);
     
     boolean nearDrop(void);
     boolean nearEndpoint(void);
     
     void passengers(uint8_t);
-    void avoid(void);
 	
 	int8_t getDirections(void);
     
     void stats(void);
 private:
-    uint8_t _bias[6] = {30, 30, 30, 30, 30, 35}; // weights are for starting on left side
+    uint8_t _bias[6] = {30, 30, 30, 30, 30, 33}; // weights are for starting on left side
     uint8_t _lastSearched[6] = {0};
     
     uint8_t _current;

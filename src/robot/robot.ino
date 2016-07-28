@@ -35,7 +35,7 @@ boolean crash = false;
 boolean ccw = false;
 boolean tight = false;
 
-void loop(){
+void loop() {
   drive.uturn(true);
 }
 
@@ -64,10 +64,10 @@ void hileHitler()
           LCD.home();
           LCD.clear();
           LCD.print("near drop");
-          while( !startbutton() );
+          while ( !startbutton() );
           drive.prepareDrop();
         }
-        
+
         path.update();
         switch (t)
         {
@@ -102,14 +102,14 @@ void hileHitler()
       if (leftPassengers) {
         currDistance = drive.getDistance();
         drive.speed(50);
-        while(drive.getDistance() < currDistance + 3) drive.go();
+        while (drive.getDistance() < currDistance + 3) drive.go();
         drive.brake();
         arm.leftBack();
       }
       else arm.leftFront();
-      
+
       pan.leftPick();
-      
+
       arm.cycle();
 
       arm.center();
@@ -122,8 +122,8 @@ void hileHitler()
       LCD.print(leftPassengers);
       LCD.print(" r: ");
       LCD.print(rightPassengers);
-      while( !startbutton() );
-      
+      while ( !startbutton() );
+
       pan.leftUp();
       drive.speed(150);
       //drive.go();
@@ -157,25 +157,35 @@ void hileHitler()
     if ( corner || crash )
     {
       // TODO: write path.avoid()
-      /*if ( crash )
-        {
-        drive.brake(); // get rid of this
-        LCD.clear();
-        LCD.home();
-        LCD.print("n: ");
-        LCD.print(n);
-        LCD.print(" c: ");
-        LCD.print(crash);
-        while ( !startbutton() ); // get rid of this
-        if ( n == -3 && crash < 4 );
-        else if ( n == 1 && crash > 5 );
-        else
+      if ( crash ) {
+        /*drive.brake(); // get rid of this
+          LCD.clear();
+          LCD.home();
+          LCD.print("n: ");
+          LCD.print(n);
+          LCD.print(" c: ");
+          LCD.print(crash);
+          while ( !startbutton() ); // get rid of this*/
+        if (( n == 2 && crash < 4 ) || ( n == 1 && crash > 5 )) {
+          path.update();
+          switch (t)
           {
-          path.update(); // pretend you've hit the intersection you were going towards
-          path.avoid(); // ADJUST WEIGHTS TO GO AWAY FROM COLLISION
-          path.find(); // find the path that leads you away from collision
+            case 0: drive.reverse();
+              break;
+            case 1: drive.left(tight);
+              break;
+            case 2: drive.straight();
+              break;
+            case 3: drive.right(tight);
+              break;
+            case 4: drive.uturn(ccw);
+              break;
           }
-        }*/
+        }
+        else {
+          path.avoid();
+        }
+      }
 
       if (n == -1)
       {
@@ -229,7 +239,7 @@ void hileHitler()
 
         path.passengers(leftPassengers + rightPassengers);
       }
-      
+
       //if ( path.nearEndpoint() ) drive.prepareEndpoint();
 
       ccw = ( n == 2 );
@@ -245,20 +255,7 @@ void hileHitler()
 
       if (crash)
       {
-        path.update();
-        switch (t)
-        {
-          case 0: drive.reverse();
-            break;
-          case 1: drive.left(tight);
-            break;
-          case 2: drive.straight();
-            break;
-          case 3: drive.right(tight);
-            break;
-          case 4: drive.uturn(ccw);
-            break;
-        }
+
       }
       /*drive.brake();
         while(!startbutton());*/

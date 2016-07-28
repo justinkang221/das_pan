@@ -3,7 +3,6 @@
 Path path;
 void setup() {
   Serial.begin(9600);
-  path.find();
   Serial.println("Initialized");
 }
 
@@ -11,8 +10,11 @@ int turn;
 
 boolean findPath = false;
 uint8_t t, n;
+boolean start = false;
+boolean stop = false;
 
 void loop() {
+  path.find();
   turn = path.turn();
   switch (turn) {
     case 0: Serial.print("backwards\n");
@@ -26,9 +28,20 @@ void loop() {
     case 4: Serial.print("uturn\n");
   }
   path.stats();
-  path.update();
-  path.find();
-  delay(1000);
+  while ( !start && !stop ) {
+    start = startbutton();
+    stop = stopbutton();
+  }
+  if (stop) {
+    Serial.print("collision!\n");
+    path.avoid();
+  }
+  else {
+    path.update();
+  }
+  stop = false;
+  start = false;
+  delay(500);
 }
 
 void looop()

@@ -47,9 +47,9 @@ Path::Path(void)
 {
     // TODO: set initial condition based on switch check
     if (digitalRead(_startingRight)) {
-        _current = 17;
-        _next = 11;
-        _last = 0;
+        _current = 16;
+        _next = 10;
+        _last = 17;
         _region = 0;
         
         _bias[0] = _bias[0] + _bias[4];
@@ -61,14 +61,14 @@ Path::Path(void)
         _bias[1] = _bias[1] - _bias[3];
     }
     else {
-        _current = 19;
-        _next = 14;
-        _last = 4;
+        _current = 20;
+        _next = 15;
+        _last = 19;
         _region = 4;
     }
     
-    _regIndex = 1;
-    _regDirec = -1;
+    _regIndex = 4;
+    _regDirec = 1;
     _nextReg = -1;
     
     _c = 0;
@@ -204,6 +204,19 @@ void Path::update(void)
     _current = _next;
 }
 
+void Path::avoid(void)
+{
+    if (_nextReg == -1) {
+        _next = _last;
+        _regDirec = -1 * _regDirec;
+        _regIndex += _regDirec;
+        //this->stats();
+    }
+    else {
+        
+    }
+}
+
 boolean Path::nearDrop(void)
 {
     return (_next == 18);
@@ -217,11 +230,6 @@ boolean Path::nearEndpoint(void)
 void Path::passengers(uint8_t passengers)
 {
     _bias[5] += 5 * passengers;
-}
-
-void Path::avoid(void)
-{
-    // TODO: adjust weights in favour of the last node
 }
 
 void Path::stats(void)
@@ -254,5 +262,9 @@ void Path::stats(void)
     Serial.print(_nextReg);
     Serial.print("\nnext: ");
     Serial.print(_next);
+    Serial.print("\nreg index:");
+    Serial.print(_regIndex);
+    Serial.print("\nreg direc");
+    Serial.print(_regDirec);
     Serial.print("\n\n\n");
 }
