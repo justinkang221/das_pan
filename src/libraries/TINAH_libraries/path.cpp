@@ -47,9 +47,9 @@ Path::Path(void)
 {
     // TODO: set initial condition based on switch check
     if (digitalRead(_startingRight)) {
-        _current = 16;
-        _next = 10;
-        _last = 17;
+        _current = 17;
+        _next = 16;
+        _last = 0;
         _region = 0;
         
         _bias[0] = _bias[0] + _bias[4];
@@ -67,7 +67,7 @@ Path::Path(void)
         _region = 4;
     }
     
-    _regIndex = 4;
+    _regIndex = 3;
     _regDirec = 1;
     _nextReg = -1;
     
@@ -206,15 +206,64 @@ void Path::update(void)
 
 void Path::avoid(void)
 {
-    if (_nextReg == -1) {
-        _next = _last;
+    // if we are in a region
+    if (_nextReg == -1 && !(_current >= 10 && _current <= 15 && (_last < 10 || _last > 15))) {
+        //Serial.print("region\n");
         _regDirec = -1 * _regDirec;
         _regIndex += _regDirec;
-        //this->stats();
+        // if we just entered a region
+        if (_current >= 10 && _current <= 15) {
+            //Serial.print("(just entered)\n");
+            _regDirec = (_last > _current) ? 1 : -1;
+            _regIndex = _last - (10 + _regDirec);
+            _next = _last;
+            _nextReg = 5;
+            _region = -1;
+        }
+        else {
+            _next = _last;
+        }
     }
+    // if we are on the bridge
     else {
-        
+        //Serial.print("bridge\n");
+        _regDirec = -1 * _regDirec;
+        _regIndex += _regDirec;
+        _nextReg = 5;
+        // if we just left a region
+        if (_last > 15 || _last < 10) {
+            //Serial.print("(just left)\n");
+            if (_last <= 8) {
+                _region = _last - 5;
+                if (_region == 2) {
+                    _regDirec = (_current == 12) ? 1 : -1;
+                }
+                else {
+                    _regDirec = 1;
+                }
+            }
+            else if (_last <= 17) {
+                _region = 0;
+                _regDirec = (_last == 16) ? -1 : 1;
+            }
+            else if (_last == 18) {
+                _region = 5;
+                _regDirec = (_current == 15) ? -1 : 1;
+            }
+            else {
+                _region = 4;
+                _regDirec = (_last == 20) ? -1 : 1;
+            }
+            
+            _regIndex = (_regDirec + 1) ? 0 : _regLengths[_region] - 1;
+            _next = _last;
+        }
+        else {
+            _next = _last;
+        }
     }
+    //Serial.print("avoid\n");
+    //this->stats();
 }
 
 boolean Path::nearDrop(void)
@@ -262,9 +311,9 @@ void Path::stats(void)
     Serial.print(_nextReg);
     Serial.print("\nnext: ");
     Serial.print(_next);
-    Serial.print("\nreg index:");
+    Serial.print("\nreg index: ");
     Serial.print(_regIndex);
-    Serial.print("\nreg direc");
+    Serial.print("\nreg direc: ");
     Serial.print(_regDirec);
     Serial.print("\n\n\n");
 }

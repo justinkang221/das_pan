@@ -35,11 +35,11 @@ boolean crash = false;
 boolean ccw = false;
 boolean tight = false;
 
-void loop() {
+void heilHitler() {
   drive.uturn(true);
 }
 
-void hileHitler()
+void loop()
 {
   drive.go();
 
@@ -156,6 +156,10 @@ void hileHitler()
 
     if ( corner || crash )
     {
+      drive.brake();
+      path.stats();
+      while (!startbutton());
+
       // TODO: write path.avoid()
       if ( crash ) {
         /*drive.brake(); // get rid of this
@@ -168,22 +172,24 @@ void hileHitler()
           while ( !startbutton() ); // get rid of this*/
         if (( n == 2 && crash < 4 ) || ( n == 1 && crash > 5 )) {
           path.update();
-          switch (t)
-          {
-            case 0: drive.reverse();
-              break;
-            case 1: drive.left(tight);
-              break;
-            case 2: drive.straight();
-              break;
-            case 3: drive.right(tight);
-              break;
-            case 4: drive.uturn(ccw);
-              break;
-          }
         }
         else {
           path.avoid();
+          path.find();
+          t = path.turn();
+        }
+        switch (t)
+        {
+          case 0: drive.reverse();
+            break;
+          case 1: drive.left(tight);
+            break;
+          case 2: drive.straight();
+            break;
+          case 3: drive.right(tight);
+            break;
+          case 4: drive.uturn(ccw);
+            break;
         }
       }
 
@@ -252,13 +258,6 @@ void hileHitler()
       drive.go();
 
       t = path.turn();
-
-      if (crash)
-      {
-
-      }
-      /*drive.brake();
-        while(!startbutton());*/
     }
   }
 }

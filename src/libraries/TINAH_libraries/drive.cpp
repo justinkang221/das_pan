@@ -459,7 +459,7 @@ void Drive::uturn(boolean ccw = true)
         if(this->wheel(_wheelL) ) ++_i;
         if(this->collisionSpecific(_col3) || this->collisionSpecific(_col4)) break;
     }
-	
+    }
 	else {
 		// enh
     this->wheel(_wheelL);
