@@ -48,7 +48,7 @@ void loop()
       lastRightDist = drive.getLastTraveledR();
       drive.stats(true);
       path.stats();
-      
+      //need a way to account for movement during turning
       if (lost) {
       if(lastLeftDist > 110 && lastRightDist > 110 && thing == 3) // we are at destination going left
       {
