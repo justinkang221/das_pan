@@ -438,7 +438,7 @@ void Drive::prepareDrop(void)
     // update encoder
     this->wheel(_wheelL);
     
-    _hack = 88;
+    _hack = 80;
 }
 
 void Drive::prepareEndpoint(void)
@@ -516,14 +516,20 @@ boolean Drive::intersection(boolean right){
 
 boolean Drive::intersection(void)
 {
-    _hack && this->wheel(_wheelL) && --_hack;
-    if(_hack == 1)
+    /*if (_hack && this->wheel(_wheelL)) {
+		--_hack;
+		LCD.home();
+		LCD.print(_hack);
+	}*/
+    if(_hack && _hack == _distanceL)
     {
         _distanceL=0;
         _distanceR=0;
 		_sack = 4;
+		_hack = 0;
         this->speed(75);
-		this->wheel(_wheelL);
+		this->brake();
+		while(!startbutton);
         return true;
     }
     else if (_backing){

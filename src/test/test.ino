@@ -100,6 +100,31 @@ void loop()
     ++c;
   }
 
+  menu("pockets");
+  while( !startbutton() );
+  while( !stopbutton() )
+  {
+    if ( c > 30 )
+    {
+      LCD.clear();
+      LCD.home();
+
+      LCD.print("fl:");
+      LCD.print(pan.leftFull(false));
+      LCD.print(" fr:");
+      LCD.print(pan.rightFull(false));
+      LCD.setCursor(0, 1);
+      LCD.print("bl:");
+      LCD.print(pan.leftFull(true));
+      LCD.print(" br:");
+      LCD.print(pan.rightFull(true));
+
+      c = 0;
+    }
+
+    ++c;
+  }
+
   menu("collisions");
   while ( !startbutton() );
   while ( !stopbutton() )
