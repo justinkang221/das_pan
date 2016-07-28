@@ -34,6 +34,8 @@ public:
     void addDistance(void);
     void removeDistance(void);
     uint16_t getDistance(void);
+	uint16_t getLastTraveledL(void);
+	uint16_t getLastTraveledR(void);
     
     void record(boolean);
 	
@@ -47,7 +49,8 @@ private:
     
     uint16_t _distanceR;
     uint16_t _distanceL;
-    
+    uint16_t _oldDistR;
+    uint16_t _oldDistL;    
     
     uint8_t _kp;
     uint8_t _kd;

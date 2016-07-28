@@ -27,6 +27,8 @@ uint8_t t;
 int8_t n;
 int8_t thing;
 uint16_t currDistance;
+uint16_t lastLeftDist;
+uint16_t lastRightDist;
 
 uint8_t leftPassengers = 0, rightPassengers = 0;
 
@@ -39,6 +41,7 @@ void heilHitler() {
   drive.uturn(true);
 }
 
+boolean lost = false;
 void loop()
 {
   drive.go();
@@ -46,25 +49,53 @@ void loop()
   if (drive.isSacked()) {
     thing = drive.describeIntersection();
     if (drive.isSacked() == 0) {
-      if (thing != path.getDirections()) {
-        LCD.print("We're Fucked!");
-        LCD.print(thing);
-        LCD.print(path.getDirections());
-        drive.brake();
-        while (!startbutton());
+      lastLeftDist = drive.getLastTraveledL();
+      lastRightDist = drive.getLastTraveledR();
+      drive.stats(true);
+      path.stats();
+      //need a way to account for movement during turning
+      if (lost) {
+      if(lastLeftDist > 110 && lastRightDist > 110 && thing == 3) // we are at destination going left
+      {
+        lost = false;
+        // tell path where I am
+        }
+      else if(lastLeftDist > 110 && lastRightDist > 110 && thing == 6) // we are at destination going right
+       {
+        lost = false;
+        // tell path where I am
+        }
+      else if (lastLeftDist > 65 && lastLeftDist < 80 && lastRightDist > 100 && thing == 7) // we are at the circle going right
+      {
+        lost = false;
+        // tell path where I am
+        } 
+        else if(lastLeftDist > 110 && lastRightDist > 65 && lastRightDist < 65 && thing == 7) // we are at the circle going left
+        {
+        lost = false;
+        // tell path where I am 
+          }
+      }
+      if (thing != path.getDirections() || lost) 
+      {
+        lost = true;
+        if (thing & B010) t = 2;
+        else if (thing & 101) t = (currDistance % 2==0) ? 1 : 3; 
+        else if (thing & B001) t = 1;
+        else if (thing & B100) t = 3;        
       }
       else
       {
-        drive.brake();
+        /*drive.brake();
         path.stats();
-        while ( !startbutton() );
+        while ( !startbutton() );*/
 
         if ( path.nearDrop() ) {
-          drive.brake();
+          /*drive.brake();
           LCD.home();
           LCD.clear();
           LCD.print("near drop");
-          while ( !startbutton() );
+          while ( !startbutton() );*/
           drive.prepareDrop();
         }
 

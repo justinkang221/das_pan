@@ -64,6 +64,8 @@ Drive::Drive(void)
     
     _distanceR = 0;
     _distanceL = 0;
+	_oldDistR = 0;
+    _oldDistL = 0;
 	
 	_interL = false;
 	_interR = false;
@@ -84,10 +86,11 @@ void Drive::setPD(uint8_t kp, uint8_t kd)
 
 void Drive::addDistance(void){
     if(this->wheel(_wheelR)){
-        _distanceR++;
+		_distanceR++;
     }
     if(this->wheel(_wheelL)){
-        _distanceL++;
+		_distanceL++;
+		if(_sack) --_sack;
     }
 }
 
@@ -102,6 +105,14 @@ void Drive::removeDistance(void){
 
 uint16_t Drive::getDistance(void){
     return min(_distanceR,_distanceL);
+}
+
+uint16_t Drive::getLastTraveledL(void){
+    return _oldDistL;
+}
+
+uint16_t Drive::getLastTraveledR(void){
+    return _oldDistR;
 }
 
 void Drive::record(boolean front){
@@ -226,9 +237,7 @@ void Drive::record(boolean front){
 
 void Drive::left(boolean tight)
 {
-    // update encoder
-    this->wheel(_wheelR);
-    
+ 
     if (tight) {
         /*motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
@@ -301,10 +310,7 @@ void Drive::straight(void)
 }
 
 void Drive::right(boolean tight)
-{
-    // update encoder
-    this->wheel(_wheelL);
-    
+{    
     if (tight) {
         /*motor.speed(_m1, _speed);
         motor.speed(_m2, _speed);
@@ -459,7 +465,7 @@ void Drive::uturn(boolean ccw = true)
         if(this->wheel(_wheelL) ) ++_i;
         if(this->collisionSpecific(_col3) || this->collisionSpecific(_col4)) break;
     }
-    }
+	}
 	else {
 		// enh
     this->wheel(_wheelL);
@@ -536,10 +542,7 @@ void Drive::uturn(boolean ccw = true)
 
 void Drive::prepareDrop(void)
 {
-    // update encoder
-    this->wheel(_wheelL);
-    
-    _hack = 80;
+     _hack = 80;
 }
 
 void Drive::prepareEndpoint(void)
@@ -555,15 +558,18 @@ uint8_t Drive::isSacked(void){
 		return 2;
 	}
 	else{
+		_sack = 0;
 		return 1;
 	}
 }
 
+/* Returns a unique value that describes the intersection
+ *left - 1
+ * straight - 2
+ * right - 4
+ */
 int8_t Drive::describeIntersection(void){
 	if(_sack){
-		if(this->wheel(_wheelL)){
-		--_sack;
-		}
 		if(!_interL && ( digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3) && digitalRead(_qrd3))) 
 		{
 			_interL=true;
@@ -584,7 +590,8 @@ int8_t Drive::describeIntersection(void){
 		){
 			_interS = true;
 		}
-	if(_sack == 0){
+	}
+	else{
 		_store = _interL + 2*_interS + 4*_interR;
 		_interR = false;
 		_interL = false;
@@ -593,8 +600,6 @@ int8_t Drive::describeIntersection(void){
         this->speed(150);
 		return _store;
 	}
-	}
-	else return -1;
 }
 
 /*
@@ -626,7 +631,7 @@ boolean Drive::intersection(void)
     {
         _distanceL=0;
         _distanceR=0;
-		_sack = 4;
+		_sack = 6;
 		_hack = 0;
         this->speed(75);
 		this->brake();
@@ -638,7 +643,6 @@ boolean Drive::intersection(void)
             _distanceL=0;
             _distanceR=0;
             this->speed(150);
-			this->wheel(_wheelL);
             _error = -_error;
             _lastError = -_lastError;
             _recentError = -_recentError;
@@ -654,11 +658,12 @@ boolean Drive::intersection(void)
 			_interR = true;
 		}
 		if(_interR || _interL){
+			_oldDistL = _distanceL;
+			_oldDistR = _distanceR;
 			_distanceL=0;
 			_distanceR=0;
-            _sack = 4;
+            _sack = 6;
             this->speed(75);
-			this->wheel(_wheelL);
 			return true;
 		}
 	}
@@ -743,7 +748,16 @@ void Drive::brake(void)
 
 void Drive::stats(boolean collision)
 {
-    if (_c > 0) {
+	Serial.print("Distance traveled on right:");
+	Serial.println(_oldDistR);
+    Serial.print("Distance traveled on left:");
+	Serial.println(_oldDistL);
+	Serial.print("Distance traveled during intersection right:");
+	Serial.println(_distanceR);
+    Serial.print("Distance traveled during intersection left:");
+	Serial.println(_distanceL);
+	return;
+    /*if (_c > 0) {
         LCD.clear();
         LCD.home();
         
@@ -780,5 +794,5 @@ void Drive::stats(boolean collision)
         _c = 0;
     }
     
-    ++_c;
+    ++_c;*/
 }
