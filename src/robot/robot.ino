@@ -82,7 +82,7 @@ void loop()
           while ( !startbutton() );
           // tell path where I am
         }
-        else if (lastLeftDist > 55 && lastLeftDist < 80 && lastRightDist > 100 && thing == 6) // we are at the circle going right
+        else if (lastLeftDist < 80 && lastRightDist > 100 && thing == 6) // we are at the circle going right
         {
           lost = false;
           // tell path where I am
@@ -91,7 +91,7 @@ void loop()
           drive.brake();
           while ( !startbutton() );
         }
-        else if (lastLeftDist > 100 && lastRightDist > 55 && lastRightDist < 80 && thing == 3) // we are at the circle going left
+        else if (lastLeftDist > 100 && lastRightDist < 80 && thing == 3) // we are at the circle going left
         {
           lost = false;
           // tell path where I am
@@ -283,9 +283,9 @@ void loop()
         n = path.find();
         directions = path.getDirections();
         drive.record(true);
-        drive.brake();
+       /* drive.brake();
         path.stats();
-        while ( !startbutton() );
+        while ( !startbutton() );*/
         t = path.turn();
 
         //if ( path.nearEndpoint() ) drive.prepareEndpoint();

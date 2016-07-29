@@ -76,6 +76,7 @@ Drive::Drive(void)
     
     _i = 0;
     _j = 0;
+	_k = 0;
 }
 
 void Drive::setPD(uint8_t kp, uint8_t kd)
@@ -302,6 +303,8 @@ void Drive::left(boolean tight)
         while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
         _backing = false;
     }
+	_distanceL = 8;
+	_distanceR = 8;
 }
 
 void Drive::straight(void)
@@ -378,6 +381,9 @@ void Drive::right(boolean tight)
         while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
         _backing = false;
     }
+	
+	_distanceL = 8;
+	_distanceR = 8;
 }
 
 void Drive::reverse(void)
@@ -401,9 +407,26 @@ void Drive::uturn(boolean ccw = true)
     this->wheel(_wheelR);
     motor.speed(_m1, -150);
     motor.speed(_m2, -50);
+	
     for ( _i = 0, _j = 0; (_i - _j) < 12;) {
-        if(this->wheel(_wheelL) ) ++_i;
-        if(this->wheel(_wheelR) ) ++_j;
+		
+		if(this->wheel(_wheelL) ){
+			++_i;
+			_k=0;
+		} 
+        else if(this->wheel(_wheelR) ){
+			_k=0;
+			++_j;
+		}
+		else _k++;
+		if(_k>5000){
+			motor.speed(_m1, -150);
+            motor.speed(_m2, -150);
+			delay(250);
+            motor.speed(_m1, -150);
+            motor.speed(_m2, -50);
+			_k=0;
+		}
     }
     /*
     this->brake();
@@ -417,7 +440,19 @@ void Drive::uturn(boolean ccw = true)
     motor.speed(_m2, 125);
     for ( _i = 0; _i < 17;) {
         this->record(true);
-        if(this->wheel(_wheelL) ) ++_i;
+		if(this->wheel(_wheelL) ){
+			++_i;
+			_k=0;
+		}
+		else _k++;
+		if(_k>5000){
+			motor.speed(_m1, -150);
+            motor.speed(_m2, -150);
+			delay(250);
+            motor.speed(_m1, -150);
+            motor.speed(_m2, 125);
+			_k=0;
+		}
         if(this->collisionSpecific(_col1) || this->collisionSpecific(_col2)){
             motor.speed(_m1, -150);
             motor.speed(_m2, -150);
@@ -439,14 +474,30 @@ void Drive::uturn(boolean ccw = true)
     motor.speed(_m2, 150);
     for ( _i = 0, _j = 0; (_j - _i) < 11;) {
         this->record(true);
-        if(this->wheel(_wheelL) ) ++_i;
-        if(this->wheel(_wheelR) ) ++_j;
+		if(this->wheel(_wheelL) ){
+			++_i;
+			_k=0;
+		} 
+        else if(this->wheel(_wheelR) ){
+			_k=0;
+			++_j;
+		}
+		else _k++;
+		if(_k>5000){
+			motor.speed(_m1, -150);
+            motor.speed(_m2, -150);
+			delay(250);
+            motor.speed(_m1, 150);
+            motor.speed(_m2, 50);
+			_k=0;
+		}
         if(this->collisionSpecific(_col1) || this->collisionSpecific(_col2)){
             motor.speed(_m1, -150);
-            motor.speed(_m2, -150);
+            motor.speed(_m2, -50);
             delay(250);
             motor.speed(_m1, 50);
             motor.speed(_m2, 150);
+			_j++;
 			this->wheel(_wheelL);
 			this->wheel(_wheelR);
         }
@@ -478,8 +529,23 @@ void Drive::uturn(boolean ccw = true)
     motor.speed(_m1, -50);
     motor.speed(_m2, -150);
     for ( _i = 0, _j = 0; (_i - _j) < 12;) {
-        if(this->wheel(_wheelL) ) ++_j;
-        if(this->wheel(_wheelR) ) ++_i;
+		if(this->wheel(_wheelL) ){
+			++_j;
+			_k=0;
+		} 
+        else if(this->wheel(_wheelR) ){
+			_k=0;
+			++_i;
+		}
+		else _k++;
+		if(_k>5000){
+			motor.speed(_m1, -150);
+            motor.speed(_m2, -150);
+			delay(250);
+            motor.speed(_m1, -50);
+            motor.speed(_m2, -150);
+			_k=0;
+		}
     }
     /*
     this->brake();
@@ -494,6 +560,19 @@ void Drive::uturn(boolean ccw = true)
     for ( _i = 0; _i < 17;) {
         this->record(true);
         if(this->wheel(_wheelR) ) ++_i;
+		if(this->wheel(_wheelR) ){
+			++_i;
+			_k=0;
+		}
+		else _k++;
+		if(_k>5000){
+			motor.speed(_m1, -150);
+            motor.speed(_m2, -150);
+			delay(250);
+            motor.speed(_m1, 125);
+            motor.speed(_m2, -150);
+			_k=0;
+		}
         if(this->collisionSpecific(_col1) || this->collisionSpecific(_col2)){
             motor.speed(_m1, -150);
             motor.speed(_m2, -150);
@@ -515,14 +594,30 @@ void Drive::uturn(boolean ccw = true)
     motor.speed(_m2, 50);
     for ( _i = 0, _j = 0; (_j - _i) < 11;) {
         this->record(true);
-        if(this->wheel(_wheelL) ) ++_j;
-        if(this->wheel(_wheelR) ) ++_i;
+        if(this->wheel(_wheelL) ){
+			++_j;
+			_k=0;
+		} 
+        else if(this->wheel(_wheelR) ){
+			_k=0;
+			++_i;
+		}
+		else _k++;
+		if(_k>5000){
+			motor.speed(_m1, -150);
+            motor.speed(_m2, -150);
+			delay(250);
+            motor.speed(_m1, 150);
+            motor.speed(_m2, 50);
+			_k=0;
+		}
         if(this->collisionSpecific(_col1) || this->collisionSpecific(_col2)){
-            motor.speed(_m1, -150);
+            motor.speed(_m1, -50);
             motor.speed(_m2, -150);
             delay(250);
             motor.speed(_m1, 150);
             motor.speed(_m2, 50);
+			_j++;
 			this->wheel(_wheelL);
 			this->wheel(_wheelR);
         }
