@@ -100,7 +100,7 @@ void loop()
           LCD.print(t);
           while ( !startbutton() );
         }
-        else if (lastLeftDist > 55 && lastLeftDist < 80 && lastRightDist > 100 && thing == 6) // we are at the circle going right
+        else if (lastLeftDist < 80 && lastRightDist > 100 && thing == 6) // we are at the circle going right
         {
           lost = false;
           LCD.setCursor(0, 1);
@@ -118,7 +118,7 @@ void loop()
           LCD.print(t);
           while ( !startbutton() );
         }
-        else if (lastLeftDist > 100 && lastRightDist > 55 && lastRightDist < 80 && thing == 3) // we are at the circle going left
+        else if (lastLeftDist > 100 && lastRightDist < 80 && thing == 3) // we are at the circle going left
         {
           lost = false;
           LCD.setCursor(0, 1);
