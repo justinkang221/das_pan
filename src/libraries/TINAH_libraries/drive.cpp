@@ -22,13 +22,13 @@
 
 #define _threshold (500)
 
-#define _col1 (15)
-#define _col2 (14)
-#define _col3 (12)
-#define _col4 (13)
+#define _col1 (12)
+#define _col2 (13)
+#define _col3 (14)
+#define _col4 (15)
 
-#define _wheelL (9)
-#define _wheelR (10)
+#define _wheelL (6)
+#define _wheelR (7)
 
 Drive::Drive(void)
 {
@@ -854,7 +854,7 @@ void Drive::brake(void)
 
 void Drive::stats(boolean collision)
 {
-	Serial.print("Distance traveled on right:");
+	/*Serial.print("Distance traveled on right:");
 	Serial.println(_oldDistR);
     Serial.print("Distance traveled on left:");
 	Serial.println(_oldDistL);
@@ -862,8 +862,8 @@ void Drive::stats(boolean collision)
 	Serial.println(_distanceR);
     Serial.print("Distance traveled during intersection left:");
 	Serial.println(_distanceL);
-	return;
-    /*if (_c > 0) {
+	return;*/
+    if (_c > 30) {
         LCD.clear();
         LCD.home();
         
@@ -886,7 +886,7 @@ void Drive::stats(boolean collision)
             LCD.print(" bl:");
             LCD.print(digitalRead(_qrd5));
             LCD.print(" il:");
-            LCD.print(digitalRead(_qrd4));
+            LCD.print(digitalRead(_qrd3));
             
             LCD.setCursor(0,1);
             
@@ -900,5 +900,5 @@ void Drive::stats(boolean collision)
         _c = 0;
     }
     
-    ++_c;*/
+    ++_c;
 }

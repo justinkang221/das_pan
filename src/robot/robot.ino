@@ -41,17 +41,23 @@ boolean avoids = false;
 uint8_t directions = 0;
 boolean endpoint = false;
 
-void loops()
+void loop()
+{
+  passenger.stats();
+}
+
+void looped()
 {
   drive.go();
   if (drive.intersection()) {
-    drive.uturn(true);
+    LCD.home();
+    LCD.print("inter");
     drive.brake();
     while (!startbutton());
   }
 }
 
-void loop()
+void lupus()
 {
   drive.go();
 

@@ -6,7 +6,7 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _startingRight (8)
+#define _startingRight (A5)
 
 static const int8_t _intersections[21][4] = {
     { -1, 17, -1, -1}, // 0

@@ -6,10 +6,10 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _pocket1 (7)
-#define _pocket2 (6)
-#define _pocket3 (0) //not yet implemented
-#define _pocket4 (0) //not yet implemented
+#define _pocket1 (10)
+#define _pocket2 (11)
+#define _pocket3 (8) 
+#define _pocket4 (9) 
 
 Pan::Pan(void) {}
 
@@ -51,5 +51,6 @@ boolean Pan::leftFull(boolean _backPocket)
 
 boolean Pan::rightFull(boolean _backPocket)
 {
-	return false;
+	if (_backPocket) return !(digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3));
+	else return !(digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4));
 }
