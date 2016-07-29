@@ -319,7 +319,7 @@ void loop()
         n = path.find();
         directions = path.getDirections();
         drive.record(true);
-        
+
         t = path.turn();
 
         //if ( path.nearEndpoint() ) drive.prepareEndpoint();

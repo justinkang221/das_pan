@@ -76,6 +76,7 @@ private:
     
     uint8_t _i;
     uint8_t _j;
+	uint16_t _k;
     
     uint16_t _hack;
     uint16_t _sack;
