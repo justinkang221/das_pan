@@ -48,7 +48,7 @@ Path::Path(void)
     // TODO: set initial condition based on switch check
     if (digitalRead(_startingRight)) {
         _current = 17;
-        _next = 16;
+        _next = 11;
         _last = 0;
         _region = 0;
         
@@ -61,14 +61,14 @@ Path::Path(void)
         _bias[1] = _bias[1] - _bias[3];
     }
     else {
-        _current = 20;
-        _next = 15;
-        _last = 19;
+        _current = 19;
+        _next = 14;
+        _last = 4;
         _region = 4;
     }
     
-    _regIndex = 3;
-    _regDirec = 1;
+    _regIndex = 1;
+    _regDirec = -1;
     _nextReg = -1;
     
     _c = 0;
@@ -176,7 +176,6 @@ int8_t Path::find(void)
 uint8_t Path::turn(void)
 {
     //if (_current == 2) return 4;
-    
     // find index of destination node
     _ii = 0;
     while (_intersections[_current][_ii] != _next) ++_ii;
@@ -279,15 +278,19 @@ void Path::passengers(uint8_t passengers)
 
 void Path::stats(void)
 {
-    /*LCD.clear();
+    LCD.clear();
     LCD.home();
     
     LCD.print("r:");
     LCD.print(_region);
-    LCD.print(" nr:");
+    LCD.print("nr:");
     LCD.print(_nextReg);
+    LCD.print("d:");
+    LCD.print(_regDirec);
+    LCD.print("i:");
+    LCD.print(_regIndex);
     
-    LCD.setCursor(0,1);*/
+    LCD.setCursor(0,1);
     
     LCD.print("l:");
     LCD.print(_last);

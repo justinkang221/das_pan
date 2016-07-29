@@ -29,7 +29,7 @@ public:
     
     void stats(void);
 private:
-    uint8_t _bias[6] = {33, 30, 30, 30, 30, 34}; // weights are for starting on left side
+    uint8_t _bias[6] = {30, 30, 30, 33, 30, 30}; // weights are for starting on left side
     uint8_t _lastSearched[6] = {0};
     
     uint8_t _current;

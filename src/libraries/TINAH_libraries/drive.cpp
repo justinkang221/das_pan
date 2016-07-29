@@ -465,6 +465,11 @@ void Drive::uturn(boolean ccw = true)
         if(this->wheel(_wheelL) ) ++_i;
         if(this->collisionSpecific(_col3) || this->collisionSpecific(_col4)) break;
     }
+        while(!(digitalRead(_qrd2) || digitalRead(_qrd2) || digitalRead(_qrd2))){
+            this->go();
+        }
+        _distanceL = 0;
+        _distanceR = 0;
 	}
 	else {
 		// enh
@@ -537,6 +542,12 @@ void Drive::uturn(boolean ccw = true)
         if(this->collisionSpecific(_col3) || this->collisionSpecific(_col4)) break;
     }
 	}
+    
+    while(!(digitalRead(_qrd1) || digitalRead(_qrd1) || digitalRead(_qrd1))){
+        this->go();
+    }
+    _distanceL = 0;
+    _distanceR = 0;
     
 }
 
