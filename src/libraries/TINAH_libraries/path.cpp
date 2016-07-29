@@ -276,6 +276,27 @@ void Path::passengers(uint8_t passengers)
     _bias[5] += 5 * passengers;
 }
 
+void Path::reorient(uint8_t node) {
+    if (node == 12 || node == 13) {
+        _region = -1;
+        _next = (node == 12)? 11: 14;
+        _current = node;
+        _last = (node == 12)? 13: 12;
+        _regIndex = node - 10;
+        _regDirec = (node == 12)? -1: 1;
+        _nextReg = (node == 12)? 1: 3;
+    }
+    else {
+        _region = (node == 10)? 0: 4;
+        _next = (node == 10)? 16: 20;
+        _current = node;
+        _last = 18;
+        _regIndex = 5;
+        _regDirec = -1;
+        _nextReg = -1;
+    }
+}
+
 void Path::stats(void)
 {
     LCD.clear();

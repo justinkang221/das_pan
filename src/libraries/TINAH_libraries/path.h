@@ -24,7 +24,8 @@ public:
     boolean nearEndpoint(void);
     
     void passengers(uint8_t);
-	
+    void reorient(uint8_t);
+    
 	int8_t getDirections(void);
     
     void stats(void);

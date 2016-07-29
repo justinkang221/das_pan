@@ -67,10 +67,19 @@ void loop()
         if (lastLeftDist > 110 && lastRightDist > 110 && thing == 3) // we are at destination 15
         {
           lost = false;
-          // tell path where I am
           LCD.setCursor(0, 1);
           LCD.print("I'm found 15");
           drive.brake();
+          path.reorient(15);
+          directions = path.getDirections();
+          t = path.turn();
+          LCD.home();
+          LCD.print("d:");
+          LCD.print(directions);
+          LCD.print(" th:");
+          LCD.print(thing);
+          LCD.print(" t:");
+          LCD.print(t);
           while ( !startbutton() );
         }
         else if (lastLeftDist > 110 && lastRightDist > 110 && thing == 6) // we are at destination 10
@@ -79,25 +88,52 @@ void loop()
           LCD.setCursor(0, 1);
           LCD.print("I'm found 10");
           drive.brake();
+          path.reorient(10);
+          directions = path.getDirections();
+          t = path.turn();
+          LCD.home();
+          LCD.print("d:");
+          LCD.print(directions);
+          LCD.print(" th:");
+          LCD.print(thing);
+          LCD.print(" t:");
+          LCD.print(t);
           while ( !startbutton() );
-          // tell path where I am
         }
         else if (lastLeftDist < 80 && lastRightDist > 100 && thing == 6) // we are at the circle going right
         {
           lost = false;
-          // tell path where I am
           LCD.setCursor(0, 1);
           LCD.print("I'm found CR");
           drive.brake();
+          path.reorient(13);
+          directions = path.getDirections();
+          t = path.turn();
+          LCD.home();
+          LCD.print("d:");
+          LCD.print(directions);
+          LCD.print(" th:");
+          LCD.print(thing);
+          LCD.print(" t:");
+          LCD.print(t);
           while ( !startbutton() );
         }
         else if (lastLeftDist > 100 && lastRightDist < 80 && thing == 3) // we are at the circle going left
         {
           lost = false;
-          // tell path where I am
           LCD.setCursor(0, 1);
           LCD.print("I'm found CL");
           drive.brake();
+          path.reorient(12);
+          directions = path.getDirections();
+          t = path.turn();
+          LCD.home();
+          LCD.print("d:");
+          LCD.print(directions);
+          LCD.print(" th:");
+          LCD.print(thing);
+          LCD.print(" t:");
+          LCD.print(t);
           while ( !startbutton() );
         }
       }
@@ -283,9 +319,7 @@ void loop()
         n = path.find();
         directions = path.getDirections();
         drive.record(true);
-       /* drive.brake();
-        path.stats();
-        while ( !startbutton() );*/
+
         t = path.turn();
 
         //if ( path.nearEndpoint() ) drive.prepareEndpoint();
