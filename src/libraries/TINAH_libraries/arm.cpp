@@ -14,14 +14,20 @@ Arm::Arm(void) {}
 
 void Arm::leftFront(void)
 {
-    RCServo0.write(176);
+    RCServo0.write(172);
     delay(1000);
 }
 
 void Arm::leftBack(void)
 {
-    RCServo0.write(155);
+    RCServo0.write(158);
     delay(1000);
+}
+
+void Arm::leftCenter(void)
+{
+	RCServo0.write(165);
+	delay(1000);
 }
 
 void Arm::center(void)
@@ -31,14 +37,20 @@ void Arm::center(void)
 
 void Arm::rightFront(void)
 {
-    RCServo0.write(1);
+    RCServo0.write(0);
     delay(1000);
 }
 
 void Arm::rightBack(void)
 {
-    RCServo0.write(10);
+    RCServo0.write(14);
     delay(1000);
+}
+
+void Arm::rightCenter(void)
+{
+	RCServo0.write(7);
+	delay(1000);
 }
 
 void Arm::cycle(void)

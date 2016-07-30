@@ -17,8 +17,8 @@ public:
     void rightUp(void);
     void rightPick(void);
     void rightDrop(void);
-	boolean leftFull(boolean);
-	boolean rightFull(boolean);
+	boolean leftFull(void);
+	boolean rightFull(void);
 };
 
 #endif

@@ -30,7 +30,7 @@ uint16_t currDistance;
 uint16_t lastLeftDist;
 uint16_t lastRightDist;
 
-uint8_t leftPassengers = 0, rightPassengers = 0;
+boolean leftPassengers = false, rightPassengers = false;
 
 boolean corner = false;
 boolean crash = false;
@@ -46,18 +46,17 @@ void loop()
   passenger.stats();
 }
 
-void looped()
+void loops()
 {
   drive.go();
   if (drive.intersection()) {
-    LCD.home();
-    LCD.print("inter");
+    drive.uturn(true);
     drive.brake();
     while (!startbutton());
   }
 }
 
-void lupus()
+void loopinsMurdocTheAcclaimedVampyreHunter()
 {
   drive.go();
 
@@ -188,66 +187,82 @@ void lupus()
     corner = drive.intersection();
     crash = drive.collision();// && ( n != 0 ); // TODO: implement collisions with other robots and get rid of n != 0
     // TODO: handle IR detection around corners and stuff
-    if ( passenger.precise() == 1 && leftPassengers < 2 )
+    if ( passenger.coarse() == 1 && !leftPassengers)
     {
       drive.speed(50);
-      /*while ( passenger.precise() != 1 ) {
+      currDistance = drive.getDistance();
+      while ( drive.getDistance() < currDistance + 4 ) {
         drive.go();
-        passenger.stats();
-        }*/
-      drive.brake();
+        //passenger.stats();
+        if ( passenger.precise() == 1) {
+          drive.brake();
 
-      if (leftPassengers) {
-        currDistance = drive.getDistance();
-        drive.speed(50);
-        while (drive.getDistance() < currDistance + 3) drive.go();
-        drive.brake();
-        arm.leftBack();
+          arm.leftCenter();
+          pan.leftPick();
+          arm.cycle();
+
+          if (pan.leftFull()) { leftPassengers = true; pan.leftUp(); break; }
+
+          arm.leftFront();
+          arm.cycle();
+
+          if (pan.leftFull()) { leftPassengers = true; pan.leftUp(); break; }
+
+          arm.leftBack();
+          arm.cycle();
+
+          if (pan.leftFull()) { leftPassengers = true; pan.leftUp(); }
+          break;
+        }
       }
-      else arm.leftFront();
-
-      pan.leftPick();
-
-      arm.cycle();
-
-      arm.center();
-
-      if (pan.leftFull(leftPassengers)) ++leftPassengers;
       path.passengers(leftPassengers + rightPassengers);
-      LCD.home();
+      /*LCD.home();
       LCD.clear();
       LCD.print("l: ");
       LCD.print(leftPassengers);
       LCD.print(" r: ");
       LCD.print(rightPassengers);
-      while ( !startbutton() );
-
-      pan.leftUp();
+      while ( !startbutton() );*/
       drive.speed(150);
       //drive.go();
     }
 
-    if ( passenger.precise() == 2 && rightPassengers < 2 )
+    if ( passenger.coarse() == 2 && !rightPassengers )
     {
       drive.speed(50);
-      /*while ( passenger.precise() != 2 ) {
+      currDistance = drive.getDistance();
+      while ( drive.getDistance() < currDistance + 4 ) {
         drive.go();
-        passenger.stats();
-        }*/
+        //passenger.stats();
+        if ( passenger.precise() == 2) {
+          drive.brake();
 
-      drive.brake();
+          arm.rightCenter();
+          pan.rightPick();
+          arm.cycle();
 
-      pan.rightPick();
+          if (pan.rightFull()) { rightPassengers = true; pan.rightUp(); break; }
 
-      if (rightPassengers) arm.rightBack();
-      else arm.rightFront();
-      arm.cycle();
+          arm.rightFront();
+          arm.cycle();
 
-      path.passengers(leftPassengers + ++rightPassengers);
+          if (pan.rightFull()) { rightPassengers = true; pan.rightUp(); break; }
 
-      arm.center();
+          arm.rightBack();
+          arm.cycle();
 
-      pan.rightUp();
+          if (pan.rightFull()) { rightPassengers = true; pan.rightUp(); }
+          break;
+        }
+      }
+      path.passengers(leftPassengers + rightPassengers);
+      /*LCD.home();
+      LCD.clear();
+      LCD.print("l: ");
+      LCD.print(leftPassengers);
+      LCD.print(" r: ");
+      LCD.print(rightPassengers);
+      while ( !startbutton() );*/
       drive.speed(150);
       //drive.go();
     }

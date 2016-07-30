@@ -13,9 +13,11 @@ public:
     Arm(void);
     void leftFront(void);
     void leftBack(void);
+	void leftCenter(void);
     void center(void);
     void rightFront(void);
     void rightBack(void);
+	void rightCenter(void);
     void cycle(void);
 };
 

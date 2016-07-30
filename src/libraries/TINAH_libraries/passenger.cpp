@@ -17,7 +17,8 @@
 #define _r2 (3)
 
 #define _threshold (200)
-#define _precise (240)
+#define _precise (500)
+#define _coarse (150)
 
 Passenger::Passenger(void)
 {
@@ -38,6 +39,13 @@ uint8_t Passenger::precise(void)
 {
     if (analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise && analogRead(_leftIR2) > _precise) return 1;
     else if(analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise && analogRead(_rightIR2) > _precise) return 2;
+    return 0;
+}
+
+uint8_t Passenger::coarse(void)
+{
+    if (analogRead(_leftIR2) > _coarse && analogRead(_leftIR2) > _coarse && analogRead(_leftIR2) > _coarse && analogRead(_leftIR2) > _coarse && analogRead(_leftIR2) > _coarse) return 1;
+    else if(analogRead(_rightIR2) > _coarse && analogRead(_rightIR2) > _coarse && analogRead(_rightIR2) > _coarse && analogRead(_rightIR2) > _coarse && analogRead(_rightIR2) > _coarse) return 2;
     return 0;
 }
 

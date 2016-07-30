@@ -43,14 +43,12 @@ void Pan::rightDrop(void)
     RCServo2.write(25);
 }
 
-boolean Pan::leftFull(boolean _backPocket)
+boolean Pan::leftFull(void)
 {
-	if (_backPocket) return !(digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1));
-	else return !(digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2));
+	return !(digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1)) || !(digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2));
 }
 
-boolean Pan::rightFull(boolean _backPocket)
+boolean Pan::rightFull(void)
 {
-	if (_backPocket) return !(digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3));
-	else return !(digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4));
+	return !(digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3)) || !(digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4));
 }
