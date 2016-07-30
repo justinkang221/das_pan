@@ -21,6 +21,7 @@ public:
     void right(boolean);
     void reverse(void);
     void uturn(boolean);
+    void unturn(boolean, boolean);
     
     boolean intersection(void);
     boolean collision(void);
@@ -50,7 +51,9 @@ private:
     uint16_t _distanceR;
     uint16_t _distanceL;
     uint16_t _oldDistR;
-    uint16_t _oldDistL;    
+    uint16_t _oldDistL;
+    uint8_t _turnL;
+    uint8_t _turnR;
     
     uint8_t _kp;
     uint8_t _kd;
@@ -92,6 +95,7 @@ private:
     uint8_t _backing;
     boolean _black;
     boolean _brack;
+    boolean _interrupt;
 };
 
 #endif

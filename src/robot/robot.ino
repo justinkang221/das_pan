@@ -41,11 +41,6 @@ boolean avoids = false;
 uint8_t directions = 0;
 boolean endpoint = false;
 
-void loop()
-{
-  passenger.stats();
-}
-
 void loops()
 {
   drive.go();
@@ -56,15 +51,17 @@ void loops()
   }
 }
 
-void loopinsMurdocTheAcclaimedVampyreHunter()
+void loop()
 {
   drive.go();
 
   if (drive.isSacked()) {
     thing = drive.describeIntersection();
+
     if (drive.isSacked() == 0) {
       lastLeftDist = drive.getLastTraveledL();
       lastRightDist = drive.getLastTraveledR();
+
       //drive.stats(true);
       //path.stats();
       //need a way to account for movement during turning
@@ -330,7 +327,7 @@ void loopinsMurdocTheAcclaimedVampyreHunter()
 
           path.passengers(leftPassengers + rightPassengers);
         }
-        
+
         ccw = ( n == 2 );
         tight = ( n == 3 );
         if (( n == 2) || ( n == 1)) {
@@ -357,9 +354,9 @@ void loopinsMurdocTheAcclaimedVampyreHunter()
             directions = path.getDirections();
           }
         }
-        
+
         path.update();
-        
+
         drive.record(true);
       }
     }
