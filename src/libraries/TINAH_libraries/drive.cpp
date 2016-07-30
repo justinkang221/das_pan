@@ -66,12 +66,15 @@ Drive::Drive(void)
     _distanceL = 0;
 	_oldDistR = 0;
     _oldDistL = 0;
+    _turnL = 0;
+    _turnR = 0;
 	
 	_interL = false;
 	_interR = false;
 	_interS = true;
 	_interSPast = false;
 	_lost = false;
+    _interrupt = false;
 	_store = 0;
     
     _i = 0;
@@ -171,7 +174,7 @@ void Drive::record(boolean front){
     }
 }
 
-    void Drive::go(void)
+void Drive::go(void)
 {
     if (_backing) {
         this->record(true);
@@ -238,69 +241,74 @@ void Drive::record(boolean front){
 
 void Drive::left(boolean tight)
 {
- 
     if (tight) {
-        /*motor.speed(_m1, _speed);
-        motor.speed(_m2, _speed);
-        for (_i = 0; _i<6; _i++){
-        	while( !this->wheel(_wheelR) );
-        	}
-        // delay(150);
-        */
-        if (_backing) {
-            motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
+        
+        /*if (_backing) {
+            motor.speed(_m2, 1.5 * _tightness * _turnSpeed / 100);
             motor.speed(_m1, _turnSpeed);
-            for (_i = 0; _i<2; _i++){
-        	while( !this->wheel(_wheelR) );
+            for (_i = 0; _i < 2; ++_i){
+                while( !this->wheel(_wheelR) );
         	}
-            //delay(150);
-            _lastError = -5;
+         _lastError = -5;
         }
-        else {
-            motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
-            motor.speed(_m2, _turnSpeed);
-            for (_i = 0; _i<2; _i++){
-        	while( !this->wheel(_wheelR) );
-        	}
-            // delay(150);
-            _lastError = 5;
+        else {*/
+        motor.speed(_m1, 1.5 * _tightness * _turnSpeed / 100);
+        motor.speed(_m2, _turnSpeed);
+        for (_i = 0; _i < 2; ++_i) {
+            while( !this->wheel(_wheelR) );
         }
+        _lastError = 5;
         _error = 0;
         _recentError = 0;
+        //}
         
-        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
-        _backing = false;
+        while ( !(digitalRead(_qrd1) && digitalRead(_qrd2)) ) {
+            if ( this->wheel(_wheelR) ) ++_i;
+            if ( this->collision() ) {
+                _interrupt = true;
+                break;
+            }
+        }
+        
+        if (_interrupt) {
+            this->unturn(true, true);
+            _interrupt = false;
+        }
     }
     else {
-        /*motor.speed(_m1, _speed);
-        motor.speed(_m2, _speed);
-        for (_i = 0; _i<6; _i++){
-        	while( !this->wheel(_wheelR) );
-        	}
-        // delay(150);
-        */
-        if (_backing) {
+        
+        /*if (_backing) {
             motor.speed(_m2, _tightness*_turnSpeed/100);
             motor.speed(_m1, _turnSpeed);
-            for (_i = 0; _i<2; _i++){
-        	while( !this->wheel(_wheelR) );
+            for (_i = 0; _i < 2; ++_i){
+                while( !this->wheel(_wheelR) );
         	}
-            // delay(150);
-            _lastError = -5;
+         _lastError = -5;
         }
-        else {
-            motor.speed(_m1, _tightness*_turnSpeed/100);
-            motor.speed(_m2, _turnSpeed);
-            for (_i = 0; _i<2; _i++){
-        	while( !this->wheel(_wheelR) );
-        	}
-            // delay(150);
-            _lastError = 5;
+        else {*/
+        motor.speed(_m1, _tightness*_turnSpeed/100);
+        motor.speed(_m2, _turnSpeed);
+        for (_i = 0; _i < 2; ++_i){
+            while( !this->wheel(_wheelR) );
         }
+        _lastError = 5;
         _error = 0;
         _recentError = 0;
+        //}
         
-        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2))) {
+            if ( this->wheel(_wheelR) ) ++_i;
+            if ( this->collision() ) {
+                _interrupt = true;
+                break;
+            }
+        }
+        
+        if (_interrupt) {
+            this->unturn(true, false);
+            _interrupt = false;
+        }
+        
         _backing = false;
     }
 	_distanceL = 8;
@@ -315,75 +323,128 @@ void Drive::straight(void)
 void Drive::right(boolean tight)
 {    
     if (tight) {
-        /*motor.speed(_m1, _speed);
-        motor.speed(_m2, _speed);
-        for (_i = 0; _i<6; _i++){
-        	while( !this->wheel(_wheelL) );
-        	}
-        // delay(150);
-        */
-        if (_backing) {
+        
+        /*if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, 1.5 * _tightness*_turnSpeed/100);
             for (_i = 0; _i<2; _i++){
         	while( !this->wheel(_wheelL) );
         	}
-            // delay(150);
             _lastError = 5;
             
         }
-        else {
-            motor.speed(_m1, _turnSpeed);
-            motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
-            for (_i = 0; _i<2; _i++){
-        	while( !this->wheel(_wheelL) );
-        	}
-            // delay(150);
-            _lastError = -5;
+        else {*/
+        motor.speed(_m1, _turnSpeed);
+        motor.speed(_m2, 1.5 * _tightness*_turnSpeed/100);
+        for (_i = 0; _i < 2; ++_i){
+            while( !this->wheel(_wheelL) );
         }
+        _lastError = -5;
         _error = 0;
         _recentError = 0;
+        //}
         
-        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2))) {
+            if (this->wheel(_wheelL)) ++_i;
+            if ( this->collision() ) {
+                _interrupt = true;
+                break;
+            }
+        }
+        
+        if (_interrupt) {
+            this->unturn(false, true);
+            _interrupt = false;
+        }
+        
         _backing = false;
     }
     else {
-		/*
-        motor.speed(_m1, _speed);
-        motor.speed(_m2, _speed);
-        for (_i = 0; _i<6; _i++){
-        	while( !this->wheel(_wheelL) );
-        	}
-        // delay(150);
-        */
-        if (_backing) {
+		
+        /*if (_backing) {
             motor.speed(_m2, _turnSpeed);
             motor.speed(_m1, _tightness*_turnSpeed/100);
             for (_i = 0; _i<2; _i++){
         	while( !this->wheel(_wheelL) );
         	}
-            // delay(150);
             _lastError = 5;
             
         }
-        else {
-            motor.speed(_m1, _turnSpeed);
-            motor.speed(_m2, _tightness*_turnSpeed/100);
-            for (_i = 0; _i<2; _i++){
-        	while( !this->wheel(_wheelL) );
-        	}
-            // delay(150);
-            _lastError = -5;
+        else {*/
+        motor.speed(_m1, _turnSpeed);
+        motor.speed(_m2, _tightness*_turnSpeed/100);
+        for (_i = 0; _i<2; _i++){
+            while( !this->wheel(_wheelL) );
         }
+        _lastError = -5;
         _error = 0;
         _recentError = 0;
+        //}
         
-        while (!(digitalRead(_qrd1) && digitalRead(_qrd2)));
+        while (!(digitalRead(_qrd1) && digitalRead(_qrd2))) {
+            if (this->wheel(_wheelL)) ++_i;
+            if ( this->collision() ) {
+                _interrupt = true;
+                break;
+            }
+        }
+        
+        if (_interrupt) {
+            this->unturn(false, false);
+            _interrupt = false;
+        }
+        
         _backing = false;
     }
 	
 	_distanceL = 8;
 	_distanceR = 8;
+}
+
+void Drive::unturn(boolean left, boolean tight)
+{
+    if (left) {
+        LCD.home();
+        LCD.print("interrupt ");
+        LCD.print(_i);
+        this->brake();
+        while (!startbutton() );
+        motor.speed(_m1, -1 * (_tightness*_turnSpeed/100) * (1 + tight * 0.5));
+        motor.speed(_m2, -1 * _turnSpeed);
+        for (; _i > 0; --_i) {
+            while ( !this->wheel(_wheelR) );
+            if (digitalRead(_qrd1) && digitalRead(_qrd2)) {
+                break;
+            }
+        }
+        motor.speed(_m1, -75);
+        motor.speed(_m2, -75);
+        for (_i = 0; _i < 4; ++_i) {
+            while ( !this->wheel(_wheelR));
+        }
+        this->uturn(true);
+    }
+    else {
+        LCD.home();
+        LCD.print("interrupt ");
+        LCD.print(_i);
+        this->brake();
+        while (!startbutton() );
+        motor.speed(_m1, -1 * _turnSpeed);
+        motor.speed(_m2, (-1 * (_tightness*_turnSpeed/100)) * (1 + tight * 0.5));
+        for (; _i > 0; --_i) {
+            while ( !this->wheel(_wheelL) );
+            if (digitalRead(_qrd1) && digitalRead(_qrd2)) {
+                break;
+            }
+        }
+        motor.speed(_m1, -75);
+        motor.speed(_m2, -75);
+        for (_i = 0; _i < 4; ++_i) {
+            while( !this->wheel(_wheelL) );
+        }
+        this->uturn(true);
+    }
 }
 
 void Drive::reverse(void)
@@ -670,7 +731,7 @@ uint8_t Drive::isSacked(void){
 }
 
 /* Returns a unique value that describes the intersection
- *left - 1
+ * left - 1
  * straight - 2
  * right - 4
  */
