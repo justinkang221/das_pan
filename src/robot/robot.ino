@@ -46,6 +46,13 @@ boolean endpoint = false;
 
 void loop()
 {
+  drive.uturn(true);
+  drive.brake();
+  while( !startbutton() );
+}
+
+void zeitgeist()
+{
   drive.go();
 
   if ( drive.atIntersection() ) {
