@@ -55,6 +55,13 @@ intersection		KEYWORD2
 collision		KEYWORD2
 prepareDrop		KEYWORD2
 prepareEndpoint		KEYWORD2
+getDistance		KEYWORD2
+leftDistance		KEYWORD2
+rightDistance		KEYWORD2
+atIntersection		KEYWORD2
+describeIntersection	KEYWORD2
+record			KEYWORD2
+unturn			KEYWORD2
 
 # pan
 leftUp			KEYWORD2
@@ -63,10 +70,15 @@ rightUp			KEYWORD2
 rightPick		KEYWORD2
 rightDrop		KEYWORD2
 leftDrop		KEYWORD2
+leftCenter		KEYWORD2
+rightCenter		KEYWORD2
+leftFull		KEYWORD2
+rightFull		KEYWORD2
 
 # passenger
 detect			KEYWORD2
 precise			KEYWORD2
+coarse			KEYWORD2
 
 # path
 turn			KEYWORD2
@@ -74,6 +86,9 @@ update			KEYWORD2
 nearDrop		KEYWORD2
 nearEndpoint		KEYWORD2
 passengers		KEYWORD2
+getDirections		KEYWORD2
+reorient		KEYWORD2
+avoid			KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

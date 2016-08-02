@@ -6,7 +6,7 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _startingRight (A5)
+#define STARTING_RIGHT (A5)
 
 static const int8_t _intersections[21][4] = {
     { -1, 17, -1, -1}, // 0
@@ -46,7 +46,7 @@ static const uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
 Path::Path(void)
 {
     // TODO: set initial condition based on switch check
-    if (digitalRead(_startingRight)) {
+    if (digitalRead(STARTING_RIGHT)) {
         _current = 17;
         _next = 11;
         _last = 0;

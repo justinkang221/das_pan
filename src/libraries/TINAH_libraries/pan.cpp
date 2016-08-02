@@ -6,10 +6,10 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _pocket1 (10)
-#define _pocket2 (11)
-#define _pocket3 (8) 
-#define _pocket4 (9) 
+#define POCKET1 (10)
+#define POCKET2 (11)
+#define POCKET3 (8) 
+#define POCKET4 (9) 
 
 Pan::Pan(void) {}
 
@@ -45,10 +45,10 @@ void Pan::rightDrop(void)
 
 boolean Pan::leftFull(void)
 {
-	return !(digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1) || digitalRead(_pocket1)) || !(digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2) || digitalRead(_pocket2));
+	return !(digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1)) || !(digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2));
 }
 
 boolean Pan::rightFull(void)
 {
-	return !(digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3) || digitalRead(_pocket3)) || !(digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4) || digitalRead(_pocket4));
+	return !(digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3)) || !(digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4));
 }

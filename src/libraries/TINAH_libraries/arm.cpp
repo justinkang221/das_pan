@@ -6,9 +6,9 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define _motor (37)
-#define _pot (A4)
-#define _speed (135)
+#define MOTOR (37)
+#define POT (A4)
+#define SPEED (135)
 
 Arm::Arm(void) {}
 
@@ -55,16 +55,16 @@ void Arm::rightCenter(void)
 
 void Arm::cycle(void)
 {
-    analogWrite(_motor, _speed);
+    analogWrite(MOTOR, SPEED);
     
-    while(digitalRead(_pot)==HIGH);
+    while(digitalRead(POT)==HIGH);
     delay(1);
-    while(digitalRead(_pot)==HIGH);
+    while(digitalRead(POT)==HIGH);
     
-    while(digitalRead(_pot)==LOW);
+    while(digitalRead(POT)==LOW);
     delay(1);
-    while(digitalRead(_pot)==LOW);
+    while(digitalRead(POT)==LOW);
     
     delay(200);
-    analogWrite(_motor, 0);
+    analogWrite(MOTOR, 0);
 }

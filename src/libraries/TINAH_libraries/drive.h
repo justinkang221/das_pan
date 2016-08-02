@@ -21,7 +21,7 @@ public:
     void right(boolean);
     void reverse(void);
     void uturn(boolean);
-    void unturn(boolean, boolean);
+    void unturn(boolean, boolean, boolean);
     
     boolean intersection(void);
     boolean collision(void);
@@ -35,12 +35,12 @@ public:
     void addDistance(void);
     void removeDistance(void);
     uint16_t getDistance(void);
-	uint16_t getLastTraveledL(void);
-	uint16_t getLastTraveledR(void);
+	uint16_t leftDistance(void);
+	uint16_t rightDistance(void);
     
     void record(boolean);
 	
-	uint8_t isSacked(void);
+	uint8_t atIntersection(void);
 	int8_t describeIntersection(void);
     
     boolean wheel(uint8_t);
@@ -50,10 +50,8 @@ private:
     
     uint16_t _distanceR;
     uint16_t _distanceL;
-    uint16_t _oldDistR;
-    uint16_t _oldDistL;
-    uint8_t _turnL;
-    uint8_t _turnR;
+    uint16_t _oldR;
+    uint16_t _oldL;
     
     uint8_t _kp;
     uint8_t _kd;
