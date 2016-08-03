@@ -15,17 +15,17 @@ Pan::Pan(void) {}
 
 void Pan::leftUp(void)
 {
-    RCServo1.write(1);
+    RCServo1.write(30);
 }
 
 void Pan::leftPick(void)
 {
-    RCServo1.write(80);
+    RCServo1.write(100);
 }
 
 void Pan::leftDrop(void)
 {
-    RCServo1.write(130);
+    RCServo1.write(140);
 }
 
 void Pan::rightUp(void)
@@ -35,12 +35,12 @@ void Pan::rightUp(void)
 
 void Pan::rightPick(void)
 {
-    RCServo2.write(65);
+    RCServo2.write(75);
 }
 
 void Pan::rightDrop(void)
 {
-    RCServo2.write(25);
+    RCServo2.write(35);
 }
 
 boolean Pan::leftFull(void)

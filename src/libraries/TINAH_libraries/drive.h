@@ -34,9 +34,10 @@ public:
     
     void addDistance(void);
     void removeDistance(void);
-    uint16_t getDistance(void);
-	uint16_t leftDistance(void);
-	uint16_t rightDistance(void);
+    int16_t getDistance(void);
+	int16_t leftDistance(void);
+	int16_t rightDistance(void);
+    void resetDistance(void);
     
     void record(boolean);
 	
@@ -48,10 +49,10 @@ public:
 private:
     int16_t _speed;
     
-    uint16_t _distanceR;
-    uint16_t _distanceL;
-    uint16_t _oldR;
-    uint16_t _oldL;
+    int16_t _distanceR;
+    int16_t _distanceL;
+    int16_t _oldR;
+    int16_t _oldL;
     
     uint8_t _kp;
     uint8_t _kd;
@@ -95,6 +96,7 @@ private:
     boolean _interrupt;
     
     unsigned long _currTime;
+    uint8_t _wereFuckinJammed;
 };
 
 #endif

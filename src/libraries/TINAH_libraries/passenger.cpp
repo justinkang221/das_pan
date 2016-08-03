@@ -12,8 +12,8 @@
 #define RIGHT_IR2 (0)
 
 #define THRESHOLD (200)
-#define PRECISE (500)
-#define COARSE (350)
+#define PRECISE (260)
+#define COARSE (150)
 
 Passenger::Passenger(void)
 {

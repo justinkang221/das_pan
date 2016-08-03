@@ -79,6 +79,7 @@ Drive::Drive(void)
 	_k = 0;
     
     _currTime = millis();
+    _wereFuckinJammed = 0;
 }
 
 void Drive::setPD(uint8_t kp, uint8_t kd)
@@ -106,16 +107,21 @@ void Drive::removeDistance(void){
     }
 }
 
-uint16_t Drive::getDistance(void){
+int16_t Drive::getDistance(void){
     return min(_distanceR,_distanceL);
 }
 
-uint16_t Drive::leftDistance(void){
+int16_t Drive::leftDistance(void){
     return _oldL;
 }
 
-uint16_t Drive::rightDistance(void){
+int16_t Drive::rightDistance(void){
     return _oldR;
+}
+
+void Drive::resetDistance(void){
+    _distanceR = 0;
+    _distanceL = 0;
 }
 
 void Drive::record(boolean front){
@@ -201,8 +207,8 @@ void Drive::go(void)
         _d = _kd * (_backerror - _backrecentError) / (_q + _m);
         _correction = _p + _d;
         
-        motor.speed(M2, -0.5 * (_speed + _correction));
-        motor.speed(M1, -0.5 * (_speed - _correction));
+        motor.speed(M2, -0.8 * (_speed + _correction));
+        motor.speed(M1, -0.8 * (_speed - _correction));
         _backlastError = _backerror;
     }
     else {
@@ -485,6 +491,7 @@ void Drive::uturn(boolean ccw = true)
     motor.speed(M1, -150);
     motor.speed(M2, -60);
 	_currTime = millis();
+    _wereFuckinJammed = 0;
     for ( _i = 0, _j = 0; (_i - _j) < 12;) {
 		
         this->record(true);
@@ -532,6 +539,7 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M1, -150);
             motor.speed(M2, 150);
 			_currTime = millis();
+            _wereFuckinJammed++;
 		}
         if(this->collisionSpecific(COL1) || this->collisionSpecific(COL2)){
             motor.speed(M1, -150);
@@ -550,6 +558,9 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M2, 150);
             this->wheel(WHEEL);
             _i-=2;
+        }
+        if(_wereFuckinJammed>2){
+            break;
         }
     }
     /*
@@ -579,6 +590,7 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M1, -75);
             motor.speed(M2, -150);
 			_currTime = millis();
+            _wereFuckinJammed++;
 		}
         if(this->collisionSpecific(COL1) || this->collisionSpecific(COL2)){
             motor.speed(M1, -150);
@@ -589,6 +601,9 @@ void Drive::uturn(boolean ccw = true)
 			_j++;
 			this->wheel(WHEEL);
 			this->wheel(WHEER);
+        }
+        if(_wereFuckinJammed>2){
+            break;
         }
 		/*if(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)){
 			break;
@@ -610,6 +625,11 @@ void Drive::uturn(boolean ccw = true)
         if(this->collisionSpecific(COL3) || this->collisionSpecific(COL4)) break;
     }
      */
+    if(_wereFuckinJammed>2){
+            motor.speed(M1, 0);
+            motor.speed(M2, 150);
+        while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)));
+    }
     while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
        this->go();
     }
@@ -625,6 +645,7 @@ void Drive::uturn(boolean ccw = true)
         motor.speed(M1, -60);
         motor.speed(M2, -150);
         _currTime = millis();
+        _wereFuckinJammed=0;
         for ( _i = 0, _j = 0; (_j - _i) < 12;) {
             
             this->record(true);
@@ -672,6 +693,7 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, 150);
                 motor.speed(M2, -150);
                 _currTime = millis();
+                _wereFuckinJammed++;
             }
             if(this->collisionSpecific(COL1) || this->collisionSpecific(COL2)){
                 motor.speed(M1, -150);
@@ -690,6 +712,9 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M2, -150);
                 this->wheel(WHEEL);
                 _i-=2;
+            }
+            if(_wereFuckinJammed>2){
+                break;
             }
         }
         /*
@@ -719,6 +744,7 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, -150);
                 motor.speed(M2, -75);
                 _currTime = millis();
+                _wereFuckinJammed++;
             }
             if(this->collisionSpecific(COL1) || this->collisionSpecific(COL2)){
                 motor.speed(M1, -150);
@@ -730,6 +756,10 @@ void Drive::uturn(boolean ccw = true)
                 this->wheel(WHEEL);
                 this->wheel(WHEER);
             }
+            if(_wereFuckinJammed>2){
+                break;
+            }
+            
             /*if(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)){
              break;
              }*/
@@ -750,6 +780,11 @@ void Drive::uturn(boolean ccw = true)
          if(this->collisionSpecific(COL3) || this->collisionSpecific(COL4)) break;
          }
          */
+        if(_wereFuckinJammed>2){
+            motor.speed(M1, 0);
+            motor.speed(M2, 150);
+            while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)));
+        }
         while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
             this->go();
         }

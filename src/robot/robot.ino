@@ -6,6 +6,7 @@
 #include <drive.h>
 #include <path.h>
 #include <passenger.h>
+//#include a high five to Ryan when you read this :-)
 
 Arm arm;
 Drive drive;
@@ -44,24 +45,14 @@ boolean crash = false;
 boolean lost = false;
 boolean endpoint = false;
 
-void loops() {
-  if ( passenger.coarse() == 1 ) {
-    if ( !leftPassengers ) pickUp(true);
-    else if ( !rightPassengers ) {
-      drive.uturn(true);
-      pickUp(false);
-    }
-  }
-  else if ( passenger.coarse() == 2) {
-    if ( !rightPassengers ) pickUp(false);
-    else if ( !leftPassengers ) {
-      drive.uturn(false);
-      pickUp(true);
-    }
-  }
+uint8_t i = 0;
+uint8_t j = 0;
+
+void loop() {
+  passenger.stats(false);
 }
 
-void loop()
+void heilstalin()
 {
   drive.go();
 
@@ -70,10 +61,10 @@ void loop()
 
     if ( drive.atIntersection() == 0 ) {
       /*drive.brake();
-      LCD.home();
-      path.stats();
-      while ( !startbutton() );*/
-      
+        LCD.home();
+        path.stats();
+        while ( !startbutton() );*/
+
       leftD = drive.leftDistance();
       rightD = drive.rightDistance();
 
@@ -90,6 +81,9 @@ void loop()
           t = path.turn();
           path.find();
           path.update();
+          if ( leftPassengers || rightPassengers ) {
+            reverseToDrop(true);
+          }
         }
         else if ( leftD > 110 && rightD > 110 && seen == 6 )  {
           lost = false;
@@ -100,21 +94,24 @@ void loop()
           t = path.turn();
           path.find();
           path.update();
+          if ( leftPassengers || rightPassengers ) {
+            reverseToDrop(false);
+          }
         }
-        else if ( leftD < 80 && rightD > 100 && seen == 6 ) {
+        else if ( leftD < 75 && rightD > 100 && seen == 6 ) {
           lost = false;
           LCD.setCursor(0, 1);
-          LCD.print("I'm found CR");
+          LCD.print("I'm found 13");
           path.reorient(13);
           expected = path.getDirections();
           t = path.turn();
           path.find();
           path.update();
         }
-        else if ( leftD > 100 && rightD < 80 && seen == 3 ) {
+        else if ( leftD > 100 && rightD < 75 && seen == 3 ) {
           lost = false;
           LCD.setCursor(0, 1);
-          LCD.print("I'm found CL");
+          LCD.print("I'm found 12");
           path.reorient(12);
           expected = path.getDirections();
           t = path.turn();
@@ -129,6 +126,8 @@ void loop()
         LCD.print("FUCKED!!!!!");
         LCD.print(expected);
         LCD.print(seen);
+        drive.brake();
+        while ( !startbutton() );
         if (seen & B010) t = 2;
         else if (seen == 5) t = (drive.getDistance() % 2 == 0) ? 1 : 3;
         else if (seen & B001) t = 1;
@@ -147,7 +146,6 @@ void loop()
             while ( !startbutton() );*/
           drive.prepareDrop();
         }
-        // path.update();
       }
 
       switch ( t ) {
@@ -168,41 +166,29 @@ void loop()
     corner = drive.intersection();
     crash = drive.collision();
 
-    /*if (corner) {
-      drive.brake();
-      LCD.home();
-      LCD.print("corner  ");
-      while(!startbutton);
-    }
-    if (crash) {
-      drive.brake();
-      LCD.home();
-      LCD.print("crashed  ");
-      while(!startbutton);
-    }*/
-
     if ( passenger.coarse() == 1 ) {
-      drive.brake();
-      while( !startbutton() ) passenger.stats(false);
+      /*drive.brake();
+        while( !startbutton() ) passenger.stats(false);*/
       if ( !leftPassengers ) pickUp(true);
       else if ( !rightPassengers ) {
         drive.uturn(true);
         pickUp(false);
+        drive.uturn(true);
       }
     }
     else if ( passenger.coarse() == 2) {
-      drive.brake();
-      while( !startbutton() ) passenger.stats(false);
+      /*drive.brake();
+        while( !startbutton() ) passenger.stats(false);*/
       if ( !rightPassengers ) pickUp(false);
       else if ( !leftPassengers ) {
         drive.uturn(false);
         pickUp(true);
+        drive.uturn(false);
       }
     }
 
     if ( corner || crash ) {
-      if (lost && crash) drive.uturn(true);
-      else {
+      if ( !lost ) {
         if ( n == -1 ) {
           if (leftPassengers) {
             drive.brake();
@@ -276,21 +262,31 @@ void loop()
             path.update();
             n = path.find();
             expected = path.getDirections();
-          }*/
+            }*/
           else {
+            /*path.stats();
+              drive.brake();
+              while ( !startbutton() );*/
             path.avoid();
+            /*path.stats();
+              while ( !startbutton() );*/
             drive.uturn(true);
             n = path.find();
             expected = path.getDirections();
+            /*path.stats();
+              while ( !startbutton() );*/
           }
+
         }
-
         t = path.turn();
-
         path.update();
-
         drive.record(true);
       }
+
+      else if (crash) {
+        drive.uturn(true);
+      }
+
     }
   }
 }
@@ -399,5 +395,71 @@ void pickUp(boolean left) {
     drive.speed(150);
     drive.record(true);
   }
+}
+
+void reverseToDrop(boolean comingFrom15) {
+  LCD.home();
+  drive.reverse();
+  drive.resetDistance();
+  while (drive.getDistance() > -30) {
+    drive.go();
+  }
+  if (comingFrom15) {
+    if (rightPassengers) {
+      drive.brake();
+      pan.rightDrop();
+      delay(500);
+
+      rightPassengers = 0;
+
+      pan.rightUp();
+    }
+
+    if (leftPassengers) {
+      drive.uturn(false);
+      pan.leftDrop();
+      delay(500);
+
+      leftPassengers = 0;
+
+      pan.leftUp();
+      drive.uturn(true);
+    }
+
+    path.passengers(leftPassengers + rightPassengers);
+  }
+  else {
+    if (leftPassengers) {
+      drive.brake();
+      pan.leftDrop();
+      delay(500);
+
+      leftPassengers = 0;
+
+      pan.leftUp();
+    }
+
+    if (rightPassengers) {
+      drive.uturn(true);
+      pan.rightDrop();
+      delay(500);
+
+      rightPassengers = 0;
+
+      pan.rightUp();
+      drive.uturn(false);
+    }
+
+    path.passengers(leftPassengers + rightPassengers);
+  }
+  drive.reverse();
+  while (!drive.atIntersection()) {
+    drive.go();
+  }
+  drive.resetDistance();
+  while (drive.getDistance() < 2) {
+    drive.go();
+  }
+
 }
 
