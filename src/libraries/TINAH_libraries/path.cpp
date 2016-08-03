@@ -170,6 +170,7 @@ int8_t Path::find(void)
     else if (_next == 0 || _next == 1 || _next == 5) return 2;
     else if (_next == 4 || _next == 3 || _next == 9) return 1;
     else if ( (_next == 13 && _last == 8) || (_next == 8 && _last == 13) || (_next == 17 && _last == 6) || (_next == 6 && _last == 17) ) return 3;
+    else if (_current == 7) return 7;
     else return 0;
 }
 
@@ -277,23 +278,41 @@ void Path::passengers(uint8_t passengers)
 }
 
 void Path::reorient(uint8_t node) {
-    if (node == 12 || node == 13) {
-        _region = -1;
-        _next = (node == 12)? 11: 14;
-        _current = node;
-        _last = (node == 12)? 13: 12;
-        _regIndex = node - 10;
-        _regDirec = (node == 12)? -1: 1;
-        _nextReg = (node == 12)? 1: 3;
-    }
-    else {
-        _region = (node == 10)? 0: 4;
-        _next = (node == 10)? 16: 20;
-        _current = node;
-        _last = 18;
-        _regIndex = 5;
-        _regDirec = -1;
-        _nextReg = -1;
+    _current = node;
+    
+    switch (node) {
+        case 12:
+            _region = -1;
+            _next = 11;
+            _last = 13;
+            _regIndex = 2;
+            _regDirec = -1;
+            _nextReg = 1;
+            break;
+        case 13:
+            _region = -1;
+            _next = 14;
+            _last = 12;
+            _regIndex = 3;
+            _regDirec = 1;
+            _nextReg = 3;
+            break;
+        case 10:
+            _region = 0;
+            _next = 16;
+            _last = 18;
+            _regIndex = 5;
+            _regDirec = -1;
+            _nextReg = -1;
+            break;
+        case 15:
+            _region = 4;
+            _next = 20;
+            _last = 18;
+            _regIndex = 5;
+            _regDirec = -1;
+            _nextReg = -1;
+            break;
     }
 }
 

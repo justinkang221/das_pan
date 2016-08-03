@@ -14,7 +14,7 @@ public:
     uint8_t detect(void);
     uint8_t precise(void);
 	uint8_t coarse(void);
-    void stats(void);
+    void stats(boolean);
 private:
     uint8_t _l;
     uint8_t _r;

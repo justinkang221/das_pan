@@ -45,10 +45,18 @@ void Pan::rightDrop(void)
 
 boolean Pan::leftFull(void)
 {
-	return !(digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1)) || !(digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2));
+	return !( digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) || digitalRead(POCKET1) )
+    
+    ||
+    
+    !( digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) || digitalRead(POCKET2) );
 }
 
 boolean Pan::rightFull(void)
 {
-	return !(digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3)) || !(digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4));
+	return !( digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) || digitalRead(POCKET3) )
+    
+    ||
+    
+    !(digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) || digitalRead(POCKET4) );
 }

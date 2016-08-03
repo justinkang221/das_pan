@@ -81,7 +81,6 @@ private:
     
     uint16_t _hack;
     uint16_t _sack;
-    uint8_t _cack;
 	
 	boolean _interL;
 	boolean _interR;
@@ -94,6 +93,8 @@ private:
     boolean _black;
     boolean _brack;
     boolean _interrupt;
+    
+    unsigned long _currTime;
 };
 
 #endif

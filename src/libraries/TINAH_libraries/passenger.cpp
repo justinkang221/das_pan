@@ -6,14 +6,14 @@
 #include <phys253.h>
 #include <Arduino.h>
 
-#define LEFT_IR1 (3)
-#define LEFT_IR2 (1)
+#define LEFT_IR1 (1)
+#define LEFT_IR2 (3)
 #define RIGHT_IR1 (2)
 #define RIGHT_IR2 (0)
 
 #define THRESHOLD (200)
 #define PRECISE (500)
-#define COARSE (150)
+#define COARSE (350)
 
 Passenger::Passenger(void)
 {
@@ -39,14 +39,14 @@ uint8_t Passenger::precise(void)
 
 uint8_t Passenger::coarse(void)
 {
-    if (analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE) return 1;
-    else if(analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE) return 2;
+    if (analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE && analogRead(LEFT_IR2) > COARSE) return 1;
+    else if(analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE && analogRead(RIGHT_IR2) > COARSE) return 2;
     return 0;
 }
 
-void Passenger::stats(void)
+void Passenger::stats(boolean printEveryTime)
 {
-    if (_c > 30) {
+    if (_c > 30 || printEveryTime) {
         LCD.clear();
         LCD.home();
         
