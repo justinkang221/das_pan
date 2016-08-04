@@ -55,6 +55,13 @@ unsigned long ii = 0;
 void lorp() {
   passenger.stats(false);
 }
+
+void loops() {
+  drive.powerard(true);
+  while (!stopbutton());
+  drive.powerard(false);
+  while (!startbutton());
+}
 void loop()
 {
   drive.go();
@@ -264,6 +271,7 @@ void loop()
           }
 
           path.passengers(leftPassengers + rightPassengers);
+          drive.resetStuck();
         }
         else if ( n == -2 ) {
           if ( rightPassengers )
@@ -375,8 +383,9 @@ void pickUp(boolean left) {
         drive.brake();
 
         arm.leftCenter();
-        delay(500);
+        delay(300);
         pan.leftPick();
+        delay(300);
         arm.cycle();
 
         if ( !passenger.precise(true) ) {
@@ -442,8 +451,9 @@ void pickUp(boolean left) {
         drive.brake();
 
         arm.rightCenter();
-        delay(500);
+        delay(300);
         pan.rightPick();
+        delay(300);
         arm.cycle();
         if ( !passenger.precise(false) ) {
           ii = millis();

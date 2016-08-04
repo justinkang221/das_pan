@@ -358,7 +358,7 @@ void Drive::left(boolean tight)
     }
 	_distanceL = 8;
 	_distanceR = 8;
-    _irack = 10;
+    _irack = 6;
 }
 
 void Drive::straight(void)
@@ -447,7 +447,7 @@ void Drive::right(boolean tight)
 	
 	_distanceL = 8;
 	_distanceR = 8;
-    _irack = 10;
+    _irack =6;
 }
 
 void Drive::unturn(boolean left, boolean tight, boolean reverse)
@@ -1213,4 +1213,8 @@ void Drive::stats(boolean collision)
     }
     
     ++_c;
+}
+
+void Drive::powerard(boolean turnOn) {
+    motor.speed(0, (turnOn ? 255 : 0));
 }

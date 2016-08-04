@@ -54,6 +54,7 @@ public:
     
     boolean wheel(uint8_t);
     void stats(boolean collision);
+    void powerard(boolean);
 private:
     int16_t _speed;
     
