@@ -20,12 +20,12 @@ void Pan::leftUp(void)
 
 void Pan::leftPick(void)
 {
-    RCServo1.write(100);
+    RCServo1.write(115);
 }
 
 void Pan::leftDrop(void)
 {
-    RCServo1.write(140);
+    RCServo1.write(155);
 }
 
 void Pan::rightUp(void)
@@ -35,12 +35,12 @@ void Pan::rightUp(void)
 
 void Pan::rightPick(void)
 {
-    RCServo2.write(75);
+    RCServo2.write(65);
 }
 
 void Pan::rightDrop(void)
 {
-    RCServo2.write(35);
+    RCServo2.write(30);
 }
 
 boolean Pan::leftFull(void)

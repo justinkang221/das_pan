@@ -12,8 +12,9 @@
 #define RIGHT_IR2 (0)
 
 #define THRESHOLD (200)
-#define PRECISE (260)
-#define COARSE (150)
+#define PRECISE_LEFT (680)
+#define PRECISE_RIGHT (680)
+#define COARSE (350)
 
 Passenger::Passenger(void)
 {
@@ -30,10 +31,10 @@ uint8_t Passenger::detect(void)
     return 0;
 }
 
-uint8_t Passenger::precise(void)
+uint8_t Passenger::precise(boolean left)
 {
-    if (analogRead(LEFT_IR2) > PRECISE && analogRead(LEFT_IR2) > PRECISE && analogRead(LEFT_IR2) > PRECISE && analogRead(LEFT_IR2) > PRECISE && analogRead(LEFT_IR2) > PRECISE) return 1;
-    else if(analogRead(RIGHT_IR2) > PRECISE && analogRead(RIGHT_IR2) > PRECISE && analogRead(RIGHT_IR2) > PRECISE && analogRead(RIGHT_IR2) > PRECISE && analogRead(RIGHT_IR2) > PRECISE) return 2;
+    if ( left && ( analogRead(LEFT_IR2) > PRECISE_LEFT && analogRead(LEFT_IR2) > PRECISE_LEFT && analogRead(LEFT_IR2) > PRECISE_LEFT && analogRead(LEFT_IR2) > PRECISE_LEFT && analogRead(LEFT_IR2) > PRECISE_LEFT ) ) return 1;
+    else if( ! left && ( analogRead(RIGHT_IR2) > PRECISE_RIGHT && analogRead(RIGHT_IR2) > PRECISE_RIGHT && analogRead(RIGHT_IR2) > PRECISE_RIGHT && analogRead(RIGHT_IR2) > PRECISE_RIGHT && analogRead(RIGHT_IR2) > PRECISE_RIGHT ) ) return 2;
     return 0;
 }
 

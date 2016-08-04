@@ -18,10 +18,15 @@ void setup()
 {
 #include <phys253setup.txt>
   Serial.begin(9600);
+  LCD.clear();
+  LCD.home();
+  LCD.print("    das_pan*    ");
 
   pan.leftUp();
   pan.rightUp();
   arm.center();
+  while (!startbutton());
+  drive.resetStuck();
 }
 
 uint8_t t;
@@ -44,21 +49,22 @@ boolean crash = false;
 
 boolean lost = false;
 boolean endpoint = false;
+boolean rebounded = false;
 
-uint8_t i = 0;
-uint8_t j = 0;
-
-void loop() {
+unsigned long ii = 0;
+void lorp() {
   passenger.stats(false);
 }
-
-void heilstalin()
+void loop()
 {
   drive.go();
+  drive.stuck();
 
   if ( drive.atIntersection() ) {
     seen = drive.describeIntersection();
-
+    /*if (drive.offBoard() && !lost && path.getDirections() != 7) {
+      drive.burstBack();
+      }*/
     if ( drive.atIntersection() == 0 ) {
       /*drive.brake();
         LCD.home();
@@ -73,47 +79,59 @@ void heilstalin()
       //need a way to account for movement during turning
       if ( lost ) {
         if ( leftD > 110 && rightD > 110 && seen == 3 ) {
-          lost = false;
-          LCD.setCursor(0, 1);
-          LCD.print("I'm found 15");
-          path.reorient(15);
-          expected = path.getDirections();
-          t = path.turn();
-          path.find();
-          path.update();
           if ( leftPassengers || rightPassengers ) {
             reverseToDrop(true);
           }
+          else {
+            lost = false;
+            LCD.setCursor(0, 1);
+            LCD.print("    found 15    ");
+            path.reorient(15);
+            expected = path.getDirections();
+            seen = expected;
+            t = path.turn();
+            path.find();
+            path.update();
+          }
         }
         else if ( leftD > 110 && rightD > 110 && seen == 6 )  {
-          lost = false;
-          LCD.setCursor(0, 1);
-          LCD.print("I'm found 10");
-          path.reorient(10);
-          expected = path.getDirections();
-          t = path.turn();
-          path.find();
-          path.update();
           if ( leftPassengers || rightPassengers ) {
             reverseToDrop(false);
           }
+          else {
+            lost = false;
+            LCD.setCursor(0, 1);
+            LCD.print("    found 10    ");
+            path.reorient(10);
+            expected = path.getDirections();
+            seen = expected;
+            t = path.turn();
+            path.find();
+            path.update();
+          }
         }
-        else if ( leftD < 75 && rightD > 100 && seen == 6 ) {
+        else if ( leftD < 80 && rightD > 100 && seen == 6 ) {
           lost = false;
           LCD.setCursor(0, 1);
-          LCD.print("I'm found 13");
+          LCD.print("    found 13    ");
+          /*drive.brake();
+            while (!startbutton());*/
           path.reorient(13);
           expected = path.getDirections();
+          seen = expected;
           t = path.turn();
           path.find();
           path.update();
         }
-        else if ( leftD > 100 && rightD < 75 && seen == 3 ) {
+        else if ( leftD > 100 && rightD < 80 && seen == 3 ) {
           lost = false;
           LCD.setCursor(0, 1);
-          LCD.print("I'm found 12");
+          LCD.print("    found 12    ");
+          /*drive.brake();
+            while (!startbutton());*/
           path.reorient(12);
           expected = path.getDirections();
+          seen = expected;
           t = path.turn();
           path.find();
           path.update();
@@ -122,12 +140,12 @@ void heilstalin()
 
       if ( lost || ( seen != expected  && n != 7 ) ) {
         lost = true;
-        LCD.home();
-        LCD.print("FUCKED!!!!!");
-        LCD.print(expected);
-        LCD.print(seen);
-        drive.brake();
-        while ( !startbutton() );
+        LCD.setCursor(0, 1);
+        //LCD.print("      lost      ");
+        /*LCD.print(expected);
+          LCD.print(seen);
+          drive.brake();
+          while ( !startbutton() );*/
         if (seen & B010) t = 2;
         else if (seen == 5) t = (drive.getDistance() % 2 == 0) ? 1 : 3;
         else if (seen & B001) t = 1;
@@ -161,30 +179,58 @@ void heilstalin()
           break;
       }
     }
+    drive.resetStuck();
   }
   else {
     corner = drive.intersection();
     crash = drive.collision();
-
-    if ( passenger.coarse() == 1 ) {
+    /*if (drive.offBoard() && !lost && path.getDirections() != 7) {
+      drive.burstBack();
+      }*/
+    if ( passenger.coarse() == 1 && !drive.isIracked()) {
       /*drive.brake();
         while( !startbutton() ) passenger.stats(false);*/
-      if ( !leftPassengers ) pickUp(true);
-      else if ( !rightPassengers ) {
+      if ( !leftPassengers ) {
+        drive.setIrack(6);
+        pickUp(true);
+      }
+      /*else if ( !rightPassengers ) {
         drive.uturn(true);
+
+        drive.reverse();
+
+        distance = drive.getDistance();
+        while ( drive.getDistance() < distance + 12 ) {
+          drive.go();
+        }
+        drive.reverse();
         pickUp(false);
         drive.uturn(true);
-      }
+        }*/
+      drive.resetStuck();
     }
-    else if ( passenger.coarse() == 2) {
+    else if ( passenger.coarse() == 2 && !drive.isIracked()) {
       /*drive.brake();
         while( !startbutton() ) passenger.stats(false);*/
-      if ( !rightPassengers ) pickUp(false);
-      else if ( !leftPassengers ) {
+      if ( !rightPassengers ) {
+        drive.setIrack(6);
+        pickUp(false);
+      }
+      /*else if ( !leftPassengers ) {
         drive.uturn(false);
+
+        drive.reverse();
+
+        distance = drive.getDistance();
+        while ( drive.getDistance() < distance + 12 ) {
+          drive.go();
+        }
+        drive.reverse();
+
         pickUp(true);
         drive.uturn(false);
-      }
+        }*/
+      drive.resetStuck();
     }
 
     if ( corner || crash ) {
@@ -193,7 +239,7 @@ void heilstalin()
           if (leftPassengers) {
             drive.brake();
             pan.leftDrop();
-            delay(500);
+            delay(1000);
 
             leftPassengers = 0;
 
@@ -202,12 +248,18 @@ void heilstalin()
 
           if (rightPassengers) {
             drive.uturn(true);
+            drive.brake();
             pan.rightDrop();
-            delay(500);
+            delay(1000);
 
             rightPassengers = 0;
 
             pan.rightUp();
+            delay(500);
+            drive.resetDistance();
+            while (drive.getDistance() < 8) {
+              drive.go();
+            }
             drive.uturn(false);
           }
 
@@ -218,7 +270,7 @@ void heilstalin()
           {
             drive.brake();
             pan.rightDrop();
-            delay(500);
+            delay(1000);
 
             rightPassengers = 0;
 
@@ -228,16 +280,23 @@ void heilstalin()
           if ( leftPassengers )
           {
             drive.uturn(false);
+            drive.brake();
             pan.leftDrop();
-            delay(500);
+            delay(1000);
 
             leftPassengers = 0;
 
             pan.leftUp();
+            delay(500);
+            drive.resetDistance();
+            while (drive.getDistance() < 8) {
+              drive.go();
+            }
             drive.uturn(true);
           }
 
           path.passengers(leftPassengers + rightPassengers);
+          drive.resetStuck();
         }
 
         ccw = ( n == 2 );
@@ -267,6 +326,10 @@ void heilstalin()
             /*path.stats();
               drive.brake();
               while ( !startbutton() );*/
+            ii = millis();
+            while (millis() - ii < 1000) {
+              drive.go();
+            }
             path.avoid();
             /*path.stats();
               while ( !startbutton() );*/
@@ -286,7 +349,7 @@ void heilstalin()
       else if (crash) {
         drive.uturn(true);
       }
-
+      drive.resetStuck();
     }
   }
 }
@@ -294,41 +357,63 @@ void heilstalin()
 void pickUp(boolean left) {
   drive.speed(50);
   distance = drive.getDistance();
+  while ( drive.getDistance() < distance + 2 ) {
+    drive.go();
+    if (drive.intersection()) {
+      corner = true;
+      return;
+    }
+  }
   if (left) {
     while ( drive.getDistance() < distance + 4 ) {
       drive.go();
-
-      if ( passenger.precise() == 1) {
+      if (drive.intersection()) {
+        corner = true;
+        return;
+      }
+      if ( passenger.precise(true) == 1) {
         drive.brake();
 
         arm.leftCenter();
+        delay(500);
         pan.leftPick();
         arm.cycle();
 
-        if ( pan.leftFull() ) {
-          leftPassengers = true;
-          pan.leftUp();
-          arm.center();
-          break;
+        if ( !passenger.precise(true) ) {
+          ii = millis();
+          rebounded = false;
+          while ( millis() - ii < 500 ) {
+            if ( passenger.precise(true) ) rebounded = true;
+          }
+          if (!rebounded) {
+            pan.leftUp();
+            leftPassengers = true;
+            arm.center();
+            break;
+          }
         }
 
         arm.leftFront();
         arm.cycle();
 
-        if ( pan.leftFull() ) {
-          leftPassengers = true;
-          pan.leftUp();
-          arm.center();
-          break;
+        if ( !passenger.precise(true) ) {
+          ii = millis();
+          rebounded = false;
+          while ( millis() - ii < 500 ) {
+            if ( passenger.precise(true) ) rebounded = true;
+          }
+          if (!rebounded) {
+            pan.leftUp();
+            leftPassengers = true;
+            arm.center();
+            break;
+          }
         }
 
         arm.leftBack();
         arm.cycle();
-
-        if ( pan.leftFull() ) {
-          leftPassengers = true;
-        }
         pan.leftUp();
+        if ( !passenger.precise(true) ) leftPassengers = true;
         arm.center();
         break;
       }
@@ -348,118 +433,159 @@ void pickUp(boolean left) {
   else {
     while ( drive.getDistance() < distance + 4 ) {
       drive.go();
+      if (drive.intersection()) {
+        corner = true;
+        return;
+      }
       //passenger.stats();
-      if ( passenger.precise() == 2) {
+      if (passenger.precise(false) == 2) {
         drive.brake();
 
         arm.rightCenter();
+        delay(500);
         pan.rightPick();
         arm.cycle();
-
-        if (pan.rightFull()) {
-          rightPassengers = true;
-          pan.rightUp();
-          arm.center();
-          break;
+        if ( !passenger.precise(false) ) {
+          ii = millis();
+          rebounded = false;
+          while ( millis() - ii < 500 ) {
+            if ( passenger.precise(false) ) rebounded = true;;
+          }
+          if (!rebounded) {
+            pan.rightUp();
+            rightPassengers = true;
+            arm.center();
+            break;
+          }
         }
 
         arm.rightFront();
         arm.cycle();
 
-        if (pan.rightFull()) {
-          rightPassengers = true;
-          pan.rightUp();
-          arm.center();
-          break;
+        if ( !passenger.precise(false) ) {
+          ii = millis();
+          rebounded = false;
+          while ( millis() - ii < 500 ) {
+            if ( passenger.precise(false) ) rebounded = true;;
+          }
+          if (!rebounded) {
+            pan.rightUp();
+            rightPassengers = true;
+            arm.center();
+            break;
+          }
         }
 
         arm.rightBack();
         arm.cycle();
-
-        if (pan.rightFull()) {
-          rightPassengers = true;
-        }
         pan.rightUp();
+        if ( !passenger.precise(true) ) leftPassengers = true;
         arm.center();
         break;
       }
     }
-    path.passengers(leftPassengers + rightPassengers);
-    /*LCD.home();
-      LCD.clear();
-      LCD.print("l: ");
-      LCD.print(leftPassengers);
-      LCD.print(" r: ");
-      LCD.print(rightPassengers);
-      while ( !startbutton() );*/
-    drive.speed(150);
-    drive.record(true);
   }
+  path.passengers(leftPassengers + rightPassengers);
+  /*LCD.home();
+    LCD.clear();
+    LCD.print("l: ");
+    LCD.print(leftPassengers);
+    LCD.print(" r: ");
+    LCD.print(rightPassengers);
+    while ( !startbutton() );*/
+  drive.speed(150);
+  drive.record(true);
 }
 
 void reverseToDrop(boolean comingFrom15) {
-  LCD.home();
   drive.reverse();
   drive.resetDistance();
   while (drive.getDistance() > -30) {
     drive.go();
   }
   if (comingFrom15) {
+    drive.reverse();
     if (rightPassengers) {
       drive.brake();
       pan.rightDrop();
-      delay(500);
+      delay(1000);
 
       rightPassengers = 0;
 
       pan.rightUp();
+      delay(500);
     }
 
     if (leftPassengers) {
+      drive.resetDistance();
+      while (drive.getDistance() < 4) {
+        drive.go();
+      }
       drive.uturn(false);
+      drive.brake();
       pan.leftDrop();
-      delay(500);
+      delay(1000);
 
       leftPassengers = 0;
 
       pan.leftUp();
+      delay(500);
+      drive.resetDistance();
+      while (drive.getDistance() < 8) {
+        drive.go();
+      }
       drive.uturn(true);
     }
 
     path.passengers(leftPassengers + rightPassengers);
   }
   else {
+    drive.reverse();
     if (leftPassengers) {
       drive.brake();
       pan.leftDrop();
-      delay(500);
+      delay(1000);
 
       leftPassengers = 0;
 
       pan.leftUp();
+      delay(500);
     }
 
     if (rightPassengers) {
+      drive.resetDistance();
+      while (drive.getDistance() < 4) {
+        drive.go();
+      }
       drive.uturn(true);
+      drive.brake();
       pan.rightDrop();
-      delay(500);
+      delay(1000);
 
       rightPassengers = 0;
 
       pan.rightUp();
+      delay(500);
+      drive.resetDistance();
+      while (drive.getDistance() < 8) {
+        drive.go();
+      }
       drive.uturn(false);
     }
 
     path.passengers(leftPassengers + rightPassengers);
   }
-  drive.reverse();
-  while (!drive.atIntersection()) {
+  drive.resetStuck();
+  while (!drive.intersection()) {
     drive.go();
   }
-  drive.resetDistance();
-  while (drive.getDistance() < 2) {
-    drive.go();
-  }
+  drive.resetStuck();
 
+  drive.setOldDistance(111, 111);
+  /*drive.resetIntersection();
+
+    while (drive.getDistance() < 10) {
+    drive.go();
+    }*/
 }
 

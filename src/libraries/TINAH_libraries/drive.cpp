@@ -55,6 +55,7 @@ Drive::Drive(void)
     
     _hack = 0;
     _sack = 0;
+    _irack = 0;
     
     _backing = false;
     
@@ -79,6 +80,7 @@ Drive::Drive(void)
 	_k = 0;
     
     _currTime = millis();
+    _stuckTime = millis();
     _wereFuckinJammed = 0;
 }
 
@@ -88,17 +90,34 @@ void Drive::setPD(uint8_t kp, uint8_t kd)
     _kd = kd;
 }
 
-void Drive::addDistance(void){
+void Drive::resetStuck(){
+    _stuckTime = millis();
+}
+
+void Drive::stuck(){
+    if(millis() - _stuckTime > 500){
+        motor.speed(M1, -150);
+        motor.speed(M2, -60);
+        while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)));
+    }
+}
+
+void Drive::addDistance(void)
+{
     if(this->wheel(WHEER)){
 		_distanceR++;
+        _stuckTime = millis();
     }
     if(this->wheel(WHEEL)){
 		_distanceL++;
 		if(_sack) --_sack;
+        if(_irack) --_irack;
+        _stuckTime = millis();
     }
 }
 
-void Drive::removeDistance(void){
+void Drive::removeDistance(void)
+{
     if(this->wheel(WHEER)){
         _distanceR--;
     }
@@ -107,24 +126,35 @@ void Drive::removeDistance(void){
     }
 }
 
-int16_t Drive::getDistance(void){
+int16_t Drive::getDistance(void)
+{
     return min(_distanceR,_distanceL);
 }
 
-int16_t Drive::leftDistance(void){
+int16_t Drive::leftDistance(void)
+{
     return _oldL;
 }
 
-int16_t Drive::rightDistance(void){
+int16_t Drive::rightDistance(void)
+{
     return _oldR;
 }
 
-void Drive::resetDistance(void){
+void Drive::resetDistance(void)
+{
     _distanceR = 0;
     _distanceL = 0;
 }
 
-void Drive::record(boolean front){
+void Drive::resetIntersection(void)
+{
+    _sack = 0;
+    _speed = 150;
+}
+
+void Drive::record(boolean front)
+{
     if(front){
         _left = digitalRead(QRD1);
         _right = digitalRead(QRD2);
@@ -179,6 +209,14 @@ void Drive::record(boolean front){
     }
 }
 
+void Drive::setIrack(uint16_t irack){
+    _irack = irack;
+}
+
+uint16_t Drive::isIracked(void){
+    return _irack;
+}
+
 void Drive::go(void)
 {
     if (_backing) {
@@ -207,8 +245,8 @@ void Drive::go(void)
         _d = _kd * (_backerror - _backrecentError) / (_q + _m);
         _correction = _p + _d;
         
-        motor.speed(M2, -0.8 * (_speed + _correction));
-        motor.speed(M1, -0.8 * (_speed - _correction));
+        motor.speed(M2, -(_speed + _correction));
+        motor.speed(M1, -(_speed - _correction));
         _backlastError = _backerror;
     }
     else {
@@ -320,6 +358,7 @@ void Drive::left(boolean tight)
     }
 	_distanceL = 8;
 	_distanceR = 8;
+    _irack = 10;
 }
 
 void Drive::straight(void)
@@ -408,6 +447,7 @@ void Drive::right(boolean tight)
 	
 	_distanceL = 8;
 	_distanceR = 8;
+    _irack = 10;
 }
 
 void Drive::unturn(boolean left, boolean tight, boolean reverse)
@@ -471,8 +511,6 @@ void Drive::unturn(boolean left, boolean tight, boolean reverse)
 
 void Drive::reverse(void)
 {
-    _distanceL += 20;
-    _distanceR += 20;
     _backing = !_backing;
 }
 
@@ -483,8 +521,9 @@ boolean Drive::isBacking(void)
 
 void Drive::uturn(boolean ccw = true)
 {
+    _backing = false;
     if (ccw) {
-        
+        delay(50);
     // enh
     this->wheel(WHEEL);
     this->wheel(WHEER);
@@ -511,6 +550,11 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M2, -60);
 			_currTime = millis();
 		}
+        if(this->offBoard()){
+            this->burstBack();
+            _wereFuckinJammed = 3;
+            break;
+        }
     }
     
     /*this->brake();
@@ -548,7 +592,6 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M1, -150);
             motor.speed(M2, 150);
 			this->wheel(WHEEL);
-			_i-=2;
         }
         if(this->collisionSpecific(COL3) || this->collisionSpecific(COL4)){
             motor.speed(M1, 150);
@@ -557,9 +600,13 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M1, -150);
             motor.speed(M2, 150);
             this->wheel(WHEEL);
-            _i-=2;
         }
         if(_wereFuckinJammed>2){
+            break;
+        }
+        if(this->offBoard()){
+            this->burstBack();
+            _wereFuckinJammed = 3;
             break;
         }
     }
@@ -587,8 +634,8 @@ void Drive::uturn(boolean ccw = true)
 			motor.speed(M1, -150);
             motor.speed(M2, -150);
 			delay(100);
-            motor.speed(M1, -75);
-            motor.speed(M2, -150);
+            motor.speed(M1, -150);
+            motor.speed(M2, -75);
 			_currTime = millis();
             _wereFuckinJammed++;
 		}
@@ -596,13 +643,18 @@ void Drive::uturn(boolean ccw = true)
             motor.speed(M1, -150);
             motor.speed(M2, -150);
             delay(100);
-            motor.speed(M1, -75);
-            motor.speed(M2, -150);
+            motor.speed(M1, -150);
+            motor.speed(M2, -75);
 			_j++;
 			this->wheel(WHEEL);
 			this->wheel(WHEER);
         }
         if(_wereFuckinJammed>2){
+            break;
+        }
+        if(this->offBoard()){
+            this->burstBack();
+            _wereFuckinJammed = 3;
             break;
         }
 		/*if(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)){
@@ -625,20 +677,49 @@ void Drive::uturn(boolean ccw = true)
         if(this->collisionSpecific(COL3) || this->collisionSpecific(COL4)) break;
     }
      */
+    _currTime = millis();
     if(_wereFuckinJammed>2){
             motor.speed(M1, 0);
             motor.speed(M2, 150);
-        while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)));
+        while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
+            if(millis() - _currTime > 400){
+                motor.speed(M1, -150);
+                motor.speed(M2, -150);
+                delay(100);
+                motor.speed(M1, 0);
+                motor.speed(M2, 150);
+                _currTime = millis();
+            }
+            if(this->wheel(WHEEL) ){
+                _currTime = millis();
+            }
+            if(this->wheel(WHEER) ){
+                _currTime = millis();
+            }
+            
+        }
     }
     while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
        this->go();
+        if(this->wheel(WHEEL) ){
+            _currTime = millis();
+        }
+        if(this->wheel(WHEER) ){
+            _currTime = millis();
+        }
+        if(millis() - _currTime > 400){
+            motor.speed(M1, -150);
+            motor.speed(M2, -150);
+            delay(300);
+            _currTime = millis();
+        }
     }
     _distanceL = 0;
     _distanceR = 0;
 		
 	}
     else {
-        
+        delay(50);
         // enh
         this->wheel(WHEEL);
         this->wheel(WHEER);
@@ -664,6 +745,11 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, -60);
                 motor.speed(M2, -150);
                 _currTime = millis();
+            }
+            if(this->offBoard()){
+                this->burstBack();
+                _wereFuckinJammed = 3;
+                break;
             }
         }
         
@@ -702,7 +788,6 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, 150);
                 motor.speed(M2, -150);
                 this->wheel(WHEEL);
-                _i-=2;
             }
             if(this->collisionSpecific(COL3) || this->collisionSpecific(COL4)){
                 motor.speed(M1, 150);
@@ -711,9 +796,13 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, 150);
                 motor.speed(M2, -150);
                 this->wheel(WHEEL);
-                _i-=2;
             }
             if(_wereFuckinJammed>2){
+                break;
+            }
+            if(this->offBoard()){
+                this->burstBack();
+                _wereFuckinJammed = 3;
                 break;
             }
         }
@@ -741,8 +830,8 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, -150);
                 motor.speed(M2, -150);
                 delay(100);
-                motor.speed(M1, -150);
-                motor.speed(M2, -75);
+                motor.speed(M1, -75);
+                motor.speed(M2, -150);
                 _currTime = millis();
                 _wereFuckinJammed++;
             }
@@ -750,13 +839,18 @@ void Drive::uturn(boolean ccw = true)
                 motor.speed(M1, -150);
                 motor.speed(M2, -150);
                 delay(100);
-                motor.speed(M1, -150);
-                motor.speed(M2, -75);
+                motor.speed(M1, -75);
+                motor.speed(M2, -150);
                 _j++;
                 this->wheel(WHEEL);
                 this->wheel(WHEER);
             }
             if(_wereFuckinJammed>2){
+                break;
+            }
+            if(this->offBoard()){
+                this->burstBack();
+                _wereFuckinJammed = 3;
                 break;
             }
             
@@ -781,12 +875,39 @@ void Drive::uturn(boolean ccw = true)
          }
          */
         if(_wereFuckinJammed>2){
-            motor.speed(M1, 0);
-            motor.speed(M2, 150);
-            while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)));
+            motor.speed(M1, 150);
+            motor.speed(M2, 0);
+            while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
+                if(this->wheel(WHEEL) ){
+                    _currTime = millis();
+                }
+                if(this->wheel(WHEER) ){
+                    _currTime = millis();
+                }
+                if(millis() - _currTime > 400){
+                    motor.speed(M1, -150);
+                    motor.speed(M2, -150);
+                    delay(100);
+                    motor.speed(M1, 150);
+                    motor.speed(M2, 0);
+                    _currTime = millis();
+                }
+            }
         }
         while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
             this->go();
+            if(this->wheel(WHEEL) ){
+                _currTime = millis();
+            }
+            if(this->wheel(WHEER) ){
+                _currTime = millis();
+            }
+            if(millis() - _currTime > 400){
+                motor.speed(M1, -150);
+                motor.speed(M2, -60);
+                while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2)));
+                _currTime = millis();
+            }
         }
         _distanceL = 0;
         _distanceR = 0;
@@ -886,7 +1007,6 @@ boolean Drive::intersection(void)
         _distanceR=0;
 		_sack = 6;
 		_hack = 0;
-        this->speed(75);
 		/*this->brake();
 		while(!startbutton);*/
         return true;
@@ -922,6 +1042,11 @@ boolean Drive::intersection(void)
 	}
     
     return false;
+}
+
+void Drive::setOldDistance(int16_t left, int16_t right){
+    _oldL = left;
+    _oldR = right;
 }
 
 boolean Drive::wheel(uint8_t _wheel)
@@ -992,6 +1117,46 @@ boolean Drive::collision(void)
 void Drive::speed(int16_t speed)
 {
     _speed = speed;
+}
+
+boolean Drive::offBoard(void){
+    if(( digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) && digitalRead(QRD1) ) && ( digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2) ) && ( digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) && digitalRead(QRD3) ) && ( digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) && digitalRead(QRD4) )){
+        return true;
+    }
+    return false;
+}
+
+void Drive::burstBack(void){
+    motor.speed(M1, -255);
+    motor.speed(M2, -255);
+    while(this->offBoard());
+    for (_j = 0; (_j) < 12;) {
+        this->record(true);
+        if(this->wheel(WHEEL) ){
+            ++_j;
+        }
+    }
+    motor.speed(M1, 150);
+    motor.speed(M2, 0);
+    _currTime = millis();
+    while(!(digitalRead(QRD2) && digitalRead(QRD2) && digitalRead(QRD2))){
+        if(this->wheel(WHEEL) ){
+            _currTime = millis();
+        }
+        if(this->wheel(WHEER) ){
+            _currTime = millis();
+        }
+        if(millis() - _currTime > 400){
+            motor.speed(M1, -150);
+            motor.speed(M2, -150);
+            delay(300);
+            motor.speed(M1, 150);
+            motor.speed(M2, 0);
+            _currTime = millis();
+        }
+    }
+
+    
 }
 
 void Drive::brake(void)

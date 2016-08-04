@@ -38,11 +38,19 @@ public:
 	int16_t leftDistance(void);
 	int16_t rightDistance(void);
     void resetDistance(void);
+    void setOldDistance(int16_t, int16_t);
     
     void record(boolean);
+    boolean offBoard(void);
+    void burstBack(void);
+    void setIrack(uint16_t);
+    uint16_t isIracked(void);
+    void stuck(void);
+    void resetStuck(void);
 	
 	uint8_t atIntersection(void);
 	int8_t describeIntersection(void);
+    void resetIntersection(void);
     
     boolean wheel(uint8_t);
     void stats(boolean collision);
@@ -82,13 +90,14 @@ private:
     
     uint16_t _hack;
     uint16_t _sack;
+    uint16_t _irack;
 	
 	boolean _interL;
 	boolean _interR;
 	boolean _interS;
 	boolean _interSPast;
 	boolean _lost;
-	int8_t _store;
+    int8_t _store;
     
     uint8_t _backing;
     boolean _black;
@@ -96,6 +105,8 @@ private:
     boolean _interrupt;
     
     unsigned long _currTime;
+    
+    unsigned long _stuckTime;
     uint8_t _wereFuckinJammed;
 };
 

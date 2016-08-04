@@ -33,15 +33,15 @@ static const int8_t _intersections[21][4] = {
 };
 
 static const uint8_t _r0[6] = {11, 17, 0, 17, 16, 10};
-static const uint8_t _r1[7] = {11, 6, 1, 6, 5, 6, 11};
+static const uint8_t _r1[7] = {11, 6, 1, 6, 11};
 static const uint8_t _r2[5] = {12, 7, 2, 7, 13};
-static const uint8_t _r3[7] = {14, 8, 3, 8, 9, 8, 14};
+static const uint8_t _r3[7] = {14, 8, 3, 8, 14};
 static const uint8_t _r4[6] = {14, 19, 4, 19, 20, 15};
 static const uint8_t _r5[3] = {10, 18, 15};
 static const uint8_t _r6[6] = {10, 11, 12, 13, 14, 15};
 
 static const uint8_t *_regions[7] = {_r0, _r1, _r2, _r3, _r4, _r5, _r6};
-static const uint8_t _regLengths[6] = {6, 7, 5, 7, 6, 3};
+static const uint8_t _regLengths[6] = {6, 5, 5, 5, 6, 3};
 
 Path::Path(void)
 {
@@ -274,15 +274,16 @@ boolean Path::nearEndpoint(void)
 
 void Path::passengers(uint8_t passengers)
 {
-    _bias[5] += 5 * passengers;
+    if (passengers) _bias[5] = 35 * passengers;
+    else _bias[5] = 20;
 }
 
 void Path::reorient(uint8_t node) {
     _current = node;
+    _region = -1;
     
     switch (node) {
         case 12:
-            _region = -1;
             _next = 11;
             _last = 13;
             _regIndex = 2;
@@ -290,7 +291,6 @@ void Path::reorient(uint8_t node) {
             _nextReg = 1;
             break;
         case 13:
-            _region = -1;
             _next = 14;
             _last = 12;
             _regIndex = 3;
@@ -298,20 +298,18 @@ void Path::reorient(uint8_t node) {
             _nextReg = 3;
             break;
         case 10:
-            _region = 0;
-            _next = 16;
+            _next = 11;
             _last = 18;
-            _regIndex = 5;
-            _regDirec = -1;
-            _nextReg = -1;
+            _regIndex = 0;
+            _regDirec = 1;
+            _nextReg = 1;
             break;
         case 15:
-            _region = 4;
-            _next = 20;
+            _next = 14;
             _last = 18;
             _regIndex = 5;
             _regDirec = -1;
-            _nextReg = -1;
+            _nextReg = 3;
             break;
     }
 }

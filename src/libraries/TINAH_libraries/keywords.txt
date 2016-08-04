@@ -62,6 +62,9 @@ atIntersection		KEYWORD2
 describeIntersection	KEYWORD2
 record			KEYWORD2
 unturn			KEYWORD2
+setOldDistance		KEYWORD2
+resetDistance		KEYWORD2
+resetIntersection	KEYWORD2
 
 # pan
 leftUp			KEYWORD2

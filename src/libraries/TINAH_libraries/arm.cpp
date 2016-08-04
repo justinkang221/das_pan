@@ -8,50 +8,44 @@
 
 #define MOTOR (37)
 #define POT (A4)
-#define SPEED (150)
+#define SPEED (180)
 
 Arm::Arm(void) {}
 
 void Arm::leftFront(void)
 {
-    RCServo0.write(169);
-    delay(1000);
+    RCServo0.write(180);
 }
 
 void Arm::leftBack(void)
 {
-    RCServo0.write(161);
-    delay(1000);
+    RCServo0.write(170);
 }
 
 void Arm::leftCenter(void)
 {
-	RCServo0.write(165);
-	delay(1000);
+	RCServo0.write(177);
 }
 
 void Arm::center(void)
 {
-    RCServo0.write(70);
+    RCServo0.write(80);
     delay(500);
 }
 
 void Arm::rightFront(void)
 {
-    RCServo0.write(3);
-    delay(1000);
+    RCServo0.write(1);
 }
 
 void Arm::rightBack(void)
 {
-    RCServo0.write(11);
-    delay(1000);
+    RCServo0.write(13);
 }
 
 void Arm::rightCenter(void)
 {
 	RCServo0.write(7);
-	delay(1000);
 }
 
 void Arm::cycle(void)
