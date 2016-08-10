@@ -489,7 +489,7 @@ void pickUp(boolean left) {
         arm.rightBack();
         arm.cycle();
         pan.rightUp();
-        if ( !passenger.precise(true) ) leftPassengers = true;
+        if ( !passenger.precise(true) ) rightPassengers = true;
         arm.center();
         break;
       }

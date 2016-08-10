@@ -20,7 +20,7 @@ void Pan::leftUp(void)
 
 void Pan::leftPick(void)
 {
-    RCServo1.write(125);
+    RCServo1.write(120);
 }
 
 void Pan::leftDrop(void)
@@ -35,7 +35,7 @@ void Pan::rightUp(void)
 
 void Pan::rightPick(void)
 {
-    RCServo2.write(55);
+    RCServo2.write(65);
 }
 
 void Pan::rightDrop(void)

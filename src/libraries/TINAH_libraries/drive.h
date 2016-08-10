@@ -92,6 +92,7 @@ private:
     uint16_t _hack;
     uint16_t _sack;
     uint16_t _irack;
+    uint8_t _jack;
 	
 	boolean _interL;
 	boolean _interR;
@@ -106,9 +107,7 @@ private:
     boolean _interrupt;
     
     unsigned long _currTime;
-    
     unsigned long _stuckTime;
-    uint8_t _wereFuckinJammed;
 };
 
 #endif
