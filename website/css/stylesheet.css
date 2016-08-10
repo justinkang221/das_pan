@@ -8,12 +8,11 @@ body {
     font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
 }
 
-section#webGL-canvas {
+#webGL-canvas {
     position: relative;
-    width: 100%;
     height: 500px;
 }
 
-section#webGL-canvas:focus {
+#webGL-canvas:focus {
     outline: none;
 }
