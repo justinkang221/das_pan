@@ -4,7 +4,7 @@ $(document).ready(function () {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 10000);
 
-    const renderer = new THREE.WebGLRenderer({antialias: true});
+    const renderer = new THREE.WebGLRenderer({antialias: false});
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setClearColor(0xfafafa);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -20,11 +20,28 @@ $(document).ready(function () {
 
     const ambient = new THREE.AmbientLight(0x404040);
     scene.add(ambient);
-    const light = new THREE.DirectionalLight(-1, 1, -1);
+    const light = new THREE.PointLight();
+    light.position.set(0, 1000, 0);
     scene.add(light);
 
-    var translation, rotation, scale, transformation;
-    var material;
+    var geometry = new THREE.SphereGeometry(5000, 60, 40);
+    var uniforms = {
+        texture: { type: 't', value: THREE.ImageUtils.loadTexture('img/texture/sky.jpg') }
+    };
+
+    var material = new THREE.ShaderMaterial( {
+        uniforms:       uniforms,
+        vertexShader:   document.getElementById('sky-vertex').textContent,
+        fragmentShader: document.getElementById('sky-fragment').textContent
+    });
+
+    var sky = new THREE.Mesh(geometry, material);
+    sky.scale.set(-1, 1, 1);
+    sky.eulerOrder = 'XZY';
+    sky.renderDepth = 1000.0;
+    scene.add(sky);
+
+    var translation, rotation, transformation;
 
     var chassis, tinah;
     var wheels = new THREE.Object3D();
@@ -154,7 +171,7 @@ $(document).ready(function () {
     };
 
     const plane = new THREE.PlaneGeometry(2 * (bounds.x + 100), 2 * (bounds.z + 100));
-    const ground = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({color: 0xaaaaaa}));
+    const ground = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('img/map.png')}));
     ground.receiveShadow = true;
     ground.rotation.x = -Math.PI / 2;
     ground.position.set(0, -14, 0);
@@ -295,7 +312,7 @@ $(document).ready(function () {
     function render() {
         requestAnimationFrame(render);
 
-        camera.position.set(0.3 * robot.position.x, robot.position.y + 700 - 0.3 * robot.position.z, 0.3 * robot.position.z - 800);
+        camera.position.set(0.3 * robot.position.x, robot.position.y + 1000 - 0.3 * robot.position.z, 0.3 * robot.position.z - 800);
         camera.lookAt(robot.position);
 
         if (controls.left) {
