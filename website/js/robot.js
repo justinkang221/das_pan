@@ -295,7 +295,7 @@ $(document).ready(function () {
     function render() {
         requestAnimationFrame(render);
 
-        //camera.position.set(robot.position.x, robot.position.y + 700 , robot.position.z - 800);
+        camera.position.set(0.3 * robot.position.x, robot.position.y + 700 - 0.3 * robot.position.z, 0.3 * robot.position.z - 800);
         camera.lookAt(robot.position);
 
         if (controls.left) {
