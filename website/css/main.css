@@ -1638,7 +1638,7 @@
 
 	#banner-wrapper {
 		position: relative;
-		background-image: url("img/overlay.png"), url("img/overlay.png"), url("../images/banner.jpg");
+		background-image: url("img/overlay.png"), url("img/overlay.png"), url("../img/banner.jpg");
 		background-position: top left, top left, center center;
 		background-repeat: repeat, repeat, no-repeat;
 		background-size: auto, auto, cover;
@@ -1749,7 +1749,7 @@
 				h2.major {
 					font-size: 1.65em;
 					text-align: center;
-					margin: 0 0 3em 0;
+                    padding: 0 1em 0 0; /* changed this from 3em */
 				}
 
 					h2.major span {
@@ -1805,7 +1805,7 @@
 			}
 
 			.box.feature {
-				text-align: center;
+				text-align: justify;
 			}
 
 			.box.post header {

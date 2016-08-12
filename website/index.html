@@ -87,18 +87,21 @@
 
                     <!-- Features -->
                     <section class="box features" id="features">
-                        <h2 class="major"><span>A Major Heading</span></h2>
+                        <h2 class="major"><span>FEATURES</span></h2>
                         <div>
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12">
 
                                     <!-- Feature -->
-                                    <section class="box feature">
-                                        <a href="#" class="image featured"><img src="images/pic01.jpg" alt=""/></a>
-                                        <h3><a href="#">A Subheading</a></h3>
+                                    <section class="box feature pickup">
+                                        <div href="#" class="image featured"></div>
+                                        <h3><i class="fa fa-hand-lizard-o"></i>&ensp;Pickup Mechanism</h3>
                                         <p>
-                                            Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                            lectus dolore. Praesent semper mod quis eget sed etiam eu ante risus.
+                                            Have you ever found yourself asking - <i>if I were blind as a bot,
+                                            how would I pick up a doll?</i> We pondered the same question, and the
+                                            obvious answer was by swatting at it. The width of the broom and pan allow
+                                            for a large tolerance, meaning we don't have to be precisely lined up with
+                                            the doll to pick it up.
                                         </p>
                                     </section>
 
@@ -161,7 +164,7 @@
 
                     <!-- Blog -->
                     <section class="box blog" id="robot">
-                        <h2 class="major"><span>Another Major Heading</span></h2>
+                        <h2 class="major"><span>ROBOT</span></h2>
                         <div>
                             <div class="row">
                                 <div class="col-sm-9 col-xs-12">
@@ -172,12 +175,14 @@
                                             <header>
                                                 <h3><a href="#">Here's a really big heading</a></h3>
                                                 <p>With a smaller subtitle that attempts to elaborate</p>
-                                                <ul class="meta">
-                                                    <li class="icon fa-clock-o">15 minutes ago</li>
-                                                    <li class="icon fa-comments"><a href="#">8</a></li>
-                                                </ul>
                                             </header>
-                                            <div id="webGL-canvas" tabindex="1"></div>
+                                            <div id="webGL-canvas" tabindex="1">
+                                                <div class="overlay">
+                                                    <p>
+                                                        Click/Touch to try
+                                                    </p>
+                                                </div>
+                                            </div>
                                             <p>
                                                 Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
                                                 lectus. Praesent
@@ -319,8 +324,9 @@
 <script src="js/typed.min.js"></script>
 <script>
     $(function () {
-        $(".typed").typed({
-            strings: [$(".typed").text()],
+        var elem = $('.typed');
+        elem.typed({
+            strings: [elem.text()],
             typeSpeed: 200
         });
     });
@@ -344,13 +350,6 @@ void main() {
   vec4 pos = vec4(position, 1.0);
   gl_Position = projectionMatrix * modelViewMatrix * pos;
 }
-
-
-
-
-
-
-
 </script>
 
 <script type="application/x-glsl" id="sky-fragment">
@@ -361,13 +360,6 @@ void main() {
   vec4 sample = texture2D(texture, vUV);
   gl_FragColor = vec4(sample.xyz, sample.w);
 }
-
-
-
-
-
-
-
 </script>
 
 </body>
