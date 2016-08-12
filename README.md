@@ -4,7 +4,7 @@
 ![Ripped Andre](img/andre-arnold.png)
 
 
-ENPH 253 Summer 2016 Team 7
+ENPH 253 Summer 2016 Team 7  
 [Competition Page](http://projectlab.engphys.ubc.ca/enph-253-2016/competition-2016/)
 
 
@@ -23,4 +23,4 @@ You can view the website locally by installing python and running the following 
 $ python -m SimpleHTTPServer 8000
 Serving HTTP on 0.0.0.0 port 8000 …
 ```
-then visiting `localhost:8000`
+then visiting `localhost:8000` in your browser.
