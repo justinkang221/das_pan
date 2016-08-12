@@ -1,0 +1,51 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+.typed {
+    display: inline-block;
+}
+
+.typed-cursor{
+    display: inline-block;
+    font-size: 50px;
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+
+#header a:visited {
+    color: #C1CAC5;
+    text-decoration: none;
+}
+
+body {
+    font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#webGL-canvas {
+    position: relative;
+    height: 500px;
+}
+
+#webGL-canvas:focus {
+    outline: none;
+}

@@ -26,12 +26,12 @@ $(document).ready(function () {
 
     var geometry = new THREE.SphereGeometry(5000, 60, 40);
     var uniforms = {
-        texture: { type: 't', value: THREE.ImageUtils.loadTexture('img/texture/sky.jpg') }
+        texture: {type: 't', value: THREE.ImageUtils.loadTexture('img/texture/sky.jpg')}
     };
 
-    var material = new THREE.ShaderMaterial( {
-        uniforms:       uniforms,
-        vertexShader:   document.getElementById('sky-vertex').textContent,
+    var material = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: document.getElementById('sky-vertex').textContent,
         fragmentShader: document.getElementById('sky-fragment').textContent
     });
 
@@ -171,7 +171,7 @@ $(document).ready(function () {
     };
 
     const plane = new THREE.PlaneGeometry(2 * (bounds.x + 100), 2 * (bounds.z + 100));
-    const ground = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('img/map.png')}));
+    const ground = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('img/texture/map.png')}));
     ground.receiveShadow = true;
     ground.rotation.x = -Math.PI / 2;
     ground.position.set(0, -14, 0);
