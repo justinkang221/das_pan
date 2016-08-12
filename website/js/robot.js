@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    var loaded = false;
+
     const LEFT = -1, CENTER = 0, RIGHT = 1;
     const canvas = document.getElementById('webGL-canvas');
     const scene = new THREE.Scene();
@@ -24,9 +26,10 @@ $(document).ready(function () {
     light.position.set(0, 1000, 0);
     scene.add(light);
 
+    const texture = new THREE.TextureLoader();
     var geometry = new THREE.SphereGeometry(5000, 60, 40);
     var uniforms = {
-        texture: {type: 't', value: THREE.ImageUtils.loadTexture('img/texture/sky.jpg')}
+        texture: {type: 't', value: texture.load('img/texture/sky.jpg')}
     };
 
     var material = new THREE.ShaderMaterial({
@@ -37,8 +40,8 @@ $(document).ready(function () {
 
     var sky = new THREE.Mesh(geometry, material);
     sky.scale.set(-1, 1, 1);
-    sky.eulerOrder = 'XZY';
-    sky.renderDepth = 1000.0;
+    sky.rotation.order = 'XZY';
+    sky.renderOrder = 1000.0;
     scene.add(sky);
 
     var translation, rotation, transformation;
@@ -117,6 +120,8 @@ $(document).ready(function () {
         translation = new THREE.Matrix4().makeTranslation(-147, 13, 147);
         pan.right.applyMatrix(translation);
         robot.add(pan.right);
+
+        loaded = true;
     });
 
     loader.load('stl/admiral.stl', function (geometry) {
@@ -171,7 +176,7 @@ $(document).ready(function () {
     };
 
     const plane = new THREE.PlaneGeometry(2 * (bounds.x + 100), 2 * (bounds.z + 100));
-    const ground = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('img/texture/map.png')}));
+    const ground = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({map: texture.load('img/texture/map.png')}));
     ground.receiveShadow = true;
     ground.rotation.x = -Math.PI / 2;
     ground.position.set(0, -14, 0);
@@ -411,5 +416,11 @@ $(document).ready(function () {
         renderer.render(scene, camera);
     }
 
-    render();
+    var interval = setInterval(function () {
+        if (loaded) {
+            render();
+            clearInterval(interval);
+        }
+    }, 10);
+
 });
