@@ -263,8 +263,8 @@ $(document).ready(function () {
                     controls.arm.orient = CENTER;
                 }
                 break;
-            case 188:
-            case 190:
+            case 88:
+            case 90:
             case 32:
                 controls.move = false;
                 prevent = true;
@@ -291,13 +291,13 @@ $(document).ready(function () {
             case 40:
                 controls.down = false;
                 break;
-            case 188:
+            case 90:
                 controls.pan.left = !controls.pan.left;
                 if (!controls.pan.right) controls.pan.right = true;
                 if (!controls.pan.left) controls.arm.orient = LEFT;
                 else if (controls.pan.right) controls.arm.orient = CENTER;
                 break;
-            case 190:
+            case 88:
                 controls.pan.right = !controls.pan.right;
                 if (!controls.pan.left) controls.pan.left = true;
                 if (!controls.pan.right) controls.arm.orient = RIGHT;
