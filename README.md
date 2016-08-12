@@ -18,7 +18,9 @@ ENPH 253 Summer 2016 Team 7
 > To test the sensors and calibrate the actuators, run `test.ino`.
 > To test the path finding algorithm, run `nav.ino`.
 
-You can view the website locally by installing python and running the command
+You can view the website locally by installing python and running the following command,
 ```bash
-python -m SimpleHTTPServer 8000
+$ python -m SimpleHTTPServer 8000
+Serving HTTP on 0.0.0.0 port 8000 …
 ```
+then visiting `localhost:8000`
