@@ -85,14 +85,12 @@
             <div class="row">
                 <div class="col-xs-12">
 
-                    <!-- Features -->
                     <section class="box features" id="features">
                         <h2 class="major"><span>FEATURES</span></h2>
                         <div>
                             <div class="row">
                                 <div class="col-sm-3 col-xs-12">
 
-                                    <!-- Feature -->
                                     <section class="box feature pickup">
                                         <div href="#" class="image featured"></div>
                                         <h3><i class="fa fa-hand-lizard-o"></i>&ensp;Pickup Mechanism</h3>
@@ -108,20 +106,21 @@
                                 </div>
                                 <div class="col-sm-3 col-xs-12">
 
-                                    <!-- Feature -->
                                     <section class="box feature">
                                         <a href="#" class="image featured"><img src="images/pic02.jpg" alt=""/></a>
-                                        <h3><a href="#">Another Subheading</a></h3>
+                                        <h3><a href="#">Seeing the World</a></h3>
                                         <p>
-                                            Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                            lectus dolore. Praesent semper mod quis eget sed etiam eu ante risus.
+                                            Since computer vision is not feasible within 5 weeks, we used IR detection
+                                            to traverse the map, follow tape, and find passengers. We liked IR
+                                            detection so much, we even used it to encode the wheels on our robot, so
+                                            that we could perform turns accurately. It took some signal processing,
+                                            but das_pan was eventually able to see the world.
                                         </p>
                                     </section>
 
                                 </div>
                                 <div class="col-sm-3 col-xs-12">
 
-                                    <!-- Feature -->
                                     <section class="box feature">
                                         <a href="#" class="image featured"><img src="images/pic03.jpg" alt=""/></a>
                                         <h3><a href="#">And Another</a></h3>
@@ -134,7 +133,6 @@
                                 </div>
                                 <div class="col-sm-3 col-xs-12">
 
-                                    <!-- Feature -->
                                     <section class="box feature">
                                         <a href="#" class="image featured"><img src="images/pic04.jpg" alt=""/></a>
                                         <h3><a href="#">And One More</a></h3>
@@ -146,14 +144,6 @@
 
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <ul class="actions">
-                                        <li><a href="#" class="button big">Do Something</a></li>
-                                        <li><a href="#" class="button alt big">Think About It</a></li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                     </section>
 
@@ -162,7 +152,6 @@
             <div class="row">
                 <div class="col-xs-12">
 
-                    <!-- Blog -->
                     <section class="box blog" id="robot">
                         <h2 class="major"><span>ROBOT</span></h2>
                         <div>
@@ -170,31 +159,16 @@
                                 <div class="col-sm-9 col-xs-12">
                                     <div class="content content-left">
 
-                                        <!-- Featured Post -->
                                         <article class="box post">
                                             <header>
-                                                <h3><a href="#">Here's a really big heading</a></h3>
-                                                <p>With a smaller subtitle that attempts to elaborate</p>
+                                                <h3>3D model</h3>
+                                                <p>
+                                                    Try the demo below to move around and actuate a 3d model of das_pan.
+                                                </p>
                                             </header>
                                             <div id="webGL-canvas" tabindex="1">
-                                                <div class="overlay">
-                                                    <p>
-                                                        Click/Touch to try
-                                                    </p>
-                                                </div>
+                                                <div class="overlay"><p>Click to try</p></div>
                                             </div>
-                                            <p>
-                                                Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                                lectus. Praesent
-                                                semper mod quis eget mi. Etiam sed ante risus aliquam erat et volutpat.
-                                                Praesent a
-                                                dapibus velit. Curabitur sed nisi nunc, accumsan vestibulum lectus.
-                                                Lorem ipsum
-                                                dolor sit non aliquet sed, tempor et dolor. Praesent a dapibus velit.
-                                                Curabitur
-                                                accumsan.
-                                            </p>
-                                            <a href="#" class="button">Continue Reading</a>
                                         </article>
 
                                     </div>
@@ -202,55 +176,28 @@
                                 <div class="col-sm-3 col-xs-12">
                                     <div class="sidebar">
 
-                                        <!-- Archives -->
                                         <ul class="divided">
                                             <li>
                                                 <article class="box post-summary">
-                                                    <h3><a href="#">A Subheading</a></h3>
-                                                    <ul class="meta">
-                                                        <li class="icon fa-clock-o">6 hours ago</li>
-                                                        <li class="icon fa-comments"><a href="#">34</a></li>
-                                                    </ul>
+                                                    <h3>Use the arrow keys to move around</h3>
                                                 </article>
                                             </li>
                                             <li>
                                                 <article class="box post-summary">
-                                                    <h3><a href="#">Another Subheading</a></h3>
-                                                    <ul class="meta">
-                                                        <li class="icon fa-clock-o">9 hours ago</li>
-                                                        <li class="icon fa-comments"><a href="#">27</a></li>
-                                                    </ul>
+                                                    <h3>Actuate the pans with z and x</h3>
                                                 </article>
                                             </li>
                                             <li>
                                                 <article class="box post-summary">
-                                                    <h3><a href="#">And Another</a></h3>
-                                                    <ul class="meta">
-                                                        <li class="icon fa-clock-o">Yesterday</li>
-                                                        <li class="icon fa-comments"><a href="#">184</a></li>
-                                                    </ul>
+                                                    <h3>Cycle the arm with space bar</h3>
                                                 </article>
                                             </li>
-                                            <li>
+                                            <li class="visible-xs">
                                                 <article class="box post-summary">
-                                                    <h3><a href="#">And Another</a></h3>
-                                                    <ul class="meta">
-                                                        <li class="icon fa-clock-o">2 days ago</li>
-                                                        <li class="icon fa-comments"><a href="#">286</a></li>
-                                                    </ul>
-                                                </article>
-                                            </li>
-                                            <li>
-                                                <article class="box post-summary">
-                                                    <h3><a href="#">And One More</a></h3>
-                                                    <ul class="meta">
-                                                        <li class="icon fa-clock-o">3 days ago</li>
-                                                        <li class="icon fa-comments"><a href="#">8,086</a></li>
-                                                    </ul>
+                                                    <h3>Unfortunately, you can only try this demo using a keyboard</h3>
                                                 </article>
                                             </li>
                                         </ul>
-                                        <a href="#" class="button alt">Browse Archives</a>
 
                                     </div>
                                 </div>
@@ -263,51 +210,119 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer id="footer" class="container">
-        <div class="row 200%">
-            <div class="12u">
+        <div class="row">
+            <div class="col-xs-12">
 
-                <!-- About -->
                 <section id="team">
-                    <h2 class="major"><span>What's this about?</span></h2>
-                    <p>
-                        This is <strong>TXT</strong>, yet another free responsive site template designed by
-                        <a href="http://twitter.com/ajlkn">AJ</a> for <a href="http://html5up.net">HTML5 UP</a>. It's
-                        released under the
-                        <a href="http://html5up.net/license/">Creative Commons Attribution</a> license so feel free to
-                        use it for
-                        whatever you're working on (personal or commercial), just be sure to give us credit for the
-                        design.
-                        That's basically it :)
-                    </p>
+                    <h2 class="major"><span>Meet the Team</span></h2>
+                    <section id="portfolio">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="headshot col-sm-3 col-xs-6">
+                                    <a href="https://www.linkedin.com/in/rahat-dhande-297122105" class="portfolio-box"
+                                       target="blank">
+                                        <img src="img/portfolio/rahat.jpg" class="img-responsive img-circle" alt="">
+                                        <div class="portfolio-box-caption">
+                                            <div class="portfolio-box-caption-content">
+                                                <div class="project-category text-faded">
+                                                    Rahat Dhande
+                                                </div>
+                                                <div class="project-name">
+                                                    Software Engineer
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="headshot col-sm-3 col-xs-6">
+                                    <a href="https://www.linkedin.com/in/andrew-dworschak-00669a105"
+                                       class="portfolio-box" target="_blank">
+                                        <img src="img/portfolio/andrew.jpg" class="img-responsive img-circle"
+                                             alt="">
+                                        <div class="portfolio-box-caption">
+                                            <div class="portfolio-box-caption-content">
+                                                <div class="project-category text-faded">
+                                                    Andrew Dworschack
+                                                </div>
+                                                <div class="project-name">
+                                                    Mechanical Engineer
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="headshot col-sm-3 col-xs-6">
+                                    <a href="https://www.linkedin.com/in/alex-swift-scott-713131a5"
+                                       class="portfolio-box" target="_blank">
+                                        <img src="img/portfolio/alex.jpg" class="img-responsive img-circle" alt="">
+                                        <div class="portfolio-box-caption">
+                                            <div class="portfolio-box-caption-content">
+                                                <div class="project-category text-faded">
+                                                    Alex Swift-Scott
+                                                </div>
+                                                <div class="project-name">
+                                                    Electrical Engineer
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="headshot col-sm-3 col-xs-6">
+                                    <a href="javaScript:void(0)" class="portfolio-box">
+                                        <img src="img/portfolio/justin.jpg" class="img-responsive img-circle"
+                                             alt="">
+                                        <div class="portfolio-box-caption">
+                                            <div class="portfolio-box-caption-content">
+                                                <div class="project-category text-faded">
+                                                    Justin Kang
+                                                </div>
+                                                <div class="project-name">
+                                                    Project Manager
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </section>
 
             </div>
         </div>
-        <div class="row 200%">
-            <div class="12u">
-
-                <!-- Contact -->
+        <div class="row">
+            <div class="col-xs-12">
                 <section>
-                    <h2 class="major"><span>Get in touch</span></h2>
-                    <ul class="contact">
-                        <li><a class="icon fa-facebook" href="#"><span class="label">Facebook</span></a></li>
-                        <li><a class="icon fa-twitter" href="#"><span class="label">Twitter</span></a></li>
-                        <li><a class="icon fa-instagram" href="#"><span class="label">Instagram</span></a></li>
-                        <li><a class="icon fa-dribbble" href="#"><span class="label">Dribbble</span></a></li>
-                        <li><a class="icon fa-google-plus" href="#"><span class="label">Google+</span></a></li>
-                    </ul>
+                    <h2 class="major"><span></span></h2>
                 </section>
-
             </div>
         </div>
 
         <!-- Copyright -->
         <div id="copyright">
             <ul class="menu">
-                <li>&copy; Untitled. All rights reserved</li>
-                <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                <li>
+                    <i class="fa fa-gears"></i>
+                    Competition:
+                    <a href="http://projectlab.engphys.ubc.ca/enph-253-2016/competition-2016/" target="_blank">
+                        ENPH 253
+                    </a>
+                </li>
+                <li>
+                    <i class="fa fa-newspaper-o"></i>
+                    Website Template:
+                    <a href="http://html5up.net" target="_blank">
+                        HTML5 UP
+                    </a>
+                </li>
+                <li>
+                    <i class="fa fa-github"></i>
+                    Source Code:
+                    <a href="https://github.com/rahatchd/team7enph-2016" target="_blank">
+                        Github
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -342,6 +357,7 @@
 <script src="js/STLLoader.js"></script>
 <script src="js/robot.js"></script>
 
+<!--@formatter:off-->
 <script type="application/x-glsl" id="sky-vertex">
 varying vec2 vUV;
 
@@ -350,6 +366,7 @@ void main() {
   vec4 pos = vec4(position, 1.0);
   gl_Position = projectionMatrix * modelViewMatrix * pos;
 }
+
 </script>
 
 <script type="application/x-glsl" id="sky-fragment">
@@ -360,7 +377,9 @@ void main() {
   vec4 sample = texture2D(texture, vUV);
   gl_FragColor = vec4(sample.xyz, sample.w);
 }
+
 </script>
+<!--@formatter:on-->
 
 </body>
 </html>

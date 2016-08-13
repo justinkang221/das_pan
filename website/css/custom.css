@@ -61,6 +61,7 @@ body {
     height: 500px;
     border-radius: 16px;
     overflow: hidden;
+    margin-bottom: 2em;
 }
 
 #webGL-canvas .overlay {
@@ -69,7 +70,7 @@ body {
     width: 100%;
     background: rgba(10, 10, 10, 0.3);
     display: flex;
-    align-items: center
+    align-items: center;
 }
 
 #webGL-canvas:focus {
@@ -92,5 +93,18 @@ body {
 @media screen and (max-width: 736px) {
     #webGL-canvas .overlay p {
         font-size: 8vw;
+    }
+}
+
+#robot .sidebar {
+    height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 736px) {
+    #robot .sidebar {
+        height: auto;
+        display: block;
     }
 }
