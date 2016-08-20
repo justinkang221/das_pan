@@ -1808,6 +1808,10 @@
 				text-align: justify;
 			}
 
+			.box.feature h3 {
+                text-align: center;
+            }
+
 			.box.post header {
 				margin: 0 0 2.5em 0;
 			}
