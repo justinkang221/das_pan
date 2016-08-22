@@ -41,6 +41,10 @@ body {
     text-decoration: none;
 }
 
+.icons {
+    padding-bottom: 3em;
+}
+
 .image.featured {
     width: 260px;
     height: 462px;
