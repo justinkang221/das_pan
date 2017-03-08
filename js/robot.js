@@ -344,7 +344,7 @@ $(document).ready(function () {
         if (controls.down) {
             location.x = robot.position.x - speed * Math.sin(robot.rotation.y);
             location.z = robot.position.z - speed * Math.cos(robot.rotation.y);
-            wheels.rotation.x += (Math.abs(location.x) > bounds.x || Math.abs(location.z) > bounds.z) ? Math.PI / 3 : Math.PI / 24;
+            wheels.rotation.x -= (Math.abs(location.x) > bounds.x || Math.abs(location.z) > bounds.z) ? Math.PI / 3 : Math.PI / 24;
         }
 
         robot.position.x = Math.max(Math.min(location.x, bounds.x), -1 * bounds.x);
