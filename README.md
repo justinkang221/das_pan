@@ -1,8 +1,4 @@
 # 2016 Engineering Physics Uber-Bots Robot Competition
-### Team Andre You Have Nice Hair _Also have you been working out_
-
-![Ripped Andre](img/andre-arnold.png)
-
 
 ENPH 253 Summer 2016 Team 7  
 [Competition Page](http://projectlab.engphys.ubc.ca/enph-253-2016/competition-2016/)
